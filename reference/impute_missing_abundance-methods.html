@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.99.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
       </span>
     </div>
 
@@ -161,26 +161,15 @@
 <span class="r-in"><span><span class="va">airway</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">impute_missing_abundance</span><span class="op">(</span>.formula <span class="op">=</span> <span class="op">~</span> <span class="va">dex</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: counts appears not to be scaled for sequencing depth (missing _scaled suffix; if you think this column is idependent of sequencing depth ignore this message), therefore the imputation can produce non meaningful results if sequencing depth for samples are highly variable. If you use force_scaling = TRUE library size will be used for eliminatig some sequencig depth effect before imputation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: 500 × 25</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># </span><span style="color: #555555;">Features=100 | Samples=5 | Assays=counts, .imputed</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .feature .sample counts .imputed SampleName cell  dex   albut Run   avgLength</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG000… SRR103…    679        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG000… SRR103…      0        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG000… SRR103…    467        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG000… SRR103…    260        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG000… SRR103…     60        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG000… SRR103…      0        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG000… SRR103…   <span style="text-decoration: underline;">3</span>251        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG000… SRR103…   <span style="text-decoration: underline;">1</span>433        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG000… SRR103…    519        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG000… SRR103…    394        0 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: Experiment &lt;fct&gt;, Sample &lt;fct&gt;, BioSample &lt;fct&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   condition &lt;fct&gt;, gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_biotype &lt;chr&gt;, gene_seq_start &lt;int&gt;, gene_seq_end &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_name &lt;chr&gt;, seq_strand &lt;int&gt;, seq_coord_system &lt;int&gt;, symbol &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   GRangesList &lt;list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 100 5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): ''</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> assays(2): counts .imputed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(100): ENSG00000000003 ENSG00000000005 ... ENSG00000005469</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000005471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(10): gene_id gene_name ... seq_coord_system symbol</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colnames(5): SRR1039508 SRR1039509 SRR1039512 SRR1039513 SRR1039516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colData names(10): SampleName cell ... BioSample condition</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -196,7 +185,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.99.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
       </span>
     </div>
 
@@ -215,26 +215,15 @@ select_closest_pairs = function(df)
 <span class="r-in"><span>       <span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>All samples appear to belong to the same group.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Getting the 14224 most variable genes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: 63,677 × 25</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># </span><span style="color: #555555;">Features=63677 | Samples=1 | Assays=counts</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .feature        .sample   counts SampleName cell  dex   albut Run   avgLength</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000000003 SRR10395…    572 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000000005 SRR10395…      0 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000000419 SRR10395…    508 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000000457 SRR10395…    229 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000000460 SRR10395…     60 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000000938 SRR10395…      0 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000000971 SRR10395…   <span style="text-decoration: underline;">7</span>995 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000001036 SRR10395…   <span style="text-decoration: underline;">1</span>109 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000001084 SRR10395…    704 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000001167 SRR10395…    269 GSM1275875 N061… trt   untrt SRR1…        98</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: Experiment &lt;fct&gt;, Sample &lt;fct&gt;, BioSample &lt;fct&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   condition &lt;fct&gt;, gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_biotype &lt;chr&gt;, gene_seq_start &lt;int&gt;, gene_seq_end &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_name &lt;chr&gt;, seq_strand &lt;int&gt;, seq_coord_system &lt;int&gt;, symbol &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   .abundant &lt;lgl&gt;, GRangesList &lt;list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 63677 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(2): '' tidybulk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> assays(1): counts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(63677): ENSG00000000003 ENSG00000000005 ... ENSG00000273492</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000273493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(11): gene_id gene_name ... symbol .abundant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colnames(1): SRR1039521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colData names(10): SampleName cell ... BioSample condition</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -250,7 +239,7 @@ select_closest_pairs = function(df)
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

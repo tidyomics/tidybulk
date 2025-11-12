@@ -21,7 +21,7 @@ it filters out the low-abundance features directly."><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.99.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
       </span>
     </div>
 
@@ -167,26 +167,15 @@ multifactor RNA-Seq experiments with respect to biological variation. Nucleic Ac
 <span class="r-in"><span><span class="co"># Basic usage</span></span></span>
 <span class="r-in"><span><span class="va">airway</span> <span class="op">|&gt;</span> <span class="fu">keep_abundant</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>All samples appear to belong to the same group.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: 113,792 × 25</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># </span><span style="color: #555555;">Features=14224 | Samples=8 | Assays=counts</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .feature        .sample   counts SampleName cell  dex   albut Run   avgLength</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000000003 SRR10395…    679 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000000419 SRR10395…    467 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000000457 SRR10395…    260 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000000460 SRR10395…     60 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000000971 SRR10395…   <span style="text-decoration: underline;">3</span>251 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000001036 SRR10395…   <span style="text-decoration: underline;">1</span>433 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000001084 SRR10395…    519 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000001167 SRR10395…    394 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000001460 SRR10395…    172 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000001461 SRR10395…   <span style="text-decoration: underline;">2</span>112 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: Experiment &lt;fct&gt;, Sample &lt;fct&gt;, BioSample &lt;fct&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   condition &lt;fct&gt;, gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_biotype &lt;chr&gt;, gene_seq_start &lt;int&gt;, gene_seq_end &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_name &lt;chr&gt;, seq_strand &lt;int&gt;, seq_coord_system &lt;int&gt;, symbol &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   .abundant &lt;lgl&gt;, GRangesList &lt;list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 14224 8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): ''</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> assays(1): counts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(14224): ENSG00000000003 ENSG00000000419 ... ENSG00000273382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000273486</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(11): gene_id gene_name ... symbol .abundant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colnames(8): SRR1039508 SRR1039509 ... SRR1039520 SRR1039521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colData names(10): SampleName cell ... BioSample condition</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With custom thresholds</span></span></span>
 <span class="r-in"><span><span class="va">airway</span> <span class="op">|&gt;</span> <span class="fu">keep_abundant</span><span class="op">(</span></span></span>
@@ -194,26 +183,15 @@ multifactor RNA-Seq experiments with respect to biological variation. Nucleic Ac
 <span class="r-in"><span>  minimum_proportion <span class="op">=</span> <span class="fl">0.5</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>All samples appear to belong to the same group.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: 123,488 × 25</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># </span><span style="color: #555555;">Features=15436 | Samples=8 | Assays=counts</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .feature        .sample   counts SampleName cell  dex   albut Run   avgLength</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000000003 SRR10395…    679 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000000419 SRR10395…    467 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000000457 SRR10395…    260 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000000460 SRR10395…     60 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000000971 SRR10395…   <span style="text-decoration: underline;">3</span>251 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000001036 SRR10395…   <span style="text-decoration: underline;">1</span>433 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000001084 SRR10395…    519 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000001167 SRR10395…    394 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000001460 SRR10395…    172 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000001461 SRR10395…   <span style="text-decoration: underline;">2</span>112 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: Experiment &lt;fct&gt;, Sample &lt;fct&gt;, BioSample &lt;fct&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   condition &lt;fct&gt;, gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_biotype &lt;chr&gt;, gene_seq_start &lt;int&gt;, gene_seq_end &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_name &lt;chr&gt;, seq_strand &lt;int&gt;, seq_coord_system &lt;int&gt;, symbol &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   .abundant &lt;lgl&gt;, GRangesList &lt;list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 15436 8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): ''</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> assays(1): counts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(15436): ENSG00000000003 ENSG00000000419 ... ENSG00000273478</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000273486</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(11): gene_id gene_name ... symbol .abundant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colnames(8): SRR1039508 SRR1039509 ... SRR1039520 SRR1039521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colData names(10): SampleName cell ... BioSample condition</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Using a factor of interest</span></span></span>
 <span class="r-in"><span><span class="va">airway</span> <span class="op">|&gt;</span> <span class="fu">keep_abundant</span><span class="op">(</span>factor_of_interest <span class="op">=</span> <span class="va">condition</span><span class="op">)</span></span></span>
@@ -222,26 +200,15 @@ multifactor RNA-Seq experiments with respect to biological variation. Nucleic Ac
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use the `formula_design` argument instead.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The argument 'factor_of_interest' is deprecated and will be removed in a</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>   future release. Please use the 'design' or 'formula_design' argument instead.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: 127,408 × 25</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># </span><span style="color: #555555;">Features=15926 | Samples=8 | Assays=counts</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .feature        .sample   counts SampleName cell  dex   albut Run   avgLength</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000000003 SRR10395…    679 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000000419 SRR10395…    467 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000000457 SRR10395…    260 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000000460 SRR10395…     60 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000000971 SRR10395…   <span style="text-decoration: underline;">3</span>251 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000001036 SRR10395…   <span style="text-decoration: underline;">1</span>433 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000001084 SRR10395…    519 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000001167 SRR10395…    394 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000001460 SRR10395…    172 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000001461 SRR10395…   <span style="text-decoration: underline;">2</span>112 GSM1275862 N613… untrt untrt SRR1…       126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: Experiment &lt;fct&gt;, Sample &lt;fct&gt;, BioSample &lt;fct&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   condition &lt;fct&gt;, gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_biotype &lt;chr&gt;, gene_seq_start &lt;int&gt;, gene_seq_end &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_name &lt;chr&gt;, seq_strand &lt;int&gt;, seq_coord_system &lt;int&gt;, symbol &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   .abundant &lt;lgl&gt;, GRangesList &lt;list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 15926 8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): ''</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> assays(1): counts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(15926): ENSG00000000003 ENSG00000000419 ... ENSG00000273472</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000273486</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(11): gene_id gene_name ... symbol .abundant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colnames(8): SRR1039508 SRR1039509 ... SRR1039520 SRR1039521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colData names(10): SampleName cell ... BioSample condition</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -257,7 +224,7 @@ multifactor RNA-Seq experiments with respect to biological variation. Nucleic Ac
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>

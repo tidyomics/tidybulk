@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.99.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
       </span>
     </div>
 
@@ -182,26 +182,15 @@ edgeR::calcNormFactors(.data, method = c("TMM","TMMwsp","RLE","upperquartile"))<
 <span class="r-in"><span>   <span class="fu">scale_abundance</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>All samples appear to belong to the same group.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: the sample with largest library size SRR1039517 was chosen as reference for scaling</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: 509,416 × 28</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># </span><span style="color: #555555;">Features=63677 | Samples=8 | Assays=counts, counts_scaled</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .feature      .sample counts counts_scaled SampleName cell  dex   albut Run  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ENSG00000000… SRR103…    679         940.  GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ENSG00000000… SRR103…      0           0   GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ENSG00000000… SRR103…    467         646.  GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ENSG00000000… SRR103…    260         360.  GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ENSG00000000… SRR103…     60          83.1 GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ENSG00000000… SRR103…      0           0   GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ENSG00000000… SRR103…   <span style="text-decoration: underline;">3</span>251        <span style="text-decoration: underline;">4</span>500.  GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ENSG00000001… SRR103…   <span style="text-decoration: underline;">1</span>433        <span style="text-decoration: underline;">1</span>984.  GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ENSG00000001… SRR103…    519         718.  GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ENSG00000001… SRR103…    394         545.  GSM1275862 N613… untrt untrt SRR1…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 19 more variables: avgLength &lt;int&gt;, Experiment &lt;fct&gt;, Sample &lt;fct&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   BioSample &lt;fct&gt;, condition &lt;fct&gt;, TMM &lt;dbl&gt;, multiplier &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;int&gt;, gene_biotype &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_seq_start &lt;int&gt;, gene_seq_end &lt;int&gt;, seq_name &lt;chr&gt;, seq_strand &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_coord_system &lt;int&gt;, symbol &lt;chr&gt;, .abundant &lt;lgl&gt;, GRangesList &lt;list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 63677 8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(2): '' tidybulk</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> assays(2): counts counts_scaled</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(63677): ENSG00000000003 ENSG00000000005 ... ENSG00000273492</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000273493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(11): gene_id gene_name ... symbol .abundant</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colnames(8): SRR1039508 SRR1039509 ... SRR1039520 SRR1039521</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> colData names(12): SampleName cell ... TMM multiplier</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -217,7 +206,7 @@ edgeR::calcNormFactors(.data, method = c("TMM","TMMwsp","RLE","upperquartile"))<
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer></div>
