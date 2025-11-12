@@ -17,6 +17,7 @@
 #' @param reference_sample A character string. The name of the reference sample. If NULL the sample with highest total read count will be selected as reference.
 #' @param .subset_for_scaling A gene-wise quosure condition. This will be used to filter rows (features/genes) of the dataset. For example
 #' @param suffix A character string to append to the scaled abundance column name. Default is "_scaled".
+#' @param chunk_sample_size An integer indicating how many samples to process per chunk. Default is `Inf` (no chunking). For HDF5-backed data or large datasets, set to a finite value (e.g., 50) to enable memory-efficient chunked processing with BiocParallel parallelization.
 #'
 #' @param reference_selection_function DEPRECATED. please use reference_sample.
 #' @param ... Further arguments.
@@ -68,6 +69,7 @@ setGeneric("scale_abundance", function(.data,
                                        reference_sample = NULL,
                                        .subset_for_scaling = NULL,
                                        suffix = "_scaled",
+                                       chunk_sample_size = Inf,
                                        # DEPRECATED
                                        reference_selection_function = NULL,
                                        ...,
@@ -107,7 +109,7 @@ setGeneric("scale_abundance", function(.data,
                                reference_sample = NULL,
                                .subset_for_scaling = NULL,
                                suffix = "_scaled",
-                               chunk_size = Inf,
+                               chunk_sample_size = Inf,
                                # DEPRECATED
                                reference_selection_function = NULL,
                                ...,
@@ -161,12 +163,15 @@ setGeneric("scale_abundance", function(.data,
   if (nrow(.data_filtered) == 0)
     stop("tidybulk says: there are 0 genes that passes the filters (.abundant and/or .subset_for_scaling). Please check your filtering or your data.")
   
-  # Determine the correct assay name
-  my_counts_filtered = assays(.data_filtered)[[my_assay]] |> na.omit()
-  library_size_filtered = my_counts_filtered |> colSums(na.rm  = TRUE)
-  
+  # Get the rownames of features that passed filtering
+  features_to_use <- rownames(.data_filtered)
+
+  # We just carry the gene names, no need to stress the memory with the full data frame
+  rm(.data_filtered)
+
+
   # If not enough genes, warning
-  if(nrow(my_counts_filtered)<100) warning(warning_for_scaling_with_few_genes)
+  if(length(features_to_use)<100) warning(warning_for_scaling_with_few_genes)
   
   # Set column name for value scaled
   value_scaled = paste0(my_assay, suffix)
@@ -175,152 +180,102 @@ setGeneric("scale_abundance", function(.data,
   reference <-
     reference_sample
   
-  if (is.null(reference))
+  if (is.null(reference)){
+      # Get filtered counts for reference selection
+  library_size_filtered = assays(.data[features_to_use, ])[[my_assay]] |> colSums(na.rm  = TRUE)
     reference = library_size_filtered |>
     sort() |>
     tail(1) |>
     names()
+  }
+
   
   
   # Communicate the reference if chosen by default
   if(is.null(reference_sample)) message(sprintf("tidybulk says: the sample with largest library size %s was chosen as reference for scaling", reference))
   
-  # Calculate TMM
-  nf <-
-    edgeR::calcNormFactors(
-      my_counts_filtered,
-      refColumn = reference,
-      method = method
-    )
+
+  # Calculate TMM normalization factors once for all samples
+  chunk_counts_filtered <- assays(.data[features_to_use, ])[[my_assay]] |> na.omit()
+  chunk_library_size <- chunk_counts_filtered |> colSums(na.rm = TRUE)
   
-  # Calculate multiplier
-  multiplier =
-    # Relecting the ratio of effective library size of the reference sample to the effective library size of each sample
-    (library_size_filtered[reference] * nf[reference]) |>
-    divide_by(library_size_filtered * nf) 
+  nf <- edgeR::calcNormFactors(
+    chunk_counts_filtered,
+    refColumn = reference,
+    method = method
+  )
+  
+  # Calculate multiplier for all samples
+  multiplier <- 
+    (chunk_library_size[reference] * nf[reference]) |>
+    divide_by(chunk_library_size * nf)
   
   # Add to sample info
-  colData(.data)$TMM = nf
-  colData(.data)$multiplier = multiplier
+  colData(.data)$TMM <- nf
+  colData(.data)$multiplier <- multiplier
   
-  # Check if input is DelayedArray to preserve memory efficiency
-  input_assay <- assay(.data, my_assay)
-  is_delayed <- is(input_assay, "DelayedArray")
-  
-  if (is_delayed) {
-    # For DelayedArray, use sweep to create a delayed operation
-    check_and_install_packages("DelayedArray")
-    my_counts_scaled <- list(
-      DelayedArray::sweep(input_assay, 2, multiplier, "*")
-    ) |> setNames(value_scaled)
+  # If chunk_sample_size is finite, process in chunks with parallelization
+  if (!is.finite(chunk_sample_size) || chunk_sample_size >= ncol(.data)) {
+    
+    # Standard processing without chunking - just apply the multipliers
+    .data <- apply_scaling_only(.data, my_assay, multiplier, value_scaled)
+    
   } else {
-    # For regular matrices, use matrix multiplication
-    my_counts_scaled =
-      list(
-        input_assay %*%
-          diag(multiplier)
-        
-      ) |>
-      setNames(value_scaled)
+
+    sample_names <- colnames(.data)
+    sample_indices <- seq_along(sample_names)
+    sample_groups <- split(sample_names, ceiling(sample_indices / chunk_sample_size))
+    
+    # Check if BiocParallel is available, otherwise install
+    check_and_install_packages("BiocParallel")
+    
+    # Get the current BiocParallel backend
+    bp_param <- BiocParallel::bpparam()
+    
+    # Inform user about parallelization settings
+    if (is(bp_param, "SerialParam")) {
+      message("tidybulk says: Processing chunks serially. For parallel processing, configure BiocParallel with BiocParallel::register() before calling this function. For example: BiocParallel::register(BiocParallel::MulticoreParam(workers = 4, progressbar = TRUE))")
+    } else {
+      message(sprintf("tidybulk says: Processing %d chunks in parallel using %s with %d workers", 
+                      length(sample_groups), class(bp_param)[1], BiocParallel::bpnworkers(bp_param)))
+    }
+    
+    chunk_results <-
+      BiocParallel::bplapply(
+        sample_groups,
+        function(current_samples) {
+          # Extract chunk
+          chunk_se <- .data[, current_samples, drop = FALSE]
+          
+          # Get multipliers for this chunk
+          chunk_multiplier <- multiplier[current_samples]
+          
+          # Apply scaling to chunk (TMM already calculated)
+          chunk_scaled <- apply_scaling_only(
+            chunk_se,
+            my_assay, 
+            chunk_multiplier, 
+            value_scaled
+          )
+          
+          chunk_scaled
+        },
+        BPPARAM = bp_param
+      )
+    
+    # Combine chunks - use SummarizedExperiment::cbind for proper S4 dispatch
+    message("tidybulk says: Combining chunks")
+    .data <- do.call(SummarizedExperiment::cbind, args = chunk_results)
+
   }
-  
-  colnames(my_counts_scaled[[1]]) = colnames(input_assay)
-  
-  scaled_symbol <- rlang::sym(value_scaled)
-  scaled_quosure <- drop_enquo_env(rlang::new_quosure(scaled_symbol))
-  
-  # Add the assay
-  assays(.data, withDimnames=FALSE) =  assays(.data) |> c(my_counts_scaled)
-  
-  .data |>
-    
-    # Add methods
-    memorise_methods_used(c("edger", "tmm")) |>
-    
-    # Attach column internals
-    add_tt_columns(.abundance_scaled = !!scaled_quosure )
-  
-}
 
-#' Scale transcript abundance for HDF5-backed SummarizedExperiment
-#'
-#' @description A memory-efficient variant of `scale_abundance()` that chunks the
-#' `SummarizedExperiment` by sample and applies the base `scale_abundance()` subroutine to
-#' each partition. When no reference sample is supplied, the sample whose library size is
-#' closest to the mean library size is selected automatically. Each chunk includes that
-#' reference, the results are column-bound, and the scaled assay is appended to the original
-#' object. Processing is parallelized using BiocParallel; configure parallelization with
-#' `BiocParallel::register()` before calling this function.
-#'
-#' @inheritParams scale_abundance
-#' @param chunk_sample_size An integer indicating how many samples to process per partition before column-binding the scaled result. Default is `50`.
-#'
-#' @return A `SummarizedExperiment` object with an additional scaled assay.
-#' @export
-scale_abundance_h5 <- function(.data,
-                               abundance = SummarizedExperiment::assayNames(.data)[1],
-                               method = "TMM",
-                               reference_sample = NULL,
-                               suffix = "_scaled",
-                               chunk_sample_size = 50,
-                               ...) {
-  
-  my_assay <- abundance
-  
-
-  
-  value_scaled <- paste0(my_assay, suffix)
-  
-  chunk_sample_size <- as.integer(chunk_sample_size)
-  if (is.na(chunk_sample_size) || chunk_sample_size < 1) {
-    stop("tidybulk says: chunk_size must be a positive integer")
-  }
-  
-  sample_names <- colnames(.data)
-  sample_indices <- seq_along(sample_names)
-  sample_groups <- split(sample_names, ceiling(sample_indices / chunk_sample_size))
-  
-  # Check if BiocParallel is available, otherwise install
-  check_and_install_packages("BiocParallel")
-  
-  # Get the current BiocParallel backend
-  bp_param <- BiocParallel::bpparam()
-  
-  # Inform user about parallelization settings
-  if (is(bp_param, "SerialParam")) {
-    message("tidybulk says: Processing chunks serially. For parallel processing, configure BiocParallel with BiocParallel::register() before calling this function. For example: BiocParallel::register(BiocParallel::MulticoreParam(workers = 4, progressbar = TRUE))")
-  } else {
-    message(sprintf("tidybulk says: Processing %d chunks in parallel using %s with %d workers", 
-                    length(sample_groups), class(bp_param)[1], BiocParallel::bpnworkers(bp_param)))
-  }
-  
-  chunk_results <-
-    BiocParallel::bplapply(
-      sample_groups,
-      function(current_samples) {
-        chunk_samples <- unique(c(reference_sample, current_samples))
-        chunk_se <- .data[, chunk_samples, drop = FALSE]
-        
-
-
-            scale_abundance(
-              chunk_se,
-              abundance = my_assay,
-              method = method,
-              reference_sample = reference_sample,
-              suffix = suffix,
-              ...
-            )
-      },
-      BPPARAM = bp_param
-    )
-  
-  .data = do.call(cbind, args = chunk_results) 
-  .data |>
+    scaled_symbol <- rlang::sym(value_scaled)
+    scaled_quosure <- drop_enquo_env(rlang::new_quosure(scaled_symbol))
     
-    memorise_methods_used(c("edger", "tmm")) |>
-    
-    add_tt_columns(.abundance_scaled = !!(((function(x, v)	enquo(v))(x,!!as.symbol(value_scaled))) |> drop_enquo_env()) )
+   .data |>
+      memorise_methods_used(c("edger", "tmm")) |>
+      add_tt_columns(.abundance_scaled = !!scaled_quosure)
+  
 }
 
 #' scale_abundance
@@ -344,3 +299,32 @@ setMethod("scale_abundance",
 setMethod("scale_abundance",
           "RangedSummarizedExperiment",
           .scale_abundance_se)
+
+
+  # Core scaling function - applies pre-calculated multipliers to create scaled assay
+  apply_scaling_only <- function(data_obj, assay_name, multipliers, scaled_name) {
+    
+    # Get the assay data and apply scaling
+    chunk_assay <- assay(data_obj, assay_name)
+    is_delayed <- is(chunk_assay, "DelayedArray")
+    
+    if (is_delayed) {
+      # For DelayedArray, use sweep to create a delayed operation
+      check_and_install_packages("DelayedArray")
+      my_counts_scaled <- list(
+        DelayedArray::sweep(chunk_assay, 2, multipliers, "*")
+      ) |> setNames(scaled_name)
+    } else {
+      # For regular matrices, use matrix multiplication
+      my_counts_scaled <- list(
+        chunk_assay %*% diag(multipliers)
+      ) |> setNames(scaled_name)
+    }
+    
+    colnames(my_counts_scaled[[1]]) <- colnames(chunk_assay)
+    
+    # Add the scaled assay
+    assays(data_obj, withDimnames = FALSE) <- assays(data_obj) |> c(my_counts_scaled)
+    data_obj
+  }
+  
