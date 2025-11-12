@@ -9,11 +9,12 @@
 \usage{
 scale_abundance(
   .data,
-  abundance = assayNames(.data)[1],
+  abundance = SummarizedExperiment::assayNames(.data)[1],
   method = "TMM",
   reference_sample = NULL,
   .subset_for_scaling = NULL,
   suffix = "_scaled",
+  chunk_sample_size = Inf,
   reference_selection_function = NULL,
   ...,
   .abundance = NULL
@@ -21,11 +22,12 @@ scale_abundance(
 
 \S4method{scale_abundance}{SummarizedExperiment}(
   .data,
-  abundance = assayNames(.data)[1],
+  abundance = SummarizedExperiment::assayNames(.data)[1],
   method = "TMM",
   reference_sample = NULL,
   .subset_for_scaling = NULL,
   suffix = "_scaled",
+  chunk_sample_size = Inf,
   reference_selection_function = NULL,
   ...,
   .abundance = NULL
@@ -33,11 +35,12 @@ scale_abundance(
 
 \S4method{scale_abundance}{RangedSummarizedExperiment}(
   .data,
-  abundance = assayNames(.data)[1],
+  abundance = SummarizedExperiment::assayNames(.data)[1],
   method = "TMM",
   reference_sample = NULL,
   .subset_for_scaling = NULL,
   suffix = "_scaled",
+  chunk_sample_size = Inf,
   reference_selection_function = NULL,
   ...,
   .abundance = NULL
@@ -55,6 +58,8 @@ scale_abundance(
 \item{.subset_for_scaling}{A gene-wise quosure condition. This will be used to filter rows (features/genes) of the dataset. For example}
 
 \item{suffix}{A character string to append to the scaled abundance column name. Default is "_scaled".}
+
+\item{chunk_sample_size}{An integer indicating how many samples to process per chunk. Default is `Inf` (no chunking). For HDF5-backed data or large datasets, set to a finite value (e.g., 50) to enable memory-efficient chunked processing with BiocParallel parallelization.}
 
 \item{reference_selection_function}{DEPRECATED. please use reference_sample.}
 
