@@ -61,7 +61,6 @@
 #' @importFrom rlang enquo
 #' @importFrom dplyr filter
 #' @importFrom tidyr drop_na
-#' @importFrom magrittr not
 #' @importFrom stats as.formula
 #'
 #' @docType methods
@@ -145,7 +144,7 @@ setGeneric("identify_abundant", function(.data,
     stop("The parameter minimum_proportion must be between 0 and 1")
   
   # If column is present use this instead of doing more work
-  if(".abundant" %in% colnames(colData(.data))){
+  if(".abundant" %in% colnames(rowData(.data))){
     message("tidybulk says: the column .abundant already exists in colData. Nothing was done")
     return(.data)
   }
@@ -153,35 +152,28 @@ setGeneric("identify_abundant", function(.data,
   # Check if package is installed, otherwise install
   check_and_install_packages("edgeR")
 
-  # Get gene to exclude
-  # If minimum_count_per_million is provided, use it and ignore minimum_counts
+  # Get logical vector of abundant features (TRUE = keep/abundant) from filterByExpr.
+  # Use positional indexing: filterByExpr returns a vector in row order, so no rownames needed.
   if (!is.null(minimum_count_per_million)) {
-    gene_to_exclude =
+    keep =
       .data |>
       filterByExpr_SE(
         design = design,
         min.prop = minimum_proportion,
         CPM.Cutoff = minimum_count_per_million,
         assay_name = my_assay
-      ) |>
-      not() |>
-      which() |>
-      names()
+      )
   } else {
-    gene_to_exclude =
+    keep =
       .data |>
       filterByExpr_SE(
         min.count = minimum_counts,
         design = design,
         min.prop = minimum_proportion,
         assay_name = my_assay
-      ) |>
-      not() |>
-      which() |>
-      names()
+      )
   }
-  
-  rowData(.data)$.abundant = (rownames(rowData(.data)) %in% gene_to_exclude) |> not()
+  rowData(.data)$.abundant <- keep
   
   # Return
   .data
