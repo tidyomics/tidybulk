@@ -65,7 +65,7 @@
     \item Allow as_SummarizedExperiment with multiple columns identifiers for .sample and .feature
 }}
 
-\section{Changes in version 2.0.0, Bioconductor 3.19 Release}{
+\section{Changes in version 2.0.0, Bioconductor 3.22 Release}{
 \itemize{
     \item Major refactoring to improve code maintainability and performance. This included the removal of all tbl methods in favor of SummarizedExperiment-based approaches.
     \item Replace deprecated pipe operator \%>\% with native |> operator for improved readability
@@ -102,4 +102,10 @@
     \item Remove obsolete figures and streamline content
     \item Remove deprecated warnings and redundant messages
     \item Several bug fixes and optimizations
+}}
+
+\section{Changes in version 2.1.1, Bioconductor 3.23 Dev}{
+\itemize{
+    \item Maintenance release with minor bug fixes and performance improvements
+    \item Bump minor version number following creation of RELEASE_3_22 branch
 }}
