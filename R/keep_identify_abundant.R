@@ -61,6 +61,7 @@
 #' @importFrom rlang enquo
 #' @importFrom dplyr filter
 #' @importFrom tidyr drop_na
+#' @importFrom magrittr not
 #' @importFrom stats as.formula
 #'
 #' @docType methods
