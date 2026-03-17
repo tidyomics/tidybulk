@@ -161,4 +161,23 @@ test_that("identify_abundant and keep_abundant work with formula_design argument
     "Both formula_design and design provided; formula_design will be used."
   )
   expect_equal(sum(rowData(se_abundant_precedence)$.abundant), sum(rowData(se_abundant_10)$.abundant))
+})
+
+test_that("identify_abundant and keep_abundant work with NULL rownames", {
+  # Simulates get_pseudobulk() -> as(\"SummarizedExperiment\") where coercion drops feature rownames
+  set.seed(1)
+  mat <- matrix(rnbinom(100, mu = 10, size = 1), nrow = 10, ncol = 10)
+  se <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(counts = mat),
+    colData = data.frame(group = rep(c("A", "B"), 5))
+  )
+  rownames(se) <- NULL
+
+  res <- tidybulk::identify_abundant(se, minimum_counts = 5)
+  expect_true(".abundant" %in% colnames(SummarizedExperiment::rowData(res)))
+  expect_length(SummarizedExperiment::rowData(res)$.abundant, nrow(se))
+  expect_type(SummarizedExperiment::rowData(res)$.abundant, "logical")
+
+  res_keep <- tidybulk::keep_abundant(se, minimum_counts = 5)
+  expect_true(nrow(res_keep) <= nrow(se))
 }) 
