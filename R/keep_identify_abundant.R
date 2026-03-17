@@ -153,7 +153,7 @@ setGeneric("identify_abundant", function(.data,
   check_and_install_packages("edgeR")
 
   # Get logical vector of abundant features (TRUE = keep/abundant) from filterByExpr.
-  # Use positional indexing: filterByExpr returns a vector in row order, so no rownames needed.
+  # Use positional indexing: filterByExpr returns a vector in row order, no rownames needed.
   if (!is.null(minimum_count_per_million)) {
     keep =
       .data |>
