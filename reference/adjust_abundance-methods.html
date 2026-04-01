@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.2</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Adjust transcript abundance for unwanted variation</h1>
-    <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/master/R/adjust_abundance.R" class="external-link"><code>R/adjust_abundance.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/fix-ubuntu-actions/R/adjust_abundance.R" class="external-link"><code>R/adjust_abundance.R</code></a></small>
     <div class="hidden name"><code>adjust_abundance-methods.Rd</code></div>
     </div>
 
@@ -206,6 +206,9 @@ At the moment just an unwanted covariate is allowed at a time using Combat (DOI:
 <span class="r-in"><span><span class="fu"><a href="identify_abundant-methods.html">identify_abundant</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span><span class="fu">adjust_abundance</span><span class="op">(</span>  .factor_unwanted <span class="op">=</span> <span class="va">batch</span>, .factor_of_interest <span class="op">=</span>  <span class="va">condition</span>, method<span class="op">=</span><span class="st">"combat_seq"</span>  <span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>All samples appear to belong to the same group.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'bit64':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   method          from </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   print.bitstring tools</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Found 2 batches</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Using null model in ComBat-seq.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Adjusting for 1 covariate(s) or covariate level(s)</span>

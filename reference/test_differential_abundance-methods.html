@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.2</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform differential transcription testing using edgeR quasi-likelihood (QLT), edgeR likelihood-ratio (LR), limma-voom, limma-voom-with-quality-weights or DESeq2</h1>
-    <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/master/R/test_differential_abundance.R" class="external-link"><code>R/test_differential_abundance.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/fix-ubuntu-actions/R/test_differential_abundance.R" class="external-link"><code>R/test_differential_abundance.R</code></a></small>
     <div class="hidden name"><code>test_differential_abundance-methods.Rd</code></div>
     </div>
 
@@ -277,6 +277,7 @@ design =
 <span class="r-msg co"><span class="r-pr">#&gt;</span> =====================================</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This message is displayed once per session.</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: The design column names are "(Intercept), conditionuntrt"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> calcNormFactors has been renamed to normLibSizes</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the DE object do `metadata(.)$tidybulk$edgeR_quasi_likelihood_object`</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the raw results (fitted GLM) do `metadata(.)$tidybulk$edgeR_quasi_likelihood_fit`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
@@ -295,6 +296,7 @@ design =
 <span class="r-in"><span>  <span class="fu">test_differential_abundance</span><span class="op">(</span> <span class="op">~</span> <span class="va">condition</span>, method <span class="op">=</span> <span class="st">"edgeR_quasi_likelihood"</span> <span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>All samples appear to belong to the same group.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: The design column names are "(Intercept), conditionuntrt"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> calcNormFactors has been renamed to normLibSizes</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the DE object do `metadata(.)$tidybulk$edgeR_quasi_likelihood_object`</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the raw results (fitted GLM) do `metadata(.)$tidybulk$edgeR_quasi_likelihood_fit`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
@@ -317,6 +319,7 @@ design =
 <span class="r-in"><span>    method <span class="op">=</span> <span class="st">"edgeR_quasi_likelihood"</span></span></span>
 <span class="r-in"><span> <span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: The design column names are "conditiontrt, conditionuntrt"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> calcNormFactors has been renamed to normLibSizes</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the DE object do `metadata(.)$tidybulk$edgeR_quasi_likelihood_object`</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the raw results (fitted GLM) do `metadata(.)$tidybulk$edgeR_quasi_likelihood_fit`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
@@ -380,9 +383,23 @@ design =
 <span class="r-in"><span>    <span class="op">~</span> <span class="va">condition</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">condition</span> <span class="op">|</span> <span class="va">cell</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    method <span class="op">=</span> <span class="st">"glmmseq_lme4"</span>, cores <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'lme4':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   method           from</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   na.action.merMod car </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>package version mismatch: </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> glmmTMB was built with TMB package version 1.9.19</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> Current TMB package version is 1.9.21</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> Please re-install glmmTMB from source or restore original ‘TMB’ package (see '?reinstalling' for more information)</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the ‘nobars’ function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainer to do so.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once per session.</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> calcNormFactors has been renamed to normLibSizes</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the ‘findbars’ function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainer to do so.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once per session.</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the ‘subbars’ function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainer to do so.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once per session.</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> n = 8 samples, 4 individuals</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Time difference of 36.0902 secs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Time difference of 31.28685 secs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the DE object do `metadata(.)$tidybulk$glmmseq_lme4_object`</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the raw results (fitted GLM) do `metadata(.)$tidybulk$glmmseq_lme4_fit`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>

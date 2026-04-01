@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.2</span>
       </span>
     </div>
 
@@ -82,9 +82,9 @@ interfaces</h1>
                         <h4 data-toc-skip class="author">Stefano
 Mangiola</h4>
             
-            <h4 data-toc-skip class="date">2025-11-12</h4>
+            <h4 data-toc-skip class="date">2026-04-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/master/vignettes/comparison_coding.Rmd" class="external-link"><code>vignettes/comparison_coding.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/fix-ubuntu-actions/vignettes/comparison_coding.Rmd" class="external-link"><code>vignettes/comparison_coding.Rmd</code></a></small>
       <div class="hidden name"><code>comparison_coding.Rmd</code></div>
 
     </div>
@@ -185,13 +185,16 @@ analysis, and to deconvolve the cellularity.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">org.Hs.eg.db</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: AnnotationDbi</span></span></code></pre>
+<pre><code><span><span class="co">## Registered S3 method overwritten by 'bit64':</span></span>
+<span><span class="co">##   method          from </span></span>
+<span><span class="co">##   print.bitstring tools</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Attaching package: 'AnnotationDbi'</span></span></code></pre>
 <pre><code><span><span class="co">## The following object is masked from 'package:dplyr':</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##     select</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/AnnotationDbi" class="external-link">AnnotationDbi</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Add gene symbol and entrez</span></span>
@@ -205,7 +208,7 @@ analysis, and to deconvolve the cellularity.</p>
 <span>                                      multiVals <span class="op">=</span> <span class="st">"first"</span></span>
 <span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 <pre><code><span><span class="co">## 'select()' returned 1:many mapping between keys and columns</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach</a></span><span class="op">(</span><span class="st">"package:org.Hs.eg.db"</span>, unload <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach</a></span><span class="op">(</span><span class="st">"package:AnnotationDbi"</span>, unload <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -224,7 +227,7 @@ traditional methods side by side.</p>
 <code>SummarizedExperiment</code> object containing RNA-seq data from an
 experiment studying the effect of dexamethasone treatment on airway
 smooth muscle cells:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway</span></span></code></pre></div>
 <pre><code><span><span class="co">## class: RangedSummarizedExperiment </span></span>
 <span><span class="co">## dim: 63677 8 </span></span>
@@ -240,7 +243,7 @@ smooth muscle cells:</p>
 tools while maintaining its <code>SummarizedExperiment</code> nature.
 This is useful because it allows us to use the <code>tidyverse</code>
 tools to manipulate the data.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">airway</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "RangedSummarizedExperiment"</span></span>
 <span><span class="co">## attr(,"package")</span></span>
@@ -250,7 +253,7 @@ tools to manipulate the data.</p>
 </h4>
 <p>Before analysis, we need to ensure our variables are in the correct
 format:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert dex to factor for proper differential expression analysis</span></span>
 <span><span class="va">airway</span> <span class="op">=</span> <span class="va">airway</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>dex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">dex</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -274,13 +277,13 @@ gene-level summarization.</p>
 </blockquote>
 <div class="column-left">
 <p>TidyTranscriptomics</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">rowData</a></span><span class="op">(</span><span class="va">airway</span><span class="op">)</span><span class="op">$</span><span class="va">gene_name</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/row_colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">airway</span><span class="op">)</span></span>
 <span><span class="va">airway.aggr</span> <span class="op">=</span> <span class="va">airway</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/aggregate_duplicates-methods.html">aggregate_duplicates</a></span><span class="op">(</span>.transcript <span class="op">=</span> <span class="va">gene_name</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">temp</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    symbol <span class="op">=</span> <span class="va">dge_list</span><span class="op">$</span><span class="va">genes</span><span class="op">$</span><span class="va">symbol</span>,</span>
 <span>    <span class="va">dge_list</span><span class="op">$</span><span class="va">counts</span></span>
@@ -313,21 +316,22 @@ samples with different library sizes.</p>
 </blockquote>
 <div class="column-left">
 <p>TidyTranscriptomics</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm</span> <span class="op">=</span> <span class="va">airway</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/identify_abundant-methods.html">identify_abundant</a></span><span class="op">(</span>factor_of_interest <span class="op">=</span> <span class="va">dex</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/scale_abundance-methods.html">scale_abundance</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: The `factor_of_interest` argument of `identify_abundant()` is deprecated as of</span></span>
 <span><span class="co">## tidybulk 2.0.0.</span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use the `formula_design` argument instead.</span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The argument 'factor_of_interest' is deprecated and will be removed in a</span></span>
 <span><span class="co">##   future release. Please use the 'design' or 'formula_design' argument instead.</span></span>
-<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once per session.</span></span></span>
 <span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
 <span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: the sample with largest library size SRR1039517 was chosen as reference for scaling</span></span></code></pre>
+<pre><code><span><span class="co">## calcNormFactors has been renamed to normLibSizes</span></span></code></pre>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioinf.wehi.edu.au/edgeR/" class="external-link">edgeR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dgList</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/edgeR/man/DGEList.html" class="external-link">DGEList</a></span><span class="op">(</span>count_m<span class="op">=</span><span class="va">x</span>,group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span>
@@ -343,13 +347,13 @@ samples with different library sizes.</p>
 <p>We can easily plot the scaled density to check the scaling outcome.
 On the x axis we have the log scaled counts, on the y axes we have the
 density, data is grouped by sample and coloured by treatment.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">counts_scaled</span> <span class="op">+</span> <span class="fl">1</span>, group<span class="op">=</span><span class="va">.sample</span>, color<span class="op">=</span><span class="va">`dex`</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_log10</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="va">my_theme</span></span></code></pre></div>
-<p><img src="comparison_coding_files/figure-html/plot_normalise-1.png" class="r-plt" width="960"></p>
+<p><img src="comparison_coding_files/figure-html/plot_normalise-1.png" class="r-plt" alt="" width="960"></p>
 </div>
 <div class="section level3">
 <h3 id="step-3-filter-variable-transcripts">Step 3: Filter Variable Transcripts<a class="anchor" aria-label="anchor" href="#step-3-filter-variable-transcripts"></a>
@@ -362,13 +366,13 @@ on the most informative features.</p>
 </blockquote>
 <div class="column-left">
 <p>TidyTranscriptomics</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.variable</span> <span class="op">=</span> <span class="va">airway.norm</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/keep_variable-methods.html">keep_variable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Getting the 500 most variable genes</span></span></code></pre>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioinf.wehi.edu.au/edgeR/" class="external-link">edgeR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">x</span> <span class="op">=</span> <span class="va">norm_counts.table</span></span>
@@ -408,7 +412,7 @@ identify patterns.</p>
 10.1093/bioinformatics/btp616)</p>
 <div class="column-left">
 <p>TidyTranscriptomics</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.MDS</span> <span class="op">=</span></span>
 <span>  <span class="va">airway.norm</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/reduce_dimensions-methods.html">reduce_dimensions</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"MDS"</span>, .dims <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
@@ -418,7 +422,7 @@ identify patterns.</p>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioinf.wehi.edu.au/limma/" class="external-link">limma</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">count_m_log</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">count_m</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -438,7 +442,7 @@ identify patterns.</p>
 </div>
 <p>On the x and y axes axis we have the reduced dimensions 1 to 3, data
 is coloured by treatment.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.MDS</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/pivot_sample-methods.html">pivot_sample</a></span><span class="op">(</span><span class="op">)</span>  <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">contains</span><span class="op">(</span><span class="st">"Dim"</span><span class="op">)</span>, <span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">airway.norm.MDS</span> <span class="op">|&gt;</span></span>
@@ -447,14 +451,14 @@ is coloured by treatment.</p>
 <p><strong>PCA</strong></p>
 <div class="column-left">
 <p>TidyTranscriptomics</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.PCA</span> <span class="op">=</span></span>
 <span>  <span class="va">airway.norm</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/reduce_dimensions-methods.html">reduce_dimensions</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"PCA"</span>, .dims <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">count_m_log</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">count_m</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">pc</span> <span class="op">=</span> <span class="va">count_m_log</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">variance</span> <span class="op">=</span> <span class="va">pc</span><span class="op">$</span><span class="va">sdev</span><span class="op">^</span><span class="fl">2</span></span>
@@ -469,7 +473,7 @@ is coloured by treatment.</p>
 </div>
 <p>On the x and y axes axis we have the reduced dimensions 1 to 3, data
 is coloured by treatment.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.PCA</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/pivot_sample-methods.html">pivot_sample</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">contains</span><span class="op">(</span><span class="st">"PC"</span><span class="op">)</span>, <span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">airway.norm.PCA</span> <span class="op">|&gt;</span></span>
@@ -494,14 +498,14 @@ Dimension rotation can help align data with biological axes of interest.
 <p>TidyTranscriptomics</p>
 </div>
 </blockquote>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.MDS.rotated</span> <span class="op">=</span></span>
 <span>  <span class="va">airway.norm.MDS</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/rotate_dimensions-methods.html">rotate_dimensions</a></span><span class="op">(</span><span class="va">`Dim1`</span>, <span class="va">`Dim2`</span>, rotation_degrees <span class="op">=</span> <span class="fl">45</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rotation</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">m</span>, <span class="va">d</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">r</span> <span class="op">=</span> <span class="va">d</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">/</span> <span class="fl">180</span></span>
 <span>    <span class="op">(</span><span class="op">(</span><span class="fu">bind_rows</span><span class="op">(</span></span>
@@ -520,22 +524,22 @@ Dimension rotation can help align data with biological axes of interest.
 </div>
 <p><strong>Original</strong> On the x and y axes axis we have the first
 two reduced dimensions, data is coloured by treatment.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.MDS.rotated</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">`Dim1`</span>, y<span class="op">=</span><span class="va">`Dim2`</span>, color<span class="op">=</span><span class="va">`dex`</span> <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">my_theme</span></span></code></pre></div>
-<p><img src="comparison_coding_files/figure-html/plot_rotate_1-1.png" class="r-plt" width="960"></p>
+<p><img src="comparison_coding_files/figure-html/plot_rotate_1-1.png" class="r-plt" alt="" width="960"></p>
 <p><strong>Rotated</strong> On the x and y axes axis we have the first
 two reduced dimensions rotated of 45 degrees, data is coloured by
 treatment.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.MDS.rotated</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/pivot_sample-methods.html">pivot_sample</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">`Dim1_rotated_45`</span>, y<span class="op">=</span><span class="va">`Dim2_rotated_45`</span>, color<span class="op">=</span><span class="va">`dex`</span> <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">my_theme</span></span></code></pre></div>
-<p><img src="comparison_coding_files/figure-html/plot_rotate_2-1.png" class="r-plt" width="960"></p>
+<p><img src="comparison_coding_files/figure-html/plot_rotate_2-1.png" class="r-plt" alt="" width="960"></p>
 </div>
 <div class="section level3">
 <h3 id="step-8-test-differential-abundance">Step 8: Test Differential Abundance<a class="anchor" aria-label="anchor" href="#step-8-test-differential-abundance"></a>
@@ -555,7 +559,7 @@ different between conditions.
 <p>TidyTranscriptomics</p>
 </div>
 </blockquote>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.de</span> <span class="op">=</span></span>
 <span>    <span class="va">airway</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/test_differential_expression-methods.html">test_differential_expression</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">dex</span>, method <span class="op">=</span> <span class="st">"edgeR_quasi_likelihood"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -564,7 +568,7 @@ different between conditions.
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioinf.wehi.edu.au/edgeR/" class="external-link">edgeR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dgList</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/edgeR/man/DGEList.html" class="external-link">DGEList</a></span><span class="op">(</span>counts<span class="op">=</span><span class="va">counts_m</span>,group<span class="op">=</span><span class="va">group</span><span class="op">)</span></span>
@@ -583,7 +587,7 @@ different between conditions.
 <p>The functon <code>test_differential_expression</code> operated with
 contrasts too. The constrasts hve the name of the design matrix
 (generally <name_column_covariate><values_of_covariate>)</values_of_covariate></name_column_covariate></p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.de</span> <span class="op">=</span></span>
 <span>    <span class="va">airway</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/identify_abundant-methods.html">identify_abundant</a></span><span class="op">(</span>factor_of_interest <span class="op">=</span> <span class="va">dex</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -612,13 +616,13 @@ that could confound biological signals.</p>
 </blockquote>
 <div class="column-left">
 <p>TidyTranscriptomics</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.adj</span> <span class="op">=</span></span>
 <span>    <span class="va">airway.norm</span>     <span class="op">|&gt;</span> <span class="fu"><a href="../reference/adjust_abundance-methods.html">adjust_abundance</a></span><span class="op">(</span>    .factor_unwanted <span class="op">=</span> <span class="va">cell</span>, .factor_of_interest <span class="op">=</span> <span class="va">dex</span>, method<span class="op">=</span><span class="st">"combat"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">sva</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">count_m_log</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">count_m</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -660,7 +664,7 @@ the reference data. The airway dataset uses Ensembl IDs, so this example
 is commented out.</em></p>
 <div class="column-left">
 <p>TidyTranscriptomics</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Requires gene symbols that match reference data</span></span>
 <span><span class="co"># airway.cibersort =</span></span>
 <span><span class="co">#   airway |&gt;</span></span>
@@ -669,7 +673,7 @@ is commented out.</em></p>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"CIBERSORT.R"</span><span class="op">)</span></span>
 <span><span class="va">count_m</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span><span class="st">"mixture_file.txt"</span><span class="op">)</span></span>
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">CIBERSORT</span><span class="op">(</span></span>
@@ -687,7 +691,7 @@ is commented out.</em></p>
 </div>
 <p><em>Note: The plotting code is commented out as the deconvolution
 step is not executed.</em></p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># airway.cibersort |&gt;</span></span>
 <span><span class="co">#   pivot_longer(</span></span>
 <span><span class="co">#       names_to= "Cell_type_inferred", </span></span>
@@ -715,14 +719,14 @@ profiles.</p>
 </blockquote>
 <div class="column-left">
 <p>TidyTranscriptomics</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.cluster</span> <span class="op">=</span></span>
 <span>    <span class="va">airway.norm</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/cluster_elements-methods.html">cluster_elements</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"kmeans"</span>, centers <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">stats</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">count_m_log</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">count_m</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -752,17 +756,18 @@ analysis.</p>
 </blockquote>
 <div class="column-left">
 <p>TidyTranscriptomics</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.de</span> <span class="op">=</span></span>
 <span>    <span class="va">airway.norm</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/test_differential_abundance-methods.html">test_differential_abundance</a></span><span class="op">(</span><span class="op">~</span> <span class="va">dex</span>, method<span class="op">=</span><span class="st">"edgeR_quasi_likelihood"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## tidybulk says: The design column names are "(Intercept), dexuntrt"</span></span></code></pre>
+<pre><code><span><span class="co">## calcNormFactors has been renamed to normLibSizes</span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: to access the DE object do `metadata(.)$tidybulk$edgeR_quasi_likelihood_object`</span></span>
 <span><span class="co">## tidybulk says: to access the raw results (fitted GLM) do `metadata(.)$tidybulk$edgeR_quasi_likelihood_fit`</span></span></code></pre>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioinf.wehi.edu.au/edgeR/" class="external-link">edgeR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">count_m_log</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">count_m</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -790,11 +795,11 @@ transcriptomic data analysis with seamless integration of
 SummarizedExperiment objects and tidyverse principles. It streamlines
 the entire workflow from raw data to biological insights while
 maintaining compatibility with standard Bioconductor practices.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R Under development (unstable) (2025-11-06 r88990)</span></span>
+<pre><code><span><span class="co">## R Under development (unstable) (2026-03-28 r89738)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">## Running under: Ubuntu 24.04.3 LTS</span></span>
+<span><span class="co">## Running under: Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
 <span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -817,47 +822,48 @@ maintaining compatibility with standard Bioconductor practices.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
 <span><span class="co">##  [1] airway_1.31.0                   tidySummarizedExperiment_1.21.0</span></span>
-<span><span class="co">##  [3] tidybulk_2.1.0                  ttservice_0.5.3                </span></span>
-<span><span class="co">##  [5] SummarizedExperiment_1.41.0     Biobase_2.71.0                 </span></span>
-<span><span class="co">##  [7] GenomicRanges_1.63.0            Seqinfo_1.1.0                  </span></span>
+<span><span class="co">##  [3] tidybulk_2.1.2                  ttservice_0.5.3                </span></span>
+<span><span class="co">##  [5] SummarizedExperiment_1.41.1     Biobase_2.71.0                 </span></span>
+<span><span class="co">##  [7] GenomicRanges_1.63.1            Seqinfo_1.1.0                  </span></span>
 <span><span class="co">##  [9] IRanges_2.45.0                  S4Vectors_0.49.0               </span></span>
 <span><span class="co">## [11] BiocGenerics_0.57.0             generics_0.1.4                 </span></span>
 <span><span class="co">## [13] MatrixGenerics_1.23.0           matrixStats_1.5.0              </span></span>
-<span><span class="co">## [15] ggrepel_0.9.6                   ggplot2_4.0.0                  </span></span>
+<span><span class="co">## [15] ggrepel_0.9.8                   ggplot2_4.0.2                  </span></span>
 <span><span class="co">## [17] forcats_1.0.1                   magrittr_2.0.4                 </span></span>
-<span><span class="co">## [19] purrr_1.2.0                     tibble_3.3.0                   </span></span>
-<span><span class="co">## [21] tidyr_1.3.1                     dplyr_1.1.4                    </span></span>
-<span><span class="co">## [23] knitr_1.50                      BiocStyle_2.39.0               </span></span>
+<span><span class="co">## [19] purrr_1.2.1                     tibble_3.3.1                   </span></span>
+<span><span class="co">## [21] tidyr_1.3.2                     dplyr_1.2.0                    </span></span>
+<span><span class="co">## [23] knitr_1.51                      BiocStyle_2.39.0               </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] DBI_1.2.3            rlang_1.1.6          compiler_4.6.0      </span></span>
-<span><span class="co">##  [4] RSQLite_2.4.4        mgcv_1.9-4           png_0.1-8           </span></span>
-<span><span class="co">##  [7] systemfonts_1.3.1    vctrs_0.6.5          sva_3.59.0          </span></span>
-<span><span class="co">## [10] stringr_1.6.0        pkgconfig_2.0.3      crayon_1.5.3        </span></span>
-<span><span class="co">## [13] fastmap_1.2.0        XVector_0.51.0       ellipsis_0.3.2      </span></span>
-<span><span class="co">## [16] labeling_0.4.3       utf8_1.2.6           rmarkdown_2.30      </span></span>
-<span><span class="co">## [19] ragg_1.5.0           bit_4.6.0            xfun_0.54           </span></span>
-<span><span class="co">## [22] cachem_1.1.0         jsonlite_2.0.0       blob_1.2.4          </span></span>
-<span><span class="co">## [25] DelayedArray_0.37.0  BiocParallel_1.45.0  parallel_4.6.0      </span></span>
-<span><span class="co">## [28] R6_2.6.1             bslib_0.9.0          stringi_1.8.7       </span></span>
-<span><span class="co">## [31] RColorBrewer_1.1-3   limma_3.67.0         genefilter_1.93.0   </span></span>
-<span><span class="co">## [34] jquerylib_0.1.4      Rcpp_1.1.0           bookdown_0.45       </span></span>
-<span><span class="co">## [37] splines_4.6.0        Matrix_1.7-4         tidyselect_1.2.1    </span></span>
-<span><span class="co">## [40] abind_1.4-8          yaml_2.3.10          codetools_0.2-20    </span></span>
-<span><span class="co">## [43] lattice_0.22-7       withr_3.0.2          KEGGREST_1.51.0     </span></span>
-<span><span class="co">## [46] S7_0.2.0             evaluate_1.0.5       survival_3.8-3      </span></span>
-<span><span class="co">## [49] desc_1.4.3           Biostrings_2.79.2    pillar_1.11.1       </span></span>
-<span><span class="co">## [52] BiocManager_1.30.26  plotly_4.11.0        scales_1.4.0        </span></span>
-<span><span class="co">## [55] xtable_1.8-4         glue_1.8.0           lazyeval_0.2.2      </span></span>
-<span><span class="co">## [58] tools_4.6.0          data.table_1.17.8    annotate_1.89.0     </span></span>
-<span><span class="co">## [61] locfit_1.5-9.12      fs_1.6.6             XML_3.99-0.20       </span></span>
-<span><span class="co">## [64] grid_4.6.0           AnnotationDbi_1.73.0 edgeR_4.9.0         </span></span>
-<span><span class="co">## [67] nlme_3.1-168         cli_3.6.5            textshaping_1.0.4   </span></span>
-<span><span class="co">## [70] S4Arrays_1.11.0      viridisLite_0.4.2    gtable_0.3.6        </span></span>
-<span><span class="co">## [73] sass_0.4.10          digest_0.6.37        SparseArray_1.11.1  </span></span>
-<span><span class="co">## [76] htmlwidgets_1.6.4    farver_2.1.2         memoise_2.0.1       </span></span>
-<span><span class="co">## [79] htmltools_0.5.8.1    pkgdown_2.2.0        lifecycle_1.0.4     </span></span>
-<span><span class="co">## [82] httr_1.4.7           statmod_1.5.1        bit64_4.6.0-1</span></span></code></pre>
+<span><span class="co">##  [1] DBI_1.3.0            rlang_1.1.7          otel_0.2.0          </span></span>
+<span><span class="co">##  [4] compiler_4.7.0       RSQLite_2.4.6        mgcv_1.9-4          </span></span>
+<span><span class="co">##  [7] png_0.1-9            systemfonts_1.3.2    vctrs_0.7.2         </span></span>
+<span><span class="co">## [10] sva_3.59.0           stringr_1.6.0        pkgconfig_2.0.3     </span></span>
+<span><span class="co">## [13] crayon_1.5.3         fastmap_1.2.0        XVector_0.51.0      </span></span>
+<span><span class="co">## [16] ellipsis_0.3.2       labeling_0.4.3       utf8_1.2.6          </span></span>
+<span><span class="co">## [19] rmarkdown_2.31       ragg_1.5.2           bit_4.6.0           </span></span>
+<span><span class="co">## [22] xfun_0.57            cachem_1.1.0         jsonlite_2.0.0      </span></span>
+<span><span class="co">## [25] blob_1.3.0           DelayedArray_0.37.0  BiocParallel_1.45.0 </span></span>
+<span><span class="co">## [28] parallel_4.7.0       R6_2.6.1             bslib_0.10.0        </span></span>
+<span><span class="co">## [31] stringi_1.8.7        RColorBrewer_1.1-3   limma_3.67.0        </span></span>
+<span><span class="co">## [34] genefilter_1.93.0    jquerylib_0.1.4      Rcpp_1.1.1          </span></span>
+<span><span class="co">## [37] bookdown_0.46        splines_4.7.0        Matrix_1.7-5        </span></span>
+<span><span class="co">## [40] tidyselect_1.2.1     abind_1.4-8          yaml_2.3.12         </span></span>
+<span><span class="co">## [43] codetools_0.2-20     lattice_0.22-9       withr_3.0.2         </span></span>
+<span><span class="co">## [46] KEGGREST_1.51.1      S7_0.2.1             evaluate_1.0.5      </span></span>
+<span><span class="co">## [49] survival_3.8-6       desc_1.4.3           Biostrings_2.79.5   </span></span>
+<span><span class="co">## [52] pillar_1.11.1        BiocManager_1.30.27  plotly_4.12.0       </span></span>
+<span><span class="co">## [55] scales_1.4.0         xtable_1.8-8         glue_1.8.0          </span></span>
+<span><span class="co">## [58] lazyeval_0.2.2       tools_4.7.0          data.table_1.18.2.1 </span></span>
+<span><span class="co">## [61] annotate_1.89.0      locfit_1.5-9.12      XML_3.99-0.23       </span></span>
+<span><span class="co">## [64] fs_2.0.1             grid_4.7.0           AnnotationDbi_1.73.0</span></span>
+<span><span class="co">## [67] edgeR_4.9.4          nlme_3.1-169         cli_3.6.5           </span></span>
+<span><span class="co">## [70] textshaping_1.0.5    S4Arrays_1.11.1      viridisLite_0.4.3   </span></span>
+<span><span class="co">## [73] gtable_0.3.6         sass_0.4.10          digest_0.6.39       </span></span>
+<span><span class="co">## [76] SparseArray_1.11.12  htmlwidgets_1.6.4    farver_2.1.2        </span></span>
+<span><span class="co">## [79] memoise_2.0.1        htmltools_0.5.9      pkgdown_2.2.0       </span></span>
+<span><span class="co">## [82] lifecycle_1.0.5      httr_1.4.8           statmod_1.5.1       </span></span>
+<span><span class="co">## [85] bit64_4.6.0-1</span></span></code></pre>
 </div>
 </div>
   </div>
