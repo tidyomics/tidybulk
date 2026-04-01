@@ -40,6 +40,7 @@ jobs:
     steps:
     - uses: neurogenomics/rworkflows@master
       with:
+        run_telemetry: ${{ matrix.config.os != 'ubuntu-latest' }}
         run_bioccheck: ${{ false }}
         run_rcmdcheck: ${{ true }}
         as_cran: ${{ true }}

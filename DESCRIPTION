@@ -67,6 +67,7 @@ Suggests:
     pasilla,
     ggrepel,
     devtools,
+    fastmatch,
     functional,
     survminer,
     tidySummarizedExperiment,
