@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.3</span>
       </span>
     </div>
 
@@ -82,9 +82,9 @@ interfaces</h1>
                         <h4 data-toc-skip class="author">Stefano
 Mangiola</h4>
             
-            <h4 data-toc-skip class="date">2026-04-01</h4>
+            <h4 data-toc-skip class="date">2026-04-02</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/master/vignettes/comparison_coding.Rmd" class="external-link"><code>vignettes/comparison_coding.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/force_abundance_column_to_reduce_dimensions/vignettes/comparison_coding.Rmd" class="external-link"><code>vignettes/comparison_coding.Rmd</code></a></small>
       <div class="hidden name"><code>comparison_coding.Rmd</code></div>
 
     </div>
@@ -399,11 +399,10 @@ on the most informative features.</p>
 <h3 id="step-4-reduce-dimensions">Step 4: Reduce Dimensions<a class="anchor" aria-label="anchor" href="#step-4-reduce-dimensions"></a>
 </h3>
 <p>We may want to reduce the dimensions of our data, for example using
-PCA or MDS algorithms. <code>reduce_dimensions</code> takes a tibble,
-column names (as symbols; for <code>sample</code>,
-<code>transcript</code> and <code>count</code>) and a method (e.g., MDS
-or PCA) as arguments and returns a tibble with additional columns for
-the reduced dimensions.</p>
+PCA or MDS algorithms. <code>reduce_dimensions</code> takes a
+<code>SummarizedExperiment</code>, the assay name via the character
+argument <code>assay</code>, and a method (e.g., MDS or PCA), then adds
+the reduced dimensions to the object metadata.</p>
 <blockquote>
 <p>Dimensionality reduction helps visualize high-dimensional data and
 identify patterns.</p>
@@ -415,7 +414,7 @@ identify patterns.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.MDS</span> <span class="op">=</span></span>
 <span>  <span class="va">airway.norm</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/reduce_dimensions-methods.html">reduce_dimensions</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"MDS"</span>, .dims <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/reduce_dimensions-methods.html">reduce_dimensions</a></span><span class="op">(</span>assay <span class="op">=</span> <span class="st">"counts_scaled"</span>, method<span class="op">=</span><span class="st">"MDS"</span>, .dims <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Getting the 500 most variable genes</span></span></code></pre>
 <pre><code><span><span class="co">## [1] "MDS result_df colnames: sample, 1, 2"</span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: to access the raw results do `metadata(.)$tidybulk$MDS`</span></span></code></pre>
@@ -454,7 +453,7 @@ is coloured by treatment.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway.norm.PCA</span> <span class="op">=</span></span>
 <span>  <span class="va">airway.norm</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/reduce_dimensions-methods.html">reduce_dimensions</a></span><span class="op">(</span>method<span class="op">=</span><span class="st">"PCA"</span>, .dims <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/reduce_dimensions-methods.html">reduce_dimensions</a></span><span class="op">(</span>assay <span class="op">=</span> <span class="st">"counts_scaled"</span>, method<span class="op">=</span><span class="st">"PCA"</span>, .dims <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="column-right">
 <p>Standard procedure (comparative purpose)</p>
@@ -822,7 +821,7 @@ maintaining compatibility with standard Bioconductor practices.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
 <span><span class="co">##  [1] airway_1.31.0                   tidySummarizedExperiment_1.21.0</span></span>
-<span><span class="co">##  [3] tidybulk_2.1.2                  ttservice_0.5.3                </span></span>
+<span><span class="co">##  [3] tidybulk_2.1.3                  ttservice_0.5.3                </span></span>
 <span><span class="co">##  [5] SummarizedExperiment_1.41.1     Biobase_2.71.0                 </span></span>
 <span><span class="co">##  [7] GenomicRanges_1.63.1            Seqinfo_1.1.0                  </span></span>
 <span><span class="co">##  [9] IRanges_2.45.0                  S4Vectors_0.49.0               </span></span>
@@ -843,7 +842,7 @@ maintaining compatibility with standard Bioconductor practices.</p>
 <span><span class="co">## [16] ellipsis_0.3.2       labeling_0.4.3       utf8_1.2.6          </span></span>
 <span><span class="co">## [19] rmarkdown_2.31       ragg_1.5.2           bit_4.6.0           </span></span>
 <span><span class="co">## [22] xfun_0.57            cachem_1.1.0         jsonlite_2.0.0      </span></span>
-<span><span class="co">## [25] blob_1.3.0           DelayedArray_0.37.0  BiocParallel_1.45.0 </span></span>
+<span><span class="co">## [25] blob_1.3.0           DelayedArray_0.37.1  BiocParallel_1.45.0 </span></span>
 <span><span class="co">## [28] parallel_4.7.0       R6_2.6.1             bslib_0.10.0        </span></span>
 <span><span class="co">## [31] stringi_1.8.7        RColorBrewer_1.1-3   limma_3.67.0        </span></span>
 <span><span class="co">## [34] genefilter_1.93.0    jquerylib_0.1.4      Rcpp_1.1.1          </span></span>
