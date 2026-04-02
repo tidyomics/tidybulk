@@ -9,7 +9,7 @@
 \usage{
 reduce_dimensions(
   .data,
-  .abundance,
+  assay,
   method,
   .dims = 2,
   top = 500,
@@ -22,7 +22,7 @@ reduce_dimensions(
 
 \S4method{reduce_dimensions}{SummarizedExperiment}(
   .data,
-  .abundance,
+  assay,
   method,
   .dims = 2,
   top = 500,
@@ -35,7 +35,7 @@ reduce_dimensions(
 
 \S4method{reduce_dimensions}{RangedSummarizedExperiment}(
   .data,
-  .abundance,
+  assay,
   method,
   .dims = 2,
   top = 500,
@@ -49,7 +49,7 @@ reduce_dimensions(
 \arguments{
 \item{.data}{A `SummarizedExperiment`}
 
-\item{.abundance}{The name of the assay to use for dimension reduction. This argument must be explicitly specified.}
+\item{assay}{Character string: the name of the assay to use for dimension reduction (must match `assayNames(.data)`). This argument must be explicitly specified so that the choice of abundance matrix is deliberate.}
 
 \item{method}{A character string. The dimension reduction algorithm to use (PCA, MDS, tSNE).}
 
@@ -93,22 +93,7 @@ limma::plotMDS(ndim = .dims, plot = FALSE, top = top)
 Underlying method for tSNE:
 Rtsne::Rtsne(data, ...)
 
-Underlying method for UMAP:
-
- df_source =
-.data |>
-
-  # Filter NA symbol
-  filter(!!.feature |> is.na() |> not()) |>
-
-  # Prepare data frame
-  distinct(!!.feature,!!.element,!!.abundance) |>
-
-  # Filter most variable genes
-  keep_variable_transcripts(top) |>
-  reduce_dimensions(.abundance = counts, method="PCA",  .dims = calculate_for_pca_dimensions ) |>
-  as_matrix(rownames = quo_name(.element)) |>
-  uwot::tumap(...)
+Underlying method for UMAP: variable features from the chosen \code{assay} are optionally PCA-reduced, then \code{uwot::tumap()} is applied to the sample coordinates matrix.
 }
 \examples{
 ## Load airway dataset for examples
@@ -125,13 +110,13 @@ Underlying method for UMAP:
 counts.MDS =
  airway |>
  identify_abundant() |>
- reduce_dimensions(.abundance = counts, method="MDS", .dims = 3)
+ reduce_dimensions(assay = "counts", method="MDS", .dims = 3)
 
 
 counts.PCA =
  airway |>
  identify_abundant() |>
- reduce_dimensions(.abundance = counts, method="PCA", .dims = 3)
+ reduce_dimensions(assay = "counts", method="PCA", .dims = 3)
 
 }
 \references{

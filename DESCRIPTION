@@ -7,6 +7,9 @@ Authors@R: c(person("Stefano", "Mangiola", email = "mangiolastefano@gmail.com",
             person("Maria", "Doyle", email = "Maria.Doyle@petermac.org",
             role = c("ctb"))
                   )
+Author: Stefano Mangiola [aut, cre],
+  Maria Doyle [ctb]
+Maintainer: Stefano Mangiola <mangiolastefano@gmail.com>
 Description: This is a collection of utility functions that allow
     to perform exploration of and calculations to RNA sequencing data, in
     a modular, pipe-friendly and tidy fashion.

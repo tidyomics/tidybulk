@@ -94,7 +94,7 @@ rotation = function(m, d) {
 counts.MDS =
  airway |>
  identify_abundant() |>
- reduce_dimensions(.abundance = counts, method="MDS", .dims = 3)
+ reduce_dimensions(assay = "counts", method="MDS", .dims = 3)
 
 counts.MDS.rotated =  rotate_dimensions(counts.MDS, `Dim1`, `Dim2`, rotation_degrees = 45, .element = sample)
 

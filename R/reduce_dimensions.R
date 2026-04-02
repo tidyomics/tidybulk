@@ -4,19 +4,19 @@
 #'
 #' @description reduce_dimensions() takes as input a `SummarizedExperiment` and calculates the reduced dimensional space of the transcript abundance.
 #'
-#' @importFrom rlang enquo quo_name
+#'
 #' @importFrom magrittr not
 #' @importFrom dplyr filter distinct select mutate rename
 #' @importFrom tidyr pivot_wider
 #' @importFrom tibble enframe
-#' @importFrom SummarizedExperiment colData rowData assays
+#' @importFrom SummarizedExperiment colData rowData assays assayNames
 #' @importFrom stats prcomp
 #'
 #'
 #' @name reduce_dimensions
 #'
 #' @param .data A `SummarizedExperiment`
-#' @param .abundance The name of the assay to use for dimension reduction. This argument must be explicitly specified.
+#' @param assay Character string: the name of the assay to use for dimension reduction (must match `assayNames(.data)`). This argument must be explicitly specified so that the choice of abundance matrix is deliberate.
 #'
 #' @param method A character string. The dimension reduction algorithm to use (PCA, MDS, tSNE).
 #' @param top An integer. How many top genes to select for dimensionality reduction
@@ -41,22 +41,7 @@
 #' Underlying method for tSNE:
 #' Rtsne::Rtsne(data, ...)
 #'
-#' Underlying method for UMAP:
-#'
-#'  df_source =
-#' .data |>
-#'
-#'   # Filter NA symbol
-#'   filter(!!.feature |> is.na() |> not()) |>
-#'
-#'   # Prepare data frame
-#'   distinct(!!.feature,!!.element,!!.abundance) |>
-#'
-#'   # Filter most variable genes
-#'   keep_variable_transcripts(top) |>
-#'   reduce_dimensions(.abundance = counts, method="PCA",  .dims = calculate_for_pca_dimensions ) |>
-#'   as_matrix(rownames = quo_name(.element)) |>
-#'   uwot::tumap(...)
+#' Underlying method for UMAP: variable features from the chosen \code{assay} are optionally PCA-reduced, then \code{uwot::tumap()} is applied to the sample coordinates matrix.
 #'
 #'
 #' @return A tbl object with additional columns for the reduced dimensions
@@ -77,13 +62,13 @@
 #' counts.MDS =
 #'  airway |>
 #'  identify_abundant() |>
-#'  reduce_dimensions(.abundance = counts, method="MDS", .dims = 3)
+#'  reduce_dimensions(assay = "counts", method="MDS", .dims = 3)
 #'
 #'
 #' counts.PCA =
 #'  airway |>
 #'  identify_abundant() |>
-#'  reduce_dimensions(.abundance = counts, method="PCA", .dims = 3)
+#'  reduce_dimensions(assay = "counts", method="PCA", .dims = 3)
 #'
 #' @references
 #' Mangiola, S., Molania, R., Dong, R., Doyle, M. A., & Papenfuss, A. T. (2021). tidybulk: an R tidy framework for modular transcriptomic data analysis. Genome Biology, 22(1), 42. doi:10.1186/s13059-020-02233-7
@@ -100,7 +85,7 @@
 #'
 #'
 setGeneric("reduce_dimensions", function(.data,
-                                         .abundance,
+                                         assay,
                                          method,
                                          .dims = 2,
                                          
@@ -118,7 +103,7 @@ standardGeneric("reduce_dimensions"))
 
 
 .reduce_dimensions_se = function(.data,
-                                 .abundance,
+                                 assay,
                                  
                                  method,
                                  .dims = 2,
@@ -131,13 +116,19 @@ standardGeneric("reduce_dimensions"))
   # Fix NOTEs
   . = NULL
   
-  if(missing(.abundance))
-    stop("tidybulk says: please specify `.abundance` explicitly (e.g. `.abundance = counts_scaled`). If needed, create an assay scaled proportionally to library size with `scale_abundance()` and pass that assay via `.abundance`.")
+  if (missing(assay))
+    stop("tidybulk says: please specify `assay` explicitly as a character string (e.g. assay = \"counts_scaled\"). If needed, create an assay scaled proportionally to library size with `scale_abundance()` and pass that assay name via `assay`.", call. = FALSE)
   
-  .abundance = enquo(.abundance)
+  if (!is.character(assay) || length(assay) != 1L || !nzchar(assay))
+    stop("tidybulk says: `assay` must be a single non-empty character string naming an assay in assayNames(.data).", call. = FALSE)
   
-  if(.abundance |> quo_is_symbolic()) my_assay = quo_name(.abundance)
-  else stop("tidybulk says: please specify `.abundance` explicitly (e.g. `.abundance = counts_scaled`). If needed, create an assay scaled proportionally to library size with `scale_abundance()` and pass that assay via `.abundance`.")
+  my_assay <- assay[[1L]]
+  if (!my_assay %in% assayNames(.data))
+    stop(sprintf(
+      "tidybulk says: assay \"%s\" is not in assayNames(.data) (%s).",
+      my_assay,
+      paste(assayNames(.data), collapse = ", ")
+    ), call. = FALSE)
   
   # adjust top for the max number of features I have
   if(top > nrow(.data)){
@@ -291,11 +282,8 @@ setMethod("reduce_dimensions",
 #' @importFrom rlang :=
 #' @importFrom stats setNames
 #'
-#' @param .data A tibble
-#' @param .abundance A column symbol with the value the clustering is based on (e.g., `count`)
+#' @param .data Feature-by-sample matrix (from an assay)
 #' @param .dims A integer vector corresponding to principal components of interest (e.g., 1:6)
-#' @param .feature A column symbol. The column that is represents entities to cluster (i.e., normally genes)
-#' @param .element A column symbol. The column that is used to calculate distance (i.e., normally samples)
 #' @param top An integer. How many top genes to select
 #' @param of_samples A boolean
 #' @param transform A function that will tranform the counts, by default it is log1p for RNA sequencing data, but for avoinding tranformation you can use identity
@@ -438,11 +426,8 @@ get_reduced_dimensions_MDS_bulk_SE <-
 #' @importFrom magrittr divide_by
 #' @importFrom Matrix t
 #'
-#' @param .data A tibble
-#' @param .abundance A column symbol with the value the clustering is based on (e.g., `count`)
+#' @param .data Feature-by-sample matrix (from an assay)
 #' @param .dims A integer vector corresponding to principal components of interest (e.g., 1:6)
-#' @param .feature A column symbol. The column that is represents entities to cluster (i.e., normally genes)
-#' @param .element A column symbol. The column that is used to calculate distance (i.e., normally samples)
 #' @param top An integer. How many top genes to select
 #' @param of_samples A boolean
 #' @param transform A function that will tranform the counts, by default it is log1p for RNA sequencing data, but for avoinding tranformation you can use identity
@@ -532,11 +517,8 @@ we suggest to partition the dataset for sample clusters.
 #' @importFrom stats setNames
 #' @importFrom Matrix t
 #'
-#' @param .data A tibble
-#' @param .abundance A column symbol with the value the clustering is based on (e.g., `count`)
+#' @param .data Feature-by-sample matrix (from an assay)
 #' @param .dims A integer vector corresponding to principal components of interest (e.g., 1:6)
-#' @param .feature A column symbol. The column that is represents entities to cluster (i.e., normally genes)
-#' @param .element A column symbol. The column that is used to calculate distance (i.e., normally samples)
 #' @param top An integer. How many top genes to select
 #' @param of_samples A boolean
 #' @param transform A function that will tranform the counts, by default it is log1p for RNA sequencing data, but for avoinding tranformation you can use identity

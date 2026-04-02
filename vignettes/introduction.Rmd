@@ -479,12 +479,12 @@ MDS [@kruskal1964mds] using limma::plotMDS [@ritchie2015limma] and PCA [@hotelli
 
 ```{r eda-mds-analysis, fig.width = 10, fig.height = 10}
 airway = airway |>
-  reduce_dimensions(.abundance = counts_tmm, method="MDS", .dims = 2)
+  reduce_dimensions(assay = "counts_tmm", method="MDS", .dims = 2)
 ```
 
 ```{r eda-pca-analysis, fig.width = 10, fig.height = 10}
 airway = airway |>
-  reduce_dimensions(.abundance = counts_tmm, method="PCA", .dims = 2)
+  reduce_dimensions(assay = "counts_tmm", method="PCA", .dims = 2)
 ```
 
 ### Visualize Dimensionality Reduction Results

@@ -98,7 +98,7 @@ test_that("tidybulk SummarizedExperiment clustering",{
 
 test_that("tidybulk SummarizedExperiment clustering",{
   
-  res = se |> identify_abundant() |> reduce_dimensions(.abundance = counts, method="PCA")
+  res = se |> identify_abundant() |> reduce_dimensions(assay = "counts", method="PCA")
   
   expect_equal(
     tail(names(SummarizedExperiment::colData(res)), 1),
@@ -110,7 +110,7 @@ test_that("tidybulk SummarizedExperiment clustering",{
 test_that("Get rotated dimensions - SummarizedExperiment",{
   
   res.pca =
-    reduce_dimensions(se |> identify_abundant(), .abundance = counts, method="PCA")
+    reduce_dimensions(se |> identify_abundant(), assay = "counts", method="PCA")
   
   res =
     rotate_dimensions(
@@ -540,7 +540,7 @@ test_that("pivot",{
 test_that("Only reduced dimensions MDS - no object",{
   res =
     airway_mini |>
-    reduce_dimensions(.abundance = counts, method = "MDS", top = 50)
+    reduce_dimensions(assay = "counts", method = "MDS", top = 50)
   
   expect_true("Dim1" %in% colnames(SummarizedExperiment::colData(res)))
   expect_true(all(is.numeric(res$`Dim1`[1:4])))
@@ -553,7 +553,7 @@ test_that("Only reduced dimensions PCA - no object",{
   res =
     airway_mini |>
     identify_abundant() |>
-    reduce_dimensions(.abundance = counts, method = "PCA", top = 50, scale = FALSE)
+    reduce_dimensions(assay = "counts", method = "PCA", top = 50, scale = FALSE)
   
   expect_true(all(!is.na(res$`PC1`[1:4])))
   expect_true(all(is.numeric(res$`PC1`[1:4])))
@@ -566,7 +566,7 @@ test_that("Only reduced dimensions tSNE - no object",{
   skip("tSNE requires more samples than available in airway dataset")
   res =
     airway_mini |>
-    reduce_dimensions(.abundance = counts, method = "tSNE")
+    reduce_dimensions(assay = "counts", method = "tSNE")
   
   expect_true(all(!is.na(res$`tSNE1`[1:4])))
   expect_true(all(is.numeric(res$`tSNE1`[1:4])))
@@ -579,7 +579,7 @@ test_that("Only reduced dimensions UMAP - no object",{
   skip("UMAP requires more samples than available in airway dataset")
   res =
     airway_mini |>
-    reduce_dimensions(.abundance = counts, method = "UMAP")
+    reduce_dimensions(assay = "counts", method = "UMAP")
   
   expect_true(all(!is.na(res$`UMAP1`[1:4])))
   expect_true(all(is.numeric(res$`UMAP1`[1:4])))
