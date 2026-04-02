@@ -187,7 +187,7 @@ Tidy transcriptomics
 ```{r mds, cache=TRUE}
 tt.norm.MDS =
   tt.norm %>%
-  reduce_dimensions(method="MDS", .dims = 2)
+  reduce_dimensions(assay = "counts_scaled", method="MDS", .dims = 2)
 
 ```
 </div>
@@ -218,7 +218,7 @@ Tidy transcriptomics
 ```{r pca, cache=TRUE, message=FALSE, warning=FALSE, results='hide'}
 tt.norm.PCA =
   tt.norm %>%
-  reduce_dimensions(method="PCA", .dims = 2)
+  reduce_dimensions(assay = "counts_scaled", method="PCA", .dims = 2)
 ```
 </div>
 <div class="column-right">
@@ -245,6 +245,7 @@ tt.norm.tSNE =
 	tidybulk(		sample, ens, count_scaled) %>%
 	identify_abundant() %>%
 	reduce_dimensions(
+		assay = "count_scaled",
 		method = "tSNE",
 		perplexity=10,
 		pca_scale =TRUE

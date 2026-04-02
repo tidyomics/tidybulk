@@ -55,7 +55,7 @@ tt_scaled = tt %>% identify_abundant(factor_of_interest = condition) %>% scale_a
 	tt_scaled
 }
 plot_MDS = function(){
-	tt_mds = tt_scaled %>% 	reduce_dimensions(method = "MDS", .dims = 3)
+	tt_mds = tt_scaled %>% 	reduce_dimensions(assay = "counts_scaled", method = "MDS", .dims = 3)
 # Visualise MDS for cell types
 p = tt_mds %>%
 	select(contains("Dim"), sample, type,  condition) %>%
@@ -69,7 +69,7 @@ plot_adjusted_MDS = function(){
  p = tt_mds %>%
 	adjust_abundance( ~ condition + type) %>%
 	filter(`count_scaled_adjusted` %>% is.na %>% `!`) %>%
-	reduce_dimensions(.abundance = `count_scaled_adjusted`,	method = "MDS",	.dims = 3) %>%
+	reduce_dimensions(assay = "counts_scaled_adjusted",	method = "MDS",	.dims = 3) %>%
 
 	# Plot
 	select(contains("Dim"), sample, type,  condition) %>%

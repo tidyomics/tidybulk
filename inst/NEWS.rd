@@ -1,6 +1,11 @@
 \name{NEWS}
 \title{News for Package \pkg{tidybulk}}
 
+\section{Changes in development version}{
+\itemize{
+    \item \strong{BREAKING CHANGE:} \code{reduce_dimensions()} no longer accepts \code{.abundance} (a tidy-eval assay symbol). The assay must be given explicitly as a character string via \code{assay = "..."}, matching \code{assayNames(object)}. Omitting \code{assay} or passing an unknown assay name raises an error, so users must deliberately choose which abundance matrix to use (commonly a library-size scaled assay from \code{scale_abundance()}). Update all calls, tests, and vignettes that used \code{.abundance = counts} to \code{assay = "counts"} (or the appropriate assay name).
+}}
+
 \section{Changes in version 1.2.0, Bioconductor 3.12 Release}{
 \itemize{
     \item Make gene filtering functionality `identify_abundance` explicit, a warning will be given if this has not been performed before the majority of workflow steps (e.g. `test_differential_abundance`).
