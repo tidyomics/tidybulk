@@ -2,7 +2,7 @@
 #'
 #' `r lifecycle::badge("maturing")`
 #'
-#' @description reduce_dimensions() takes as input A `tbl` (with at least three columns for sample, feature and transcript abundance) or `SummarizedExperiment` (more convenient if abstracted to tibble with library(tidySummarizedExperiment)) and calculates the reduced dimensional space of the transcript abundance.
+#' @description reduce_dimensions() takes as input a `SummarizedExperiment` and calculates the reduced dimensional space of the transcript abundance.
 #'
 #' @importFrom rlang enquo quo_name
 #' @importFrom magrittr not
@@ -15,10 +15,8 @@
 #'
 #' @name reduce_dimensions
 #'
-#' @param .data A `tbl` (with at least three columns for sample, feature and transcript abundance) or `SummarizedExperiment` (more convenient if abstracted to tibble with library(tidySummarizedExperiment))
-#' @param .element The name of the element column (normally samples).
-#' @param .feature The name of the feature column (normally transcripts/genes)
-#' @param .abundance The name of the column including the numerical value the clustering is based on (normally transcript abundance)
+#' @param .data A `SummarizedExperiment`
+#' @param .abundance The name of the assay to use for dimension reduction. This argument must be explicitly specified.
 #'
 #' @param method A character string. The dimension reduction algorithm to use (PCA, MDS, tSNE).
 #' @param top An integer. How many top genes to select for dimensionality reduction
@@ -56,7 +54,7 @@
 #'
 #'   # Filter most variable genes
 #'   keep_variable_transcripts(top) |>
-#'   reduce_dimensions(method="PCA",  .dims = calculate_for_pca_dimensions ) |>
+#'   reduce_dimensions(.abundance = counts, method="PCA",  .dims = calculate_for_pca_dimensions ) |>
 #'   as_matrix(rownames = quo_name(.element)) |>
 #'   uwot::tumap(...)
 #'
@@ -79,13 +77,13 @@
 #' counts.MDS =
 #'  airway |>
 #'  identify_abundant() |>
-#'  reduce_dimensions( method="MDS", .dims = 3)
+#'  reduce_dimensions(.abundance = counts, method="MDS", .dims = 3)
 #'
 #'
 #' counts.PCA =
 #'  airway |>
 #'  identify_abundant() |>
-#'  reduce_dimensions(method="PCA", .dims = 3)
+#'  reduce_dimensions(.abundance = counts, method="PCA", .dims = 3)
 #'
 #' @references
 #' Mangiola, S., Molania, R., Dong, R., Doyle, M. A., & Papenfuss, A. T. (2021). tidybulk: an R tidy framework for modular transcriptomic data analysis. Genome Biology, 22(1), 42. doi:10.1186/s13059-020-02233-7
@@ -102,9 +100,7 @@
 #'
 #'
 setGeneric("reduce_dimensions", function(.data,
-                                         .element = NULL,
-                                         .feature = NULL,
-                                         .abundance = NULL,
+                                         .abundance,
                                          method,
                                          .dims = 2,
                                          
@@ -122,7 +118,7 @@ standardGeneric("reduce_dimensions"))
 
 
 .reduce_dimensions_se = function(.data,
-                                 .abundance = NULL,
+                                 .abundance,
                                  
                                  method,
                                  .dims = 2,
@@ -135,10 +131,13 @@ standardGeneric("reduce_dimensions"))
   # Fix NOTEs
   . = NULL
   
+  if(missing(.abundance))
+    stop("tidybulk says: please specify `.abundance` explicitly (e.g. `.abundance = counts_scaled`). If needed, create an assay scaled proportionally to library size with `scale_abundance()` and pass that assay via `.abundance`.")
+  
   .abundance = enquo(.abundance)
   
   if(.abundance |> quo_is_symbolic()) my_assay = quo_name(.abundance)
-  else my_assay = get_assay_scaled_if_exists_SE(.data)
+  else stop("tidybulk says: please specify `.abundance` explicitly (e.g. `.abundance = counts_scaled`). If needed, create an assay scaled proportionally to library size with `scale_abundance()` and pass that assay via `.abundance`.")
   
   # adjust top for the max number of features I have
   if(top > nrow(.data)){

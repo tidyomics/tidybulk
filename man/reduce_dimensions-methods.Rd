@@ -9,9 +9,7 @@
 \usage{
 reduce_dimensions(
   .data,
-  .element = NULL,
-  .feature = NULL,
-  .abundance = NULL,
+  .abundance,
   method,
   .dims = 2,
   top = 500,
@@ -24,9 +22,7 @@ reduce_dimensions(
 
 \S4method{reduce_dimensions}{SummarizedExperiment}(
   .data,
-  .element = NULL,
-  .feature = NULL,
-  .abundance = NULL,
+  .abundance,
   method,
   .dims = 2,
   top = 500,
@@ -39,9 +35,7 @@ reduce_dimensions(
 
 \S4method{reduce_dimensions}{RangedSummarizedExperiment}(
   .data,
-  .element = NULL,
-  .feature = NULL,
-  .abundance = NULL,
+  .abundance,
   method,
   .dims = 2,
   top = 500,
@@ -53,13 +47,9 @@ reduce_dimensions(
 )
 }
 \arguments{
-\item{.data}{A `tbl` (with at least three columns for sample, feature and transcript abundance) or `SummarizedExperiment` (more convenient if abstracted to tibble with library(tidySummarizedExperiment))}
+\item{.data}{A `SummarizedExperiment`}
 
-\item{.element}{The name of the element column (normally samples).}
-
-\item{.feature}{The name of the feature column (normally transcripts/genes)}
-
-\item{.abundance}{The name of the column including the numerical value the clustering is based on (normally transcript abundance)}
+\item{.abundance}{The name of the assay to use for dimension reduction. This argument must be explicitly specified.}
 
 \item{method}{A character string. The dimension reduction algorithm to use (PCA, MDS, tSNE).}
 
@@ -85,7 +75,7 @@ A `SummarizedExperiment` object
 A `SummarizedExperiment` object
 }
 \description{
-reduce_dimensions() takes as input A `tbl` (with at least three columns for sample, feature and transcript abundance) or `SummarizedExperiment` (more convenient if abstracted to tibble with library(tidySummarizedExperiment)) and calculates the reduced dimensional space of the transcript abundance.
+reduce_dimensions() takes as input a `SummarizedExperiment` and calculates the reduced dimensional space of the transcript abundance.
 }
 \details{
 `r lifecycle::badge("maturing")`
@@ -116,7 +106,7 @@ Underlying method for UMAP:
 
   # Filter most variable genes
   keep_variable_transcripts(top) |>
-  reduce_dimensions(method="PCA",  .dims = calculate_for_pca_dimensions ) |>
+  reduce_dimensions(.abundance = counts, method="PCA",  .dims = calculate_for_pca_dimensions ) |>
   as_matrix(rownames = quo_name(.element)) |>
   uwot::tumap(...)
 }
@@ -135,13 +125,13 @@ Underlying method for UMAP:
 counts.MDS =
  airway |>
  identify_abundant() |>
- reduce_dimensions( method="MDS", .dims = 3)
+ reduce_dimensions(.abundance = counts, method="MDS", .dims = 3)
 
 
 counts.PCA =
  airway |>
  identify_abundant() |>
- reduce_dimensions(method="PCA", .dims = 3)
+ reduce_dimensions(.abundance = counts, method="PCA", .dims = 3)
 
 }
 \references{

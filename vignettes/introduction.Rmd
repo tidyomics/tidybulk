@@ -470,7 +470,7 @@ Variance filtering is a standard preprocessing step for dimensionality reduction
 ```{r eda-remove-zero-variance}
 library(matrixStats)
 # Remove features with zero variance across samples
-airway = airway[rowVars(assay(airway)) > 0, ]
+airway = airway[rowVars(assay(airway, "counts_tmm")) > 0, ]
 ```
 
 ### Dimensionality Reduction
@@ -479,12 +479,12 @@ MDS [@kruskal1964mds] using limma::plotMDS [@ritchie2015limma] and PCA [@hotelli
 
 ```{r eda-mds-analysis, fig.width = 10, fig.height = 10}
 airway = airway |>
-  reduce_dimensions(method="MDS", .dims = 2)
+  reduce_dimensions(.abundance = counts_tmm, method="MDS", .dims = 2)
 ```
 
 ```{r eda-pca-analysis, fig.width = 10, fig.height = 10}
 airway = airway |>
-  reduce_dimensions(method="PCA", .dims = 2)
+  reduce_dimensions(.abundance = counts_tmm, method="PCA", .dims = 2)
 ```
 
 ### Visualize Dimensionality Reduction Results

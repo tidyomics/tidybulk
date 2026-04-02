@@ -312,7 +312,7 @@ norm_counts.table$cell_type = tibble_counts[
 
 ## Step 4: Reduce Dimensions
 
-We may want to reduce the dimensions of our data, for example using PCA or MDS algorithms. `reduce_dimensions` takes a tibble, column names (as symbols; for `sample`, `transcript` and `count`) and a method (e.g., MDS or PCA) as arguments and returns a tibble with additional columns for the reduced dimensions.
+We may want to reduce the dimensions of our data, for example using PCA or MDS algorithms. `reduce_dimensions` takes a `SummarizedExperiment`, an assay name via `.abundance`, and a method (e.g., MDS or PCA), then adds the reduced dimensions to the object metadata.
 
 > Dimensionality reduction helps visualize high-dimensional data and identify patterns.
 
@@ -323,7 +323,7 @@ TidyTranscriptomics
 ```{r mds}
 airway.norm.MDS =
   airway.norm |>
-  reduce_dimensions(method="MDS", .dims = 2)
+  reduce_dimensions(.abundance = counts_scaled, method="MDS", .dims = 2)
 
 ```
 </div>
@@ -366,7 +366,7 @@ TidyTranscriptomics
 ```{r pca, message=FALSE, warning=FALSE, results='hide'}
 airway.norm.PCA =
   airway.norm |>
-  reduce_dimensions(method="PCA", .dims = 2)
+  reduce_dimensions(.abundance = counts_scaled, method="PCA", .dims = 2)
 ```
 </div>
 <div class="column-right">

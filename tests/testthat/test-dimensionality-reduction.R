@@ -8,15 +8,22 @@ library(dplyr)
 library(SummarizedExperiment)
 
 # Test reduce_dimensions function
+test_that("reduce_dimensions requires explicit abundance assay", {
+  expect_error(
+    airway_mini |> identify_abundant() |> reduce_dimensions(method = "PCA"),
+    regexp = "abundance"
+  )
+})
+
 test_that("reduce_dimensions with PCA works correctly", {
-  res <- airway_mini |> identify_abundant() |> reduce_dimensions(method = "PCA")
+  res <- airway_mini |> identify_abundant() |> reduce_dimensions(.abundance = counts, method = "PCA")
   
   expect_true("PC1" %in% names(SummarizedExperiment::colData(res)))
   expect_true("PC2" %in% names(SummarizedExperiment::colData(res)))
 })
 
 test_that("reduce_dimensions with MDS works correctly", {
-  res <- airway_mini |> identify_abundant() |> reduce_dimensions(method = "MDS")
+  res <- airway_mini |> identify_abundant() |> reduce_dimensions(.abundance = counts, method = "MDS")
   
   # Check if any MDS columns exist
   col_names <- names(SummarizedExperiment::colData(res))
