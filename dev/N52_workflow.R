@@ -44,7 +44,7 @@ tt_scaled %>%
 
 # Visualise MDS for cell types
 tt_scaled %>%
-	reduce_dimensions(method="MDS", .dims = 3) %>%
+	reduce_dimensions(assay = "counts_scaled", method="MDS", .dims = 3) %>%
 	select(contains("Dim"), sample, CAPRA_TOTAL,  cell_type_formatted) %>%
 	distinct() %>%
 	GGally::ggpairs(columns = 1:3, ggplot2::aes(colour=cell_type_formatted))
@@ -52,7 +52,7 @@ tt_scaled %>%
 # Vidualise MDS CAPRA
 tt_scaled %>%
 	group_by(cell_type_formatted) %>%
-	do(reduce_dimensions((.), method="MDS")) %>%
+	do(reduce_dimensions((.), assay = "counts_scaled", method="MDS")) %>%
 	select(contains("Dim"), sample, CAPRA_TOTAL,  cell_type_formatted) %>%
 	distinct() %>%
 	ggplot(aes(x=Dim1, y = Dim2, color=CAPRA_TOTAL)) +

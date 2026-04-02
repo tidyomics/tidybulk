@@ -66,7 +66,7 @@ p1 =
 	ylab("Density") +
 	my_theme
 
-tt_mds = tt_scaled %>% 	reduce_dimensions(method="MDS", .dims = 3)
+tt_mds = tt_scaled %>% 	reduce_dimensions(assay = "counts_scaled", method="MDS", .dims = 3)
 
 # Visualise MDS for cell types
 p2 =
@@ -111,7 +111,7 @@ tt_adj = tt_mds %>%	adjust_abundance(~ condition + type)
 p3 =
 	tt_adj %>%
 	filter( `count_scaled_adjusted` %>% is.na %>% `!`) %>%
-	reduce_dimensions(.abundance = `count_scaled_adjusted`, method="MDS", .dims = 3) %>%
+	reduce_dimensions(assay = "counts_scaled_adjusted", method="MDS", .dims = 3) %>%
 
 	# Plot
 	select(contains("Dim"), sample, type,  condition ) %>%

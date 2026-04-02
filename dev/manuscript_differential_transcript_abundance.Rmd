@@ -107,7 +107,7 @@ tt_scaled %>%
 
 ```{r}
 # Reduce data dimensionality with arbitrary number of dimensions
-tt_mds <- tt_scaled %>% reduce_dimensions(method="MDS", .dims = 3)
+tt_mds <- tt_scaled %>% reduce_dimensions(assay = "counts_scaled", method="MDS", .dims = 3)
 
 # Plot all-vs-all MDS dimensions 
 tt_mds %>%
@@ -127,8 +127,8 @@ tt_mds_adj_mds <-
 
     # Calculate reduced dimensions on the adjusted counts as well
     reduce_dimensions(
-       .abundance = count_scaled_adjusted, 
-       method="MDS", .dim = 3
+       assay = "counts_scaled_adjusted",
+       method="MDS", .dims = 3
     ) 
 
 
