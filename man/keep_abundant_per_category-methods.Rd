@@ -50,19 +50,19 @@ keep_abundant_per_category(
 )
 }
 \arguments{
-\item{.data}{A `tbl` or `SummarizedExperiment` object containing transcript/gene abundance data}
+\item{.data}{A `SummarizedExperiment` object containing transcript/gene abundance data}
 
 \item{abundance}{The name of the transcript/gene abundance column (character, preferred)}
 
-\item{design}{A design matrix for more complex experimental designs. If provided, this is passed to filterByExpr instead of factor_of_interest.}
+\item{design}{A design matrix for more complex experimental designs.}
 
-\item{formula_design}{A formula for creating the design matrix}
+\item{formula_design}{A formula to generate the design matrix. Overrides `design` when both are provided}
 
 \item{minimum_counts}{The minimum count threshold for a feature to be considered abundant}
 
 \item{minimum_proportion}{The minimum proportion of samples in which a feature must be abundant}
 
-\item{minimum_count_per_million}{The minimum count per million threshold}
+\item{minimum_count_per_million}{...}
 
 \item{minimum_category}{The minimum number of categories/experimental groups that have sufficient abundance samples.}
 
@@ -70,34 +70,18 @@ keep_abundant_per_category(
 
 \item{coerce_design}{Should non-categorical design matrix be coerced; defaults to FALSE.}
 
-\item{...}{Further arguments.}
-
-\item{factor_of_interest}{The name of the column containing groups/conditions for filtering. DEPRECATED: Use 'design' or 'formula_design' instead.}
-
-\item{.abundance}{DEPRECATED. The name of the transcript/gene abundance column (symbolic, for backward compatibility)}
+\item{...}{Further arguments taken for compatibility, but are not used.}
 }
 \value{
 Returns a filtered version of the input object containing only the features that passed
 the abundance threshold criteria.
-
-Returns a filtered version of the input object containing only the features that passed
-the abundance threshold criteria.
-
-A `SummarizedExperiment` object
-
-A `SummarizedExperiment` object
 }
 \description{
 Filters the data to keep only transcripts/genes that are consistently expressed above 
 a threshold across samples. This is a filtering version of identify_abundant_per_category() that 
 removes low-abundance features instead of just marking them.
-
-This function is similar to identify_abundant() but in addition to writing to an .abundant column,
-it also filters out the low-abundance features directly.
 }
 \details{
-Filter to keep only abundant transcripts/genes in a per-category manner
-
 \lifecycle{experimental}
 
 

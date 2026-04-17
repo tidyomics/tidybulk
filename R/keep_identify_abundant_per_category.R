@@ -1,23 +1,23 @@
 
 #' Identify abundant transcripts/genes in a per-category manner
 #'
-#' `r lifecycle::badge("experimental")`
+#' \lifecycle{experimental}
 #'
 #' @description 
 #' Identifies transcripts/genes that are consistently expressed above a threshold across samples. 
 #' This function adds a logical column `.abundant` to indicate which features pass the filtering criteria.
 #'
-#' @param .data A `tbl` or `SummarizedExperiment` object containing transcript/gene abundance data
+#' @param .data A `SummarizedExperiment` object containing transcript/gene abundance data
 #' @param abundance The name of the transcript/gene abundance column (character, preferred)
 #' @param design A design matrix for more complex experimental designs.
-#' @param formula_design ...
-#' @param minimum_counts ...
-#' @param minimum_proportion ...
+#' @param formula_design A formula to generate the design matrix. Overrides `design` when both are provided
+#' @param minimum_counts The minimum count threshold for a feature to be considered abundant
+#' @param minimum_proportion The minimum proportion of samples in which a feature must be abundant
 #' @param minimum_count_per_million ...
 #' @param minimum_category The minimum number of categories/experimental groups that have sufficient abundance samples.
 #' @param force Should existing .abundant column be replaced; defaults to FALSE.
 #' @param coerce_design Should non-categorical design matrix be coerced; defaults to FALSE.
-#' @param ... Further arguments.
+#' @param ... Further arguments taken for compatibility, but are not used.
 #'
 #' @details 
 #' This function provides an alternative filtering solution for edgeR's filterByExpr() function to identify consistently expressed features.
@@ -182,11 +182,10 @@ setGeneric("identify_abundant_per_category",
 #' @docType methods
 #' @rdname identify_abundant_per_category-methods
 #'
-#' @return A `SummarizedExperiment` object
 #'
-setMethod("identify_abundant",
+setMethod("identify_abundant_per_category",
           "SummarizedExperiment",
-          .identify_abundant_se
+          .identify_abundant_per_category_se
 )
 
 #' identify_abundant_per_category
@@ -195,11 +194,10 @@ setMethod("identify_abundant",
 #' @docType methods
 #' @rdname identify_abundant_per_category-methods
 #'
-#' @return A `SummarizedExperiment` object
 #'
-setMethod("identify_abundant",
+setMethod("identify_abundant_per_category",
           "RangedSummarizedExperiment",
-          .identify_abundant_se
+          .identify_abundant_per_category_se
 )
 
 
@@ -213,17 +211,17 @@ setMethod("identify_abundant",
 #' a threshold across samples. This is a filtering version of identify_abundant_per_category() that 
 #' removes low-abundance features instead of just marking them.
 #'
-#' @param .data A `tbl` or `SummarizedExperiment` object containing transcript/gene abundance data
+#' @param .data A `SummarizedExperiment` object containing transcript/gene abundance data
 #' @param abundance The name of the transcript/gene abundance column (character, preferred)
 #' @param design A design matrix for more complex experimental designs.
-#' @param formula_design ...
-#' @param minimum_counts ...
-#' @param minimum_proportion ...
+#' @param formula_design A formula to generate the design matrix. Overrides `design` when both are provided
+#' @param minimum_counts The minimum count threshold for a feature to be considered abundant
+#' @param minimum_proportion The minimum proportion of samples in which a feature must be abundant
 #' @param minimum_count_per_million ...
 #' @param minimum_category The minimum number of categories/experimental groups that have sufficient abundance samples.
 #' @param force Should existing .abundant column be replaced; defaults to FALSE.
 #' @param coerce_design Should non-categorical design matrix be coerced; defaults to FALSE.
-#' @param ... Further arguments.
+#' @param ... Further arguments taken for compatibility, but are not used.
 #'
 #' @details 
 #' This function provides an alternative filtering solution for edgeR's filterByExpr() function to identify consistently expressed features.
@@ -273,28 +271,6 @@ setMethod("identify_abundant",
 #' @rdname keep_abundant_per_category-methods
 #' @export
 #' 
-#' @name keep_abundant_per_category
-#' @title Filter to keep only abundant transcripts/genes in a per-category manner
-#' @description This function is similar to identify_abundant() but in addition to writing to an .abundant column,
-#' it also filters out the low-abundance features directly.
-#'
-#' @param .data A `tbl` or `SummarizedExperiment` object containing transcript/gene abundance data
-#' @param abundance The name of the transcript/gene abundance column (character, preferred)
-#' @param design A design matrix for more complex experimental designs. If provided, this is passed to filterByExpr instead of factor_of_interest.
-#' @param formula_design A formula for creating the design matrix
-#' @param minimum_counts The minimum count threshold for a feature to be considered abundant
-#' @param minimum_proportion The minimum proportion of samples in which a feature must be abundant
-#' @param minimum_count_per_million The minimum count per million threshold
-#' @param factor_of_interest The name of the column containing groups/conditions for filtering. DEPRECATED: Use 'design' or 'formula_design' instead.
-#' @param ... Further arguments.
-#' @param .abundance DEPRECATED. The name of the transcript/gene abundance column (symbolic, for backward compatibility)
-#'
-#' @return 
-#' Returns a filtered version of the input object containing only the features that passed
-#' the abundance threshold criteria.
-#'
-#' @docType methods
-#' @export
 setGeneric("keep_abundant_per_category", 
            function(.data,
                     abundance = assayNames(.data)[1],
@@ -373,7 +349,6 @@ setGeneric("keep_abundant_per_category",
 #'
 #' @docType methods
 #' @rdname keep_abundant_per_category-methods
-#' @return A `SummarizedExperiment` object
 #'
 setMethod("keep_abundant_per_category",
           "SummarizedExperiment",
@@ -383,7 +358,6 @@ setMethod("keep_abundant_per_category",
 #'
 #' @docType methods
 #' @rdname keep_abundant_per_category-methods
-#' @return A `SummarizedExperiment` object
 #'
 setMethod("keep_abundant_per_category",
           "RangedSummarizedExperiment",

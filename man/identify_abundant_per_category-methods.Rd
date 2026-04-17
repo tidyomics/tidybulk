@@ -3,8 +3,8 @@
 \docType{methods}
 \name{identify_abundant_per_category}
 \alias{identify_abundant_per_category}
-\alias{identify_abundant,SummarizedExperiment-method}
-\alias{identify_abundant,RangedSummarizedExperiment-method}
+\alias{identify_abundant_per_category,SummarizedExperiment-method}
+\alias{identify_abundant_per_category,RangedSummarizedExperiment-method}
 \title{Identify abundant transcripts/genes in a per-category manner}
 \usage{
 identify_abundant_per_category(
@@ -21,7 +21,7 @@ identify_abundant_per_category(
   ...
 )
 
-\S4method{identify_abundant}{SummarizedExperiment}(
+\S4method{identify_abundant_per_category}{SummarizedExperiment}(
   .data,
   abundance = assayNames(.data)[1],
   design = NULL,
@@ -29,12 +29,13 @@ identify_abundant_per_category(
   minimum_counts = 10,
   minimum_proportion = 0.7,
   minimum_count_per_million = NULL,
-  factor_of_interest = NULL,
-  ...,
-  .abundance = NULL
+  minimum_category = 1,
+  force = FALSE,
+  coerce_design = FALSE,
+  ...
 )
 
-\S4method{identify_abundant}{RangedSummarizedExperiment}(
+\S4method{identify_abundant_per_category}{RangedSummarizedExperiment}(
   .data,
   abundance = assayNames(.data)[1],
   design = NULL,
@@ -42,23 +43,24 @@ identify_abundant_per_category(
   minimum_counts = 10,
   minimum_proportion = 0.7,
   minimum_count_per_million = NULL,
-  factor_of_interest = NULL,
-  ...,
-  .abundance = NULL
+  minimum_category = 1,
+  force = FALSE,
+  coerce_design = FALSE,
+  ...
 )
 }
 \arguments{
-\item{.data}{A `tbl` or `SummarizedExperiment` object containing transcript/gene abundance data}
+\item{.data}{A `SummarizedExperiment` object containing transcript/gene abundance data}
 
 \item{abundance}{The name of the transcript/gene abundance column (character, preferred)}
 
 \item{design}{A design matrix for more complex experimental designs.}
 
-\item{formula_design}{...}
+\item{formula_design}{A formula to generate the design matrix. Overrides `design` when both are provided}
 
-\item{minimum_counts}{...}
+\item{minimum_counts}{The minimum count threshold for a feature to be considered abundant}
 
-\item{minimum_proportion}{...}
+\item{minimum_proportion}{The minimum proportion of samples in which a feature must be abundant}
 
 \item{minimum_count_per_million}{Minimum CPM cutoff to use for filtering. If provided, this will override the minimum_counts parameter. Default is NULL.}
 
@@ -68,22 +70,18 @@ identify_abundant_per_category(
 
 \item{coerce_design}{Should non-categorical design matrix be coerced; defaults to FALSE.}
 
-\item{...}{Further arguments.}
+\item{...}{Further arguments taken for compatibility, but are not used.}
 }
 \value{
 Returns the input object with an additional logical column `.abundant` indicating which 
 features passed the abundance threshold criteria.
-
-A `SummarizedExperiment` object
-
-A `SummarizedExperiment` object
 }
 \description{
 Identifies transcripts/genes that are consistently expressed above a threshold across samples. 
 This function adds a logical column `.abundant` to indicate which features pass the filtering criteria.
 }
 \details{
-`r lifecycle::badge("experimental")`
+\lifecycle{experimental}
 
 
 This function provides an alternative filtering solution for edgeR's filterByExpr() function to identify consistently expressed features.
