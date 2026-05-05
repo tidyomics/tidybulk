@@ -34,12 +34,14 @@ data to biological insights.
 
 ### Filtering and Selection Functions
 
-| Function              | Description                                         |
-|-----------------------|-----------------------------------------------------|
-| `identify_abundant()` | Identify abundant transcripts without removing them |
-| `keep_abundant()`     | Keep abundant transcripts                           |
-| `keep_variable()`     | Keep variable transcripts                           |
-| `filterByExpr()`      | Filter by expression                                |
+| Function                                | Description                                                            |
+|-----------------------------------------|------------------------------------------------------------------------|
+| `identify_abundant()`                   | Identify abundant transcripts without removing them                    |
+| `keep_abundant()`                       | Keep abundant transcripts                                              |
+| `identify_abundant_per_category()`      | Identify abundant transcripts per experimental category                |
+| `keep_abundant_per_category()`          | Keep transcripts abundant in at least one experimental category        |
+| `keep_variable()`                       | Keep variable transcripts                                              |
+| `filterByExpr()`                        | Filter by expression                                                   |
 
 ### Dimensionality Reduction Functions
 
