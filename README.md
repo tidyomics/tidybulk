@@ -34,12 +34,14 @@ data to biological insights.
 
 ### Filtering and Selection Functions
 
-| Function              | Description                                         |
-|-----------------------|-----------------------------------------------------|
-| `identify_abundant()` | Identify abundant transcripts without removing them |
-| `keep_abundant()`     | Keep abundant transcripts                           |
-| `keep_variable()`     | Keep variable transcripts                           |
-| `filterByExpr()`      | Filter by expression                                |
+| Function                                | Description                                                            |
+|-----------------------------------------|------------------------------------------------------------------------|
+| `identify_abundant()`                   | Identify abundant transcripts without removing them                    |
+| `keep_abundant()`                       | Keep abundant transcripts                                              |
+| `identify_abundant_per_category()`      | Identify abundant transcripts per experimental category                |
+| `keep_abundant_per_category()`          | Keep transcripts abundant in at least one experimental category        |
+| `keep_variable()`                       | Keep variable transcripts                                              |
+| `filterByExpr()`                        | Filter by expression                                                   |
 
 ### Dimensionality Reduction Functions
 
@@ -101,6 +103,81 @@ data to biological insights.
 All functions are directly compatible with `SummarizedExperiment`
 objects and follow tidyverse principles for seamless integration with
 the tidyverse ecosystem.
+
+## Category-aware abundance filtering
+
+Standard abundance filtering (`keep_abundant()`) asks whether a feature
+is sufficiently expressed *across all samples*. This works well when the
+signal of interest is globally abundant, but it can silently discard
+features that are strongly expressed in only one experimental group
+(e.g. treated vs. untreated, disease vs. healthy, or a specific cell
+type). Once those features are removed at the filtering stage, they
+cannot be recovered for downstream differential testing.
+
+`keep_abundant_per_category()` (and its marking-only companion
+`identify_abundant_per_category()`) address this by evaluating abundance
+*within each experimental category independently*. A feature is retained
+if it satisfies the abundance threshold in **at least one** category,
+regardless of its expression in the others.
+
+This is especially important for:
+
+- **case / control studies** where a biomarker is expressed only in disease samples
+- **multi-tissue or cell-type datasets** with tissue-specific transcripts
+- **treatment-response experiments** with genes induced by a stimulus
+- **subgroup discovery** where rare but meaningful signals would be lost
+  by global filtering
+
+### Usage
+
+``` r
+library(airway)
+data(airway)
+
+# Keep genes that are abundant in at least one treatment group
+airway |>
+  keep_abundant_per_category(
+    formula_design = ~dex,     # experimental grouping variable
+    minimum_counts = 10,       # minimum raw count threshold
+    minimum_proportion = 0.7   # fraction of samples in a category that must pass
+  )
+```
+
+The `formula_design` argument accepts a standard R formula and derives
+the grouping from the column metadata of the `SummarizedExperiment`.
+Use `minimum_category` (default `1`) to require a feature to be abundant
+in *more than one* category when appropriate.
+
+``` r
+# Require abundance in at least 2 of the categories
+airway |>
+  keep_abundant_per_category(
+    formula_design = ~dex,
+    minimum_counts = 10,
+    minimum_proportion = 0.7,
+    minimum_category = 2
+  )
+```
+
+To use counts-per-million (CPM) thresholds instead of raw counts, pass
+`minimum_count_per_million`:
+
+``` r
+airway |>
+  keep_abundant_per_category(
+    formula_design = ~dex,
+    minimum_count_per_million = 1,
+    minimum_proportion = 0.7
+  )
+```
+
+If you only want to *mark* features (add a logical `.abundant` column)
+without filtering, use `identify_abundant_per_category()`:
+
+``` r
+airway |>
+  identify_abundant_per_category(formula_design = ~dex)
+```
 
 ### Scientific Citation
 

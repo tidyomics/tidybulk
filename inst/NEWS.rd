@@ -4,6 +4,7 @@
 \section{Changes in development version}{
 \itemize{
     \item \strong{BREAKING CHANGE:} \code{reduce_dimensions()} no longer accepts \code{.abundance} (a tidy-eval assay symbol). The assay must be given explicitly as a character string via \code{assay = "..."}, matching \code{assayNames(object)}. Omitting \code{assay} or passing an unknown assay name raises an error, so users must deliberately choose which abundance matrix to use (commonly a library-size scaled assay from \code{scale_abundance()}). Update all calls, tests, and vignettes that used \code{.abundance = counts} to \code{assay = "counts"} (or the appropriate assay name).
+    \item Added \code{identify_abundant_per_category()} and \code{keep_abundant_per_category()} as category-aware alternatives to \code{identify_abundant()} and \code{keep_abundant()}. These functions evaluate abundance within each experimental group independently and retain features that are sufficiently expressed in at least one category, making it possible to preserve group-specific or condition-specific signals that would be lost by global abundance filtering. The grouping is specified via \code{formula_design} (e.g. \code{~dex}), and the minimum number of categories required is controlled by \code{minimum_category} (default 1).
 }}
 
 \section{Changes in version 1.2.0, Bioconductor 3.12 Release}{
