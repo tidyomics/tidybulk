@@ -20,11 +20,13 @@
 <url><loc>/reference/get_X_cibersort.html</loc></url>
 <url><loc>/reference/get_bibliography-methods.html</loc></url>
 <url><loc>/reference/identify_abundant-methods.html</loc></url>
+<url><loc>/reference/identify_abundant_per_category-methods.html</loc></url>
 <url><loc>/reference/impute_missing_abundance-methods.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/keep_abundant-RangedSummarizedExperiment-method.html</loc></url>
 <url><loc>/reference/keep_abundant-SummarizedExperiment-method.html</loc></url>
 <url><loc>/reference/keep_abundant.html</loc></url>
+<url><loc>/reference/keep_abundant_per_category-methods.html</loc></url>
 <url><loc>/reference/keep_variable-methods.html</loc></url>
 <url><loc>/reference/log10_reverse_trans.html</loc></url>
 <url><loc>/reference/logit_trans.html</loc></url>
