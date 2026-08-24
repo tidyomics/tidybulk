@@ -83,7 +83,8 @@ genes.</p>
 <span>  <span class="va">.data</span>,</span>
 <span>  <span class="va">formula_abundance</span>,</span>
 <span>  abundance <span class="op">=</span> <span class="st">"counts"</span>,</span>
-<span>  dispersion_column <span class="op">=</span> <span class="st">"dispersion"</span>,</span>
+<span>  dispersion_column <span class="op">=</span> <span class="st">"dispersion_shrinked"</span>,</span>
+<span>  trended_dispersion_column <span class="op">=</span> <span class="st">"dispersion_trended"</span>,</span>
 <span>  dispersion_degrees_freedom_column <span class="op">=</span> <span class="st">"dispersion_degrees_freedom"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -92,7 +93,8 @@ genes.</p>
 <span>  <span class="va">.data</span>,</span>
 <span>  <span class="va">formula_abundance</span>,</span>
 <span>  abundance <span class="op">=</span> <span class="st">"counts"</span>,</span>
-<span>  dispersion_column <span class="op">=</span> <span class="st">"dispersion"</span>,</span>
+<span>  dispersion_column <span class="op">=</span> <span class="st">"dispersion_shrinked"</span>,</span>
+<span>  trended_dispersion_column <span class="op">=</span> <span class="st">"dispersion_trended"</span>,</span>
 <span>  dispersion_degrees_freedom_column <span class="op">=</span> <span class="st">"dispersion_degrees_freedom"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -101,7 +103,8 @@ genes.</p>
 <span>  <span class="va">.data</span>,</span>
 <span>  <span class="va">formula_abundance</span>,</span>
 <span>  abundance <span class="op">=</span> <span class="st">"counts"</span>,</span>
-<span>  dispersion_column <span class="op">=</span> <span class="st">"dispersion"</span>,</span>
+<span>  dispersion_column <span class="op">=</span> <span class="st">"dispersion_shrinked"</span>,</span>
+<span>  trended_dispersion_column <span class="op">=</span> <span class="st">"dispersion_trended"</span>,</span>
 <span>  dispersion_degrees_freedom_column <span class="op">=</span> <span class="st">"dispersion_degrees_freedom"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -128,7 +131,12 @@ them yourself, e.g. `(1 | donor)` as `donor` and
 
 <dt id="arg-dispersion-column">dispersion_column<a class="anchor" aria-label="anchor" href="#arg-dispersion-column"></a></dt>
 <dd><p>Name of the `rowData` column for tagwise (or
-trended) dispersion \(\phi_g\) (default `"dispersion"`).</p></dd>
+trended, above 1000 samples) dispersion \(\phi_g\) (default `"dispersion_shrinked"`).</p></dd>
+
+
+<dt id="arg-trended-dispersion-column">trended_dispersion_column<a class="anchor" aria-label="anchor" href="#arg-trended-dispersion-column"></a></dt>
+<dd><p>Name of the `rowData` column for the
+mean-dispersion trend \(\phi(A_g)\) (default `"dispersion_trended"`).</p></dd>
 
 
 <dt id="arg-dispersion-degrees-freedom-column">dispersion_degrees_freedom_column<a class="anchor" aria-label="anchor" href="#arg-dispersion-degrees-freedom-column"></a></dt>
@@ -139,7 +147,8 @@ the effective degrees of freedom \(d_{eff}\) behind that estimate
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>`.data` with `rowData(.data)[[dispersion_column]]` and
+    <p>`.data` with `rowData(.data)[[dispersion_column]]`,
+  `rowData(.data)[[trended_dispersion_column]]`, and
   `rowData(.data)[[dispersion_degrees_freedom_column]]` filled. The raw
   edgeR object is in `metadata(.)$tidybulk$estimateDisp`.</p>
 <p>A `SummarizedExperiment` object</p>
@@ -147,9 +156,12 @@ the effective degrees of freedom \(d_{eff}\) behind that estimate
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>Two columns are written, named by `dispersion_column` and
-`dispersion_degrees_freedom_column`. The first holds \(\phi_g\); the
-second holds the effective degrees of freedom behind that estimate.
+    <p>Three columns are written, named by `dispersion_column`,
+`trended_dispersion_column`, and `dispersion_degrees_freedom_column`.
+The first holds gene-wise \(\phi_g\) (tagwise below 1000 samples,
+trended above); the second holds the mean-dispersion trend
+\(\phi(A_g)\); the third holds the effective degrees of freedom
+behind the gene-wise estimate.
 [estimate_gene()] turns the pair into a **prior** on the negative binomial
 shape, not a plug-in: \(\phi_g\) locates the prior and \(d_{eff}\) sets
 its tightness, so the gene-wise likelihood can still pull the posterior
