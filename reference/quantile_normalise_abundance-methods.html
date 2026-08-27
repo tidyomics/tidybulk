@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.1</span>
       </span>
     </div>
 
@@ -146,15 +146,27 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span> <span class="va">airway</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>   <span class="fu">quantile_normalise_abundance</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 63677 8 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(2): '' tidybulk</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> assays(2): counts counts_scaled</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(63677): ENSG00000000003 ENSG00000000005 ... ENSG00000273492</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000273493</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(10): gene_id gene_name ... seq_coord_system symbol</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> colnames(8): SRR1039508 SRR1039509 ... SRR1039520 SRR1039521</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> colData names(10): SampleName cell ... BioSample condition</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: </span><span style="color: #555555;">Features=63677 | Samples=8 | </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # <span style="color: #555555;">  Assays=counts, counts_scaled</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># </span><span style="color: #5555FF;">                                                |--------- COVARIATES -------|</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        .feature    .sample | counts counts_scaled | SampleName cell  dex   albut</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   | <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         | <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1     </span> ENSG000000… SRR103… | 679    691.25        | GSM1275862 N613… untrt untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2     </span> ENSG000000… SRR103… | 0      0             | GSM1275862 N613… untrt untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3     </span> ENSG000000… SRR103… | 467    469.375       | GSM1275862 N613… untrt untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4     </span> ENSG000000… SRR103… | 260    257.75        | GSM1275862 N613… untrt untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5     </span> ENSG000000… SRR103… | 60     58.625        | GSM1275862 N613… untrt untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">      </span> --------    ------- - ------ ------------- - ---------- ----  ---   -----</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">509412</span> ENSG000002… SRR103… | 0      0             | GSM1275875 N061… trt   untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">509413</span> ENSG000002… SRR103… | 0      0             | GSM1275875 N061… trt   untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">509414</span> ENSG000002… SRR103… | 0      0             | GSM1275875 N061… trt   untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">509415</span> ENSG000002… SRR103… | 0      0             | GSM1275875 N061… trt   untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">509416</span> ENSG000002… SRR103… | 0      0             | GSM1275875 N061… trt   untrt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 17 more variables: Run &lt;fct&gt;, avgLength &lt;chr&gt;, Experiment &lt;fct&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Sample &lt;fct&gt;, BioSample &lt;fct&gt;, condition &lt;fct&gt;, `|` &lt;|&gt;, gene_id &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_name &lt;chr&gt;, entrezid &lt;chr&gt;, gene_biotype &lt;chr&gt;, gene_seq_start &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_seq_end &lt;chr&gt;, seq_name &lt;chr&gt;, seq_strand &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_coord_system &lt;chr&gt;, symbol &lt;chr&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

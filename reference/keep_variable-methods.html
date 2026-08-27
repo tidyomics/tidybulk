@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.1</span>
       </span>
     </div>
 
@@ -139,15 +139,26 @@ variable_trancripts = rownames(x)</p>
 <span class="r-in"><span>  <span class="fu">keep_variable</span><span class="op">(</span><span class="va">airway</span>, top <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>tidybulk says: highly abundant transcripts were not identified (i.e. identify_abundant()) or filtered (i.e., keep_abundant), therefore this operation will be performed on unfiltered data. In rare occasions this could be wanted. In standard whole-transcriptome workflows is generally unwanted.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Getting the 500 most variable genes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> class: RangedSummarizedExperiment </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 500 8 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): ''</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> assays(1): counts</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(500): ENSG00000129824 ENSG00000229807 ... ENSG00000205592</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000243232</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(10): gene_id gene_name ... seq_coord_system symbol</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> colnames(8): SRR1039508 SRR1039509 ... SRR1039520 SRR1039521</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> colData names(10): SampleName cell ... BioSample condition</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: </span><span style="color: #555555;">Features=500 | Samples=8 | </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> # <span style="color: #555555;">  Assays=counts</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># </span><span style="color: #5555FF;">                                |----------------- COVARIATES ---------------|</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      .feature    .sample | counts | SampleName cell  dex   albut Run   avgLength</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   | <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  | <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1   </span> ENSG000001… SRR103… | 4846   | GSM1275862 N613… untrt untrt SRR1… 126      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2   </span> ENSG000002… SRR103… | 0      | GSM1275862 N613… untrt untrt SRR1… 126      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3   </span> ENSG000001… SRR103… | 1358   | GSM1275862 N613… untrt untrt SRR1… 126      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4   </span> ENSG000000… SRR103… | 1507   | GSM1275862 N613… untrt untrt SRR1… 126      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5   </span> ENSG000001… SRR103… | 676    | GSM1275862 N613… untrt untrt SRR1… 126      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">    </span> --------    ------- - ------ - ---------- ----  ---   ----- ---   ---------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3996</span> ENSG000001… SRR103… | 395    | GSM1275875 N061… trt   untrt SRR1… 98       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3997</span> ENSG000001… SRR103… | 2      | GSM1275875 N061… trt   untrt SRR1… 98       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3998</span> ENSG000001… SRR103… | 3      | GSM1275875 N061… trt   untrt SRR1… 98       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3999</span> ENSG000002… SRR103… | 0      | GSM1275875 N061… trt   untrt SRR1… 98       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4000</span> ENSG000002… SRR103… | 0      | GSM1275875 N061… trt   untrt SRR1… 98       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: Experiment &lt;fct&gt;, Sample &lt;fct&gt;, BioSample &lt;fct&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   condition &lt;fct&gt;, `|` &lt;|&gt;, gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_biotype &lt;chr&gt;, gene_seq_start &lt;chr&gt;, gene_seq_end &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_name &lt;chr&gt;, seq_strand &lt;chr&gt;, seq_coord_system &lt;chr&gt;, symbol &lt;chr&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
