@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.3</span>
       </span>
     </div>
 
@@ -115,7 +115,7 @@
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>A character string. The scaling method passed to the back-end function (i.e., edgeR::calcNormFactors; "TMM","TMMwsp","RLE","upperquartile")</p></dd>
+<dd><p>A character string. The scaling method passed to the back-end function (i.e., edgeR::normLibSizes; "TMM","TMMwsp","RLE","upperquartile")</p></dd>
 
 
 <dt id="arg-reference-sample">reference_sample<a class="anchor" aria-label="anchor" href="#arg-reference-sample"></a></dt>
@@ -157,7 +157,7 @@ Lowly transcribed transcripts/genes (defined with minimum_counts and minimum_pro
 are filtered out from the scaling procedure.
 The scaling inference is then applied back to all unfiltered data.</p>
 <p>Underlying method
-edgeR::calcNormFactors(.data, method = c("TMM","TMMwsp","RLE","upperquartile"))</p>
+edgeR::normLibSizes(.data, method = c("TMM","TMMwsp","RLE","upperquartile"))</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -182,7 +182,6 @@ edgeR::calcNormFactors(.data, method = c("TMM","TMMwsp","RLE","upperquartile"))<
 <span class="r-in"><span>   <span class="fu">scale_abundance</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>All samples appear to belong to the same group.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: the sample with largest library size SRR1039517 was chosen as reference for scaling</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> calcNormFactors has been renamed to normLibSizes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: </span><span style="color: #555555;">Features=63677 | Samples=8 | </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> # <span style="color: #555555;">  Assays=counts, counts_scaled</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># </span><span style="color: #5555FF;">                                                |--------- COVARIATES -------|</span></span>
