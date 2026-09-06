@@ -75,6 +75,7 @@
 <span>  scaling_method <span class="op">=</span> <span class="st">"TMM"</span>,</span>
 <span>  omit_contrast_in_colnames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  prefix <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  formula_dispersion <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  significance_threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fill_missing_values <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -95,6 +96,7 @@
 <span>  scaling_method <span class="op">=</span> <span class="st">"TMM"</span>,</span>
 <span>  omit_contrast_in_colnames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  prefix <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  formula_dispersion <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  significance_threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fill_missing_values <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -115,6 +117,7 @@
 <span>  scaling_method <span class="op">=</span> <span class="st">"TMM"</span>,</span>
 <span>  omit_contrast_in_colnames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  prefix <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  formula_dispersion <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  significance_threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fill_missing_values <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -144,7 +147,7 @@
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>A character vector. Available methods are "edgeR_quasi_likelihood" (i.e., QLF), "edgeR_likelihood_ratio" (i.e., LRT), "edger_robust_likelihood_ratio", "DESeq2", "limma_voom", "limma_voom_sample_weights", "glmmseq_lme4", "glmmseq_glmmtmb". Only one method can be specified at a time.</p></dd>
+<dd><p>A character vector. Available methods are "edgeR_quasi_likelihood" (i.e., QLF), "edgeR_likelihood_ratio" (i.e., LRT), "edger_robust_likelihood_ratio", "DESeq2", "limma_voom", "limma_voom_sample_weights", "glmmseq_lme4", "glmmseq_glmmtmb". Only one method can be specified at a time. For glmmSeq, pass `formula_dispersion` (a fixed-effects formula for edgeR) to plug in tagwise dispersion, or omit it to let each gene estimate phi.</p></dd>
 
 
 <dt id="arg-test-above-log-fold-change">test_above_log2_fold_change<a class="anchor" aria-label="anchor" href="#arg-test-above-log-fold-change"></a></dt>
@@ -163,8 +166,12 @@
 <dd><p>A character string. The prefix you would like to add to the result columns. It is useful if you want to compare several methods.</p></dd>
 
 
+<dt id="arg-formula-dispersion">formula_dispersion<a class="anchor" aria-label="anchor" href="#arg-formula-dispersion"></a></dt>
+<dd><p>A fixed-effects formula for edgeR tagwise dispersion (glmmSeq). If NULL, each gene estimates phi.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Further arguments passed to some of the internal experimental functions. For example for glmmSeq, it is possible to pass .dispersion, and .scaling_factor column tidyeval to skip the caluclation of dispersion and scaling and use precalculated values. This is helpful is you want to calculate those quantities on many genes and do DE testing on fewer genes. .scaling_factor is the TMM value that can be obtained with tidybulk::scale_abundance.</p></dd>
+<dd><p>Further arguments passed to some of the internal experimental functions. For glmmSeq: `.scaling_factor` skips TMM and uses that column from [scale_abundance()].</p></dd>
 
 
 <dt id="arg-significance-threshold">significance_threshold<a class="anchor" aria-label="anchor" href="#arg-significance-threshold"></a></dt>
@@ -227,16 +234,8 @@ DESeq2::results()</p>
 
 
 <p>Underlying method for glmmSeq framework:</p>
-<p>counts =
-.data |&gt;
-  assay(my_assay)</p>
-<p># Create design matrix for dispersion, removing random effects
-design =
-  model.matrix(
-    object = .formula |&gt; lme4::nobars(),
-    data = metadata
-  )</p>
-<p>dispersion = counts |&gt; edgeR::estimateDisp(design = design) <!-- %$% tagwise.dispersion |&gt; setNames(rownames(counts)) --></p>
+<p>counts = assay(.data, my_assay)</p>
+<p># Tagwise phi from edgeR if formula_dispersion is given.</p>
 <p>glmmSeq( .formula,
            countdata = counts ,
            metadata =   metadata |&gt; as.data.frame(),
@@ -430,7 +429,9 @@ design =
 <span class="r-in"><span>  <span class="fu"><a href="identify_abundant-methods.html">identify_abundant</a></span><span class="op">(</span>factor_of_interest <span class="op">=</span> <span class="va">condition</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">test_differential_abundance</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="op">~</span> <span class="va">condition</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">condition</span> <span class="op">|</span> <span class="va">cell</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    method <span class="op">=</span> <span class="st">"glmmseq_lme4"</span>, cores <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span>    method <span class="op">=</span> <span class="st">"glmmseq_lme4"</span>,</span></span>
+<span class="r-in"><span>    formula_dispersion <span class="op">=</span> <span class="op">~</span> <span class="va">condition</span> <span class="op">+</span> <span class="va">cell</span>,</span></span>
+<span class="r-in"><span>    cores <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'lme4':</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   method           from</span>
@@ -439,12 +440,11 @@ design =
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> glmmTMB was built with TMB package version 1.9.21</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> Current TMB package version is 1.9.25</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> Please re-install glmmTMB from source or restore original ‘TMB’ package (see '?reinstalling' for more information)</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the ‘nobars’ function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainer to do so.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the ‘findbars’ function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainer to do so.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the ‘subbars’ function has moved to the reformulas package. Please update your imports, or ask an upstream package maintainer to do so.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: calculating tagwise (shrinked) and trended dispersion with edgeR::estimateDisp() using ~condition + cell.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: plugging rowData column dispersion_shrinked into glmmSeq.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> n = 8 samples, 4 individuals</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Time difference of 38.55318 secs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Time difference of 31.00323 secs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the DE object do `metadata(.)$tidybulk$glmmseq_lme4_object`</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> tidybulk says: to access the raw results (fitted GLM) do `metadata(.)$tidybulk$glmmseq_lme4_fit`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A SummarizedExperiment-tibble abstraction: </span><span style="color: #555555;">Features=42 | Samples=8 | </span></span>

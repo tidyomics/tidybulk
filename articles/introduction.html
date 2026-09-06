@@ -82,7 +82,7 @@ transcriptomic data analysis</h1>
                         <h4 data-toc-skip class="author">Stefano
 Mangiola</h4>
             
-            <h4 data-toc-skip class="date">2026-09-05</h4>
+            <h4 data-toc-skip class="date">2026-09-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/master/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -1666,8 +1666,11 @@ used for testing significance relative to a fold-change threshold.</p>
 <div class="section level4">
 <h4 id="mixed-models-for-complex-designs">Mixed Models for Complex Designs<a class="anchor" aria-label="anchor" href="#mixed-models-for-complex-designs"></a>
 </h4>
-<p>glmmSeq <span class="citation">(<a href="#ref-ma2020glmmseq"><span class="nocase">Ma et al.</span> 2020</a>)</span> is used for generalized
-linear mixed models for RNA-seq data.</p>
+<p>glmmSeq <span class="citation">(<a href="#ref-ma2020glmmseq"><span class="nocase">Ma et al.</span> 2020</a>)</span> is used for mixed
+models. Pass <code>formula_dispersion</code> as a fixed-effects formula
+for edgeR tagwise dispersion (you choose whether grouping factors enter
+that design). Omit it to let each gene estimate phi (useful with many
+samples).</p>
 <div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using glmmSeq for mixed models</span></span>
 <span><span class="va">airway</span> <span class="op">|&gt;</span></span>
@@ -1676,10 +1679,11 @@ linear mixed models for RNA-seq data.</p>
 <span>  <span class="co"># Select 100 genes in the interest of execution time</span></span>
 <span>  <span class="va">_</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="op">]</span> <span class="op">|&gt;</span></span>
 <span></span>
-<span>  <span class="co"># Fit model</span></span>
+<span>  <span class="co"># Fit model; formula_dispersion is the edgeR design for tagwise phi</span></span>
 <span>  <span class="fu"><a href="../reference/test_differential_expression-methods.html">test_differential_expression</a></span><span class="op">(</span></span>
 <span>    <span class="op">~</span> <span class="va">dex</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span><span class="op">|</span><span class="va">cell</span><span class="op">)</span>, </span>
-<span>    method <span class="op">=</span> <span class="st">"glmmseq_lme4"</span>, </span>
+<span>    method <span class="op">=</span> <span class="st">"glmmseq_lme4"</span>,</span>
+<span>    formula_dispersion <span class="op">=</span> <span class="op">~</span> <span class="va">dex</span> <span class="op">+</span> <span class="va">cell</span>,</span>
 <span>    cores <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    prefix <span class="op">=</span> <span class="st">"glmmseq__"</span></span>
 <span>  <span class="op">)</span> </span></code></pre></div>
@@ -1691,15 +1695,11 @@ linear mixed models for RNA-seq data.</p>
 <span><span class="co">## glmmTMB was built with TMB package version 1.9.21</span></span>
 <span><span class="co">## Current TMB package version is 1.9.25</span></span>
 <span><span class="co">## Please re-install glmmTMB from source or restore original 'TMB' package (see '?reinstalling' for more information)</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: the 'nobars' function has moved to the reformulas package. Please</span></span>
-<span><span class="co">## update your imports, or ask an upstream package maintainer to do so.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: the 'findbars' function has moved to the reformulas package. Please</span></span>
-<span><span class="co">## update your imports, or ask an upstream package maintainer to do so.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: the 'subbars' function has moved to the reformulas package. Please</span></span>
-<span><span class="co">## update your imports, or ask an upstream package maintainer to do so.</span></span></code></pre>
+<pre><code><span><span class="co">## tidybulk says: calculating tagwise (shrinked) and trended dispersion with edgeR::estimateDisp() using ~dex + cell.</span></span></code></pre>
+<pre><code><span><span class="co">## tidybulk says: plugging rowData column dispersion_shrinked into glmmSeq.</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## n = 8 samples, 4 individuals</span></span></code></pre>
-<pre><code><span><span class="co">## Time difference of 1.482127 mins</span></span></code></pre>
+<pre><code><span><span class="co">## Time difference of 1.182255 mins</span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: to access the DE object do</span></span>
 <span><span class="co">## `metadata(.)$tidybulk$glmmseq_lme4_object`</span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: to access the raw results (fitted GLM) do</span></span>
@@ -1713,7 +1713,7 @@ linear mixed models for RNA-seq data.</p>
 <span><span class="co">##   glmmseq__P_dex_adjusted</span></span>
 <span><span class="co">## colnames(8): SRR1039508 SRR1039509 ... SRR1039520 SRR1039521</span></span>
 <span><span class="co">## colData names(16): SampleName cell ... PC2 cluster_kmeans</span></span></code></pre>
-<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">airway</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/pivot_transcript-methods.html">pivot_transcript</a></span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 15,790 × 42</span></span></span>
@@ -1743,7 +1743,7 @@ linear mixed models for RNA-seq data.</p>
 <p>With tidybulk, retrieving gene descriptions is straightforward,
 making it easy to enhance the interpretability of your differential
 expression results.</p>
-<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add gene descriptions using the original SummarizedExperiment</span></span>
 <span><span class="va">airway</span> <span class="op">|&gt;</span> </span>
 <span></span>
@@ -1775,7 +1775,7 @@ expression results.</p>
 </h3>
 <p>ComBat-seq <span class="citation">(<a href="#ref-zhang2017combatseq">Zhang et al. 2020</a>)</span> is used for
 batch effect correction in RNA-seq data.</p>
-<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Adjust for batch effects</span></span>
 <span><span class="va">airway</span> <span class="op">=</span> <span class="va">airway</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/adjust_abundance-methods.html">adjust_abundance</a></span><span class="op">(</span></span>
@@ -1791,7 +1791,7 @@ batch effect correction in RNA-seq data.</p>
 <span><span class="co">## Fitting the GLM model</span></span>
 <span><span class="co">## Shrinkage off - using GLM estimates for parameters</span></span>
 <span><span class="co">## Adjusting the data</span></span></code></pre>
-<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb189"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Scatter plot of adjusted vs unadjusted</span></span>
 <span><span class="va">airway</span> <span class="op">|&gt;</span> </span>
 <span>  </span>
@@ -1815,7 +1815,7 @@ batch effect correction in RNA-seq data.</p>
 </h3>
 <p>Gene Set Enrichment Analysis (GSEA) <span class="citation">(<a href="#ref-subramanian2005gsea"><span class="nocase">Subramanian et
 al.</span> 2005</a>)</span> is used for gene set enrichment.</p>
-<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb191"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run gene rank enrichment (GSEA style)</span></span>
 <span><span class="va">gene_rank_res</span> <span class="op">=</span></span>
 <span>  <span class="va">airway</span> <span class="op">|&gt;</span></span>
@@ -1836,7 +1836,7 @@ al.</span> 2005</a>)</span> is used for gene set enrichment.</p>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> In argument: `fit = map(...)`.</span></span>
 <span><span class="co">## Caused by warning in `gsea()`:</span></span>
 <span><span class="co">## <span style="color: #BBBB00;">!</span> For some pathways, in reality P-values are less than 1e-10. You can set the eps argument to zero for better estimation.</span></span></code></pre>
-<div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Inspect significant gene sets (example for C2 collection)</span></span>
 <span><span class="va">gene_rank_res</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">gs_collection</span> <span class="op">==</span> <span class="st">"C2"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1862,7 +1862,7 @@ al.</span> 2005</a>)</span> is used for gene set enrichment.</p>
 <div class="section level5">
 <h5 id="visualize-enrichment">Visualize enrichment<a class="anchor" aria-label="anchor" href="#visualize-enrichment"></a>
 </h5>
-<div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yulab-smu.top/contribution-knowledge-mining/" class="external-link">enrichplot</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## enrichplot v1.33.0 Learn more at https://yulab-smu.top/contribution-knowledge-mining/</span></span>
 <span><span class="co">## </span></span>
@@ -1875,7 +1875,7 @@ al.</span> 2005</a>)</span> is used for gene set enrichment.</p>
 <pre><code><span><span class="co">## The following object is masked from 'package:GGally':</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##     ggtable</span></span></code></pre>
-<div class="sourceCode" id="cb201"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb200"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span>  <span class="va">gene_rank_res</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">unnest</span><span class="op">(</span><span class="va">test</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1906,13 +1906,13 @@ al.</span> 2005</a>)</span> is used for gene set enrichment.</p>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## [[6]]</span></span></code></pre>
 <p><img src="introduction_files/figure-html/enrichment-visualize-gsea-plots-6.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb208"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb207"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/detach.html" class="external-link">detach</a></span><span class="op">(</span><span class="st">"package:enrichplot"</span>, unload <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: 'enrichplot' namespace cannot be unloaded:</span></span>
 <span><span class="co">##   namespace 'enrichplot' is imported by 'clusterProfiler' so cannot be unloaded</span></span></code></pre>
 <p>Gene Ontology overrepresentation analysis <span class="citation">(<a href="#ref-ashburner2000go"><span class="nocase">Ashburner et al.</span>
 2000</a>)</span> is used for functional enrichment.</p>
-<div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb209"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Test gene overrepresentation</span></span>
 <span><span class="va">airway_overrep</span> <span class="op">=</span> </span>
 <span>  <span class="va">airway</span> <span class="op">|&gt;</span></span>
@@ -1953,7 +1953,7 @@ combines multiple gene set enrichment analysis methods to provide a more
 robust and comprehensive analysis of gene set enrichment. It creates a
 web-based interactive tool that allows you to explore the results of the
 gene set enrichment analysis.</p>
-<div class="sourceCode" id="cb212"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb211"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">EGSEA</span><span class="op">)</span></span>
 <span><span class="co"># Test gene enrichment</span></span>
 <span>  <span class="va">airway</span> <span class="op">|&gt;</span> </span>
@@ -2013,7 +2013,7 @@ Performs cell type enrichment analysis.</li>
 <div class="section level4">
 <h4 id="example-usage">Example Usage<a class="anchor" aria-label="anchor" href="#example-usage"></a>
 </h4>
-<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb212"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway</span> <span class="op">=</span> </span>
 <span>  <span class="va">airway</span> <span class="op">|&gt;</span> </span>
 <span>  </span>
@@ -2021,9 +2021,9 @@ Performs cell type enrichment analysis.</li>
 <span>  <span class="fu"><a href="../reference/deconvolve_cellularity-methods.html">deconvolve_cellularity</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"cibersort"</span>, cores <span class="op">=</span> <span class="fl">1</span>, prefix <span class="op">=</span> <span class="st">"cibersort__"</span>, feature_column <span class="op">=</span> <span class="st">"symbol"</span><span class="op">)</span> </span></code></pre></div>
 <p>For the rest of the methods, you need to install the
 <code>immunedeconv</code> package.</p>
-<div class="sourceCode" id="cb214"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"immunedeconv"</span><span class="op">)</span><span class="op">)</span> <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"immunedeconv"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb215"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb214"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">airway</span> <span class="op">=</span> </span>
 <span></span>
 <span><span class="va">airway</span> <span class="op">|&gt;</span> </span>
@@ -2047,7 +2047,7 @@ Performs cell type enrichment analysis.</li>
 </h4>
 <p>Visualize the cell type proportions as a stacked barplot for each
 method:</p>
-<div class="sourceCode" id="cb216"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb215"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Visualize CIBERSORT results</span></span>
 <span><span class="va">airway</span>   <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/pivot_sample-methods.html">pivot_sample</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -2060,7 +2060,7 @@ method:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span>, vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"CIBERSORT Cell Type Proportions"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="introduction_files/figure-html/deconvolution-plotting-1.png" class="r-plt" alt="" width="960"></p>
-<div class="sourceCode" id="cb217"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb216"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span> <span class="co"># Repeat similar plotting for LLSR, EPIC, MCP-counter, quanTIseq, and xCell</span></span>
 <span><span class="va">airway</span>   <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/pivot_sample-methods.html">pivot_sample</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -2123,7 +2123,7 @@ method:</p>
 </h3>
 <p><code>tidybulk</code> allows you to get the bibliography of all
 methods used in our workflow.</p>
-<div class="sourceCode" id="cb218"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb217"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get bibliography of all methods used in our workflow</span></span>
 <span><span class="va">airway</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/get_bibliography-methods.html">get_bibliography</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  @Article{tidybulk,</span></span>
@@ -2249,7 +2249,7 @@ methods used in our workflow.</p>
 <span><span class="co">##   year={2015},</span></span>
 <span><span class="co">##   publisher={Nature Publishing Group}</span></span>
 <span><span class="co">##  }</span></span></code></pre>
-<div class="sourceCode" id="cb220"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb219"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
