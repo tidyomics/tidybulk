@@ -3,6 +3,7 @@
 
 \section{Changes in version 2.3.3}{
 \itemize{
+    \item \code{scale_abundance()} now stores edgeR effective library size (\code{lib.size * norm.factors}) in \code{colData} as \code{effective_library_size}, alongside \code{TMM} and \code{multiplier}.
     \item For \code{glmmseq_lme4} and \code{glmmseq_glmmtmb}, pass \code{formula_dispersion} (a fixed-effects formula) to estimate tagwise dispersion with edgeR and plug it in, or omit it to let each gene estimate phi.
     \item Use \code{reformulas::nobars}/\code{findbars}/\code{subbars} instead of the deprecated \code{lme4} shims in the glmmSeq backend.
     \item Fix \code{aggregate_duplicates()} for SummarizedExperiment objects with \code{GRanges} row ranges on Bioconductor devel: convert ranges with \code{as.data.frame()} before \code{as_tibble()} to avoid broken S4Vectors List dispatch.

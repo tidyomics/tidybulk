@@ -65,13 +65,17 @@ test_that("tidybulk SummarizedExperiment normalisation subset",{
     .subset_for_scaling = .abundant & grepl("^ENSG", .feature)
   )
   
-  # Check that the multiplier column exists and has reasonable values
+  # Check that the multiplier and effective library size columns exist
   expect_true("multiplier" %in% names(SummarizedExperiment::colData(res)))
+  expect_true("effective_library_size" %in% names(SummarizedExperiment::colData(res)))
   multiplier_values <- SummarizedExperiment::colData(res)$multiplier
+  effective_library_size_values <- SummarizedExperiment::colData(res)$effective_library_size
   
-  # Check that multipliers are positive and finite
+  # Check that multipliers and effective library sizes are positive and finite
   expect_true(all(multiplier_values > 0, na.rm = TRUE))
   expect_true(all(is.finite(multiplier_values), na.rm = TRUE))
+  expect_true(all(effective_library_size_values > 0, na.rm = TRUE))
+  expect_true(all(is.finite(effective_library_size_values), na.rm = TRUE))
   
   # Check that we have a reasonable number of unique multiplier values
   unique_multipliers <- sort(unique(multiplier_values))

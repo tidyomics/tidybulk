@@ -32,7 +32,7 @@
 #'
 #'
 #'
-#' @return A tbl object with additional columns with scaled data as `<NAME OF COUNT COLUMN>_scaled`
+#' @return A `SummarizedExperiment` with a scaled assay named `<ABUNDANCE><suffix>` (default `"counts_scaled"`), plus sample-level `colData` columns `TMM`, `multiplier`, and `effective_library_size` (edgeR library size times normalisation factor).
 #'
 #'
 #' @examples
@@ -182,15 +182,19 @@ setGeneric("scale_abundance", function(.data,
       method = method
     )
   
+  # edgeR effective library size is library size times the normalisation factor
+  effective_library_size = library_size_filtered * nf
+  
   # Calculate multiplier
   multiplier =
-    # Relecting the ratio of effective library size of the reference sample to the effective library size of each sample
-    (library_size_filtered[reference] * nf[reference]) |>
-    divide_by(library_size_filtered * nf) 
+    # Ratio of effective library size of the reference sample to that of each sample
+    effective_library_size[reference] |>
+    divide_by(effective_library_size)
   
   # Add to sample info
   colData(.data)$TMM = nf
   colData(.data)$multiplier = multiplier
+  colData(.data)$effective_library_size = effective_library_size
   
   my_counts_scaled =
     list(

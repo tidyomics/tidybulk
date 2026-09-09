@@ -15,6 +15,17 @@ test_that("scale_abundance works correctly", {
     names(SummarizedExperiment::assays(res)),
     c("counts", "counts_scaled")
   )
+  
+  cd <- SummarizedExperiment::colData(res)
+  expect_true("TMM" %in% names(cd))
+  expect_true("multiplier" %in% names(cd))
+  expect_true("effective_library_size" %in% names(cd))
+  expect_true(all(cd$effective_library_size > 0, na.rm = TRUE))
+  expect_true(all(is.finite(cd$effective_library_size), na.rm = TRUE))
+  
+  # multiplier * effective library size is constant (the reference sample)
+  products <- as.numeric(cd$multiplier * cd$effective_library_size)
+  expect_equal(products, rep(products[1], length(products)))
 })
 
 test_that("scale_abundance with subset works correctly", {

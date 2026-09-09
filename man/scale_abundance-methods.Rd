@@ -63,7 +63,7 @@ scale_abundance(
 \item{.abundance}{DEPRECATED. The name of the transcript/gene abundance column (symbolic, for backward compatibility)}
 }
 \value{
-A tbl object with additional columns with scaled data as `<NAME OF COUNT COLUMN>_scaled`
+A `SummarizedExperiment` with a scaled assay named `<ABUNDANCE><suffix>` (default `"counts_scaled"`), plus sample-level `colData` columns `TMM`, `multiplier`, and `effective_library_size` (edgeR library size times normalisation factor).
 
 A `SummarizedExperiment` object
 
