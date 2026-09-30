@@ -438,7 +438,7 @@ such as batch effects (if applicable) in the formula.
       is(my_differential_abundance$results_deseqresults, "list") &&
         length(my_differential_abundance$results_deseqresults) > 1
     ) {
-      set_names(
+      my_differential_abundance$results_deseqresults <- set_names(
         my_differential_abundance$results_deseqresults,
         paste(
           prefix,
@@ -1592,7 +1592,7 @@ get_differential_transcript_abundance_deseq2_SE <- function(
       })
     result <- 1:length(my_contrasts) |>
       map_dfr(function(contrast_index) {
-        result_raw |>
+        result_raw[[contrast_index]] |>
           as_tibble(rownames = "transcript") |>
           mutate(
             constrast = sprintf(
@@ -1617,6 +1617,7 @@ get_differential_transcript_abundance_deseq2_SE <- function(
 
   # Return
   list(
+    result = result,
     result_raw = result,
     de_object = deseq2_object,
     results_deseqresults = result_raw
