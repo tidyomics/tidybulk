@@ -10,6 +10,11 @@
 #' @details
 #' The function allows for effect size adjustments after DESeq2 DE calculations. By default, specified .data and DE_name is enough to perform the adjustment. In case the DE analysis does not exist, it will be generated using the specified coefficient.
 #'
+#' @return a SummarizedExperiment
+#' @examples
+#' T
+#'
+#' @export
 #'
 adjust_effect_sizes <- function(
   .data,
@@ -19,17 +24,19 @@ adjust_effect_sizes <- function(
   DESIGN = NULL,
   ...
 ) {
+  type <- match.arg(type, choices = c("apeglm", "ashr", "normal"))
   deseq_object <- metadata(.data)$tidybulk$DESeq2_object #legibility
 
   if (missing(DE_name)) {
     if (is.null(COEF)) {
       stop("Both DE_name and COEF are missing. Please specifiy at least one!")
     }
-    # didn't know what the convention is here. I just want the comparison to fail reliably below, forcing a generation of results
+    # didn't know what the convention is here.
+    # I just want the comparison to fail reliably below, forcing a generation of results
     incomingCoef <- "def_not_a_valid_coef"
     DE_name <- "comparison"
   } else {
-    de_res <- metadata(.data)$tidybulk$results_deseqresults[[DE_name]]
+    de_res <- metadata(.data)$tidybulk$DESeq2_Resultsobject[[DE_name]]
     if (!is(de_res, "DESeqResults")) {
       stop(
         "The specified DE result is not a valid DESeqResults object. Please respecify!"
@@ -52,7 +59,10 @@ adjust_effect_sizes <- function(
 
   coef_message <- paste0("The coefficient is assumed as ", incomingCoef, ".")
   if (!is.null(COEF) && COEF != incomingCoef) {
-    de_res <- DESeq2::results(deseq_object, coef = COEF)
+    deseq_object <- DESeq2::DESeq(deseq_object)
+    de_res <- DESeq2::results(deseq_object, name = COEF)
+
+    incomingCoef <- COEF
     coef_message <- paste0(
       "The coefficient was specified as",
       as.character(COEF)
@@ -96,13 +106,15 @@ adjust_effect_sizes <- function(
     "."
   )
 
-  res_df <- adjusted
+  res_df <- adjusted |>
+    as_tibble(rownames = "transcript")
   cn <- colnames(res_df)
   cn_new <- c(
     cn[1],
-    sprintf("%s%s", paste(DE_name, res_df, sep = "_"), cn[2:length(cn)])
+    sprintf("%s%s", paste(DE_name, sep = "_"), cn[2:length(cn)])
   )
   colnames(res_df) <- cn_new
+
   stats_matrix <- res_df |>
     as_matrix(rownames = "transcript")
   stats_matrix <- stats_matrix[
@@ -114,15 +126,7 @@ adjust_effect_sizes <- function(
 
   message(paste(message_text, coef_message))
 
-  stats_matrix <- my_differential_abundance$result |>
-    as_matrix(rownames = "transcript")
-  stats_matrix <- stats_matrix[
-    match(rownames(rowData(.data)), rownames(stats_matrix)),
-    ,
-    drop = FALSE
-  ]
-
-  data_obj_intermediate <- .attach_to_metadata(
+  data_obj_intermediate <- attach_to_metadata(
     .data,
     adjusted,
     paste0(DE_name, "_adjusted")
@@ -130,7 +134,7 @@ adjust_effect_sizes <- function(
 
   rlang::inform(
     sprintf(
-      "tidybulk says: to access the adjusted effects do `metadata(.)$tidybulk$%_adjusted`",
+      "tidybulk says: to access the adjusted effects do `metadata(.)$tidybulk$%s_adjusted`",
       DE_name
     ),
     .frequency_id = sprintf("Access DE results %s", DE_name),
