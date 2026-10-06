@@ -41,165 +41,202 @@ exportMethods(as_SummarizedExperiment)
 import(lifecycle)
 import(tibble)
 importFrom(GenomicRanges,makeGRangesListFromDataFrame)
-importFrom(Matrix,colSums)
-importFrom(Matrix,rowMeans)
-importFrom(Matrix,t)
-importFrom(S4Vectors,"metadata<-")
-importFrom(S4Vectors,DataFrame)
-importFrom(S4Vectors,as.data.frame)
-importFrom(S4Vectors,metadata)
-importFrom(SummarizedExperiment,"assays<-")
-importFrom(SummarizedExperiment,"colData<-")
-importFrom(SummarizedExperiment,"rowData<-")
-importFrom(SummarizedExperiment,"rowRanges<-")
-importFrom(SummarizedExperiment,SummarizedExperiment)
-importFrom(SummarizedExperiment,as.data.frame)
-importFrom(SummarizedExperiment,assay)
-importFrom(SummarizedExperiment,assayNames)
-importFrom(SummarizedExperiment,assays)
-importFrom(SummarizedExperiment,colData)
-importFrom(SummarizedExperiment,colnames)
-importFrom(SummarizedExperiment,rowData)
-importFrom(SummarizedExperiment,rowRanges)
+importFrom(Matrix,
+  colSums,
+  rowMeans,
+  t
+)
+importFrom(S4Vectors,
+  "metadata<-",
+  DataFrame,
+  as.data.frame,
+  mcols,
+  metadata
+)
+importFrom(SummarizedExperiment,
+  "assays<-",
+  "colData<-",
+  "rowData<-",
+  "rowRanges<-",
+  SummarizedExperiment,
+  as.data.frame,
+  assay,
+  assayNames,
+  assays,
+  colData,
+  colnames,
+  rowData,
+  rowRanges
+)
 importFrom(crayon,blue)
-importFrom(dplyr,across)
-importFrom(dplyr,add_count)
-importFrom(dplyr,arrange)
-importFrom(dplyr,as_tibble)
-importFrom(dplyr,between)
-importFrom(dplyr,bind_cols)
-importFrom(dplyr,bind_rows)
-importFrom(dplyr,case_when)
-importFrom(dplyr,count)
-importFrom(dplyr,desc)
-importFrom(dplyr,distinct)
-importFrom(dplyr,everything)
-importFrom(dplyr,filter)
-importFrom(dplyr,group_by)
-importFrom(dplyr,if_else)
-importFrom(dplyr,inner_join)
-importFrom(dplyr,join_by)
-importFrom(dplyr,left_join)
-importFrom(dplyr,mutate)
-importFrom(dplyr,mutate_if)
-importFrom(dplyr,n)
-importFrom(dplyr,n_distinct)
-importFrom(dplyr,pull)
-importFrom(dplyr,rename)
-importFrom(dplyr,rowwise)
-importFrom(dplyr,select)
-importFrom(dplyr,select_if)
-importFrom(dplyr,setdiff)
-importFrom(dplyr,slice)
-importFrom(dplyr,starts_with)
-importFrom(dplyr,summarise)
-importFrom(dplyr,summarise_all)
-importFrom(dplyr,ungroup)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,geom_point)
-importFrom(ggplot2,ggplot)
-importFrom(ggplot2,labs)
-importFrom(ggplot2,scale_x_continuous)
-importFrom(ggplot2,scale_y_continuous)
-importFrom(lifecycle,deprecate_soft)
-importFrom(lifecycle,deprecate_warn)
-importFrom(magrittr,"%$%")
-importFrom(magrittr,divide_by)
-importFrom(magrittr,equals)
-importFrom(magrittr,extract2)
-importFrom(magrittr,multiply_by)
-importFrom(magrittr,not)
-importFrom(magrittr,set_colnames)
-importFrom(magrittr,set_rownames)
-importFrom(methods,is)
-importFrom(methods,new)
-importFrom(methods,slot)
-importFrom(parallel,clusterExport)
-importFrom(parallel,makeCluster)
-importFrom(parallel,mclapply)
-importFrom(parallel,parLapply)
-importFrom(parallel,stopCluster)
-importFrom(purrr,map)
-importFrom(purrr,map2)
-importFrom(purrr,map2_dfc)
-importFrom(purrr,map2_dfr)
-importFrom(purrr,map_chr)
-importFrom(purrr,map_dfr)
-importFrom(purrr,map_int)
-importFrom(purrr,reduce)
-importFrom(purrr,when)
-importFrom(rlang,"!!")
-importFrom(rlang,":=")
-importFrom(rlang,enquo)
-importFrom(rlang,inform)
-importFrom(rlang,is_quosure)
-importFrom(rlang,quo)
-importFrom(rlang,quo_is_missing)
-importFrom(rlang,quo_is_null)
-importFrom(rlang,quo_is_symbol)
-importFrom(rlang,quo_is_symbolic)
-importFrom(rlang,quo_name)
-importFrom(rlang,quo_set_env)
-importFrom(rlang,quo_squash)
-importFrom(rlang,set_names)
-importFrom(rlang,sym)
-importFrom(scales,extended_breaks)
-importFrom(scales,label_scientific)
-importFrom(scales,trans_new)
-importFrom(stats,AIC)
-importFrom(stats,anova)
-importFrom(stats,as.formula)
-importFrom(stats,coef)
-importFrom(stats,cor)
-importFrom(stats,cov)
-importFrom(stats,dist)
-importFrom(stats,hat)
-importFrom(stats,kmeans)
-importFrom(stats,lm)
-importFrom(stats,logLik)
-importFrom(stats,lsfit)
-importFrom(stats,median)
-importFrom(stats,model.matrix)
-importFrom(stats,na.omit)
-importFrom(stats,p.adjust)
-importFrom(stats,pchisq)
-importFrom(stats,plogis)
-importFrom(stats,prcomp)
-importFrom(stats,predict)
-importFrom(stats,qlogis)
-importFrom(stats,rnorm)
-importFrom(stats,sd)
-importFrom(stats,setNames)
-importFrom(stats,terms)
-importFrom(stats,update.formula)
-importFrom(stats,vcov)
-importFrom(stringr,str_c)
-importFrom(stringr,str_detect)
-importFrom(stringr,str_remove)
-importFrom(stringr,str_replace)
-importFrom(stringr,str_replace_all)
-importFrom(stringr,str_subset)
-importFrom(stringr,str_to_lower)
-importFrom(tibble,as_tibble)
-importFrom(tibble,enframe)
-importFrom(tibble,rowid_to_column)
-importFrom(tibble,tibble)
-importFrom(tidyr,drop_na)
-importFrom(tidyr,gather)
-importFrom(tidyr,nest)
-importFrom(tidyr,pivot_longer)
-importFrom(tidyr,pivot_wider)
-importFrom(tidyr,spread)
-importFrom(tidyr,unite)
-importFrom(tidyr,unnest)
-importFrom(tidyselect,all_of)
-importFrom(tidyselect,any_of)
-importFrom(tidyselect,ends_with)
-importFrom(utils,capture.output)
-importFrom(utils,combn)
-importFrom(utils,data)
-importFrom(utils,head)
-importFrom(utils,install.packages)
-importFrom(utils,packageDescription)
-importFrom(utils,packageVersion)
-importFrom(utils,tail)
+importFrom(dplyr,
+  across,
+  add_count,
+  arrange,
+  as_tibble,
+  between,
+  bind_cols,
+  bind_rows,
+  case_when,
+  count,
+  desc,
+  distinct,
+  everything,
+  filter,
+  group_by,
+  if_else,
+  inner_join,
+  join_by,
+  left_join,
+  mutate,
+  mutate_if,
+  n,
+  n_distinct,
+  pull,
+  rename,
+  rowwise,
+  select,
+  select_if,
+  setdiff,
+  slice,
+  starts_with,
+  summarise,
+  summarise_all,
+  ungroup
+)
+importFrom(ggplot2,
+  aes,
+  geom_point,
+  ggplot,
+  labs,
+  scale_x_continuous,
+  scale_y_continuous
+)
+importFrom(lifecycle,
+  deprecate_soft,
+  deprecate_warn
+)
+importFrom(magrittr,
+  "%$%",
+  divide_by,
+  equals,
+  extract2,
+  multiply_by,
+  not,
+  set_colnames,
+  set_rownames
+)
+importFrom(methods,
+  is,
+  new,
+  slot
+)
+importFrom(parallel,
+  clusterExport,
+  makeCluster,
+  mclapply,
+  parLapply,
+  stopCluster
+)
+importFrom(purrr,
+  map,
+  map2,
+  map2_dfc,
+  map2_dfr,
+  map_chr,
+  map_dfr,
+  map_int,
+  reduce,
+  when
+)
+importFrom(rlang,
+  "!!",
+  ":=",
+  enquo,
+  inform,
+  is_quosure,
+  quo,
+  quo_is_missing,
+  quo_is_null,
+  quo_is_symbol,
+  quo_is_symbolic,
+  quo_name,
+  quo_set_env,
+  quo_squash,
+  set_names,
+  sym
+)
+importFrom(scales,
+  extended_breaks,
+  label_scientific,
+  trans_new
+)
+importFrom(stats,
+  AIC,
+  anova,
+  as.formula,
+  coef,
+  cor,
+  cov,
+  dist,
+  hat,
+  kmeans,
+  lm,
+  logLik,
+  lsfit,
+  median,
+  model.matrix,
+  na.omit,
+  p.adjust,
+  pchisq,
+  plogis,
+  prcomp,
+  predict,
+  qlogis,
+  rnorm,
+  sd,
+  setNames,
+  terms,
+  update.formula,
+  vcov
+)
+importFrom(stringr,
+  str_c,
+  str_detect,
+  str_remove,
+  str_replace,
+  str_replace_all,
+  str_subset,
+  str_to_lower
+)
+importFrom(tibble,
+  as_tibble,
+  enframe,
+  rowid_to_column,
+  tibble
+)
+importFrom(tidyr,
+  drop_na,
+  gather,
+  nest,
+  pivot_longer,
+  pivot_wider,
+  spread,
+  unite,
+  unnest
+)
+importFrom(tidyselect,
+  all_of,
+  any_of,
+  ends_with
+)
+importFrom(utils,
+  capture.output,
+  combn,
+  data,
+  head,
+  install.packages,
+  packageDescription,
+  packageVersion,
+  tail
+)

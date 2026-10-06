@@ -100,4 +100,4 @@ LazyData: true
 LazyDataCompression: xz
 URL: https://github.com/stemangiola/tidybulk
 BugReports: https://github.com/stemangiola/tidybulk/issues
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
