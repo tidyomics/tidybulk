@@ -36,6 +36,32 @@ Adjust effect sizes of DESeq2 results
 The function allows for effect size adjustments after DESeq2 DE calculations. By default, specified .data and DE_name is enough to perform the adjustment. In case the DE analysis does not exist, it will be generated using the specified coefficient.
 }
 \examples{
-T
+ data('airway', package = 'airway')
+  # Ensure a 'condition' column exists for examples expecting it
+
+ SummarizedExperiment::colData(airway)$condition <- SummarizedExperiment::colData(airway)$dex
+ my_se_mini = airway
+ my_se_mini$dex  = factor(my_se_mini$dex)
+
+ # using the prefix as an identifier
+ res <- my_se_mini  |>
+   identify_abundant(factor_of_interest = condition) |>
+   test_differential_abundance( ~ dex, method="deseq2", prefix = "de_dex") |>
+   adjust_effect_sizes(DE_name = "de_dex")
+res
+
+# supplying a coef
+res2 <- my_se_mini  |>
+   identify_abundant(factor_of_interest = condition) |>
+   test_differential_abundance( ~ dex, method="deseq2", prefix = "de_dex") |>
+   adjust_effect_sizes(COEF = "dex_untrt_vs_trt")
+res2
+
+# if you have run multiple designs, you can specify which design to use
+res3 <- my_se_mini  |>
+   identify_abundant(factor_of_interest = condition) |>
+   test_differential_abundance( ~ dex, method="deseq2", prefix = "de_dex") |>
+   adjust_effect_sizes(COEF = "dex_untrt_vs_trt", DESIGN = ~ cell + dex)
+res3
 
 }
