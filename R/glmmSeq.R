@@ -253,6 +253,17 @@ lmer_to_confidence_intervals_random_effects = function(fit){
     pivot_wider(names_from = parameter, values_from = c(lower, mode, upper), names_glue = "{parameter}__{.value}")
 }
 
+# lme4 >= 2.1-0 no longer copies `offset` from the caller into the formula
+# environment. model.frame() then resolves the symbol `offset` to stats::offset()
+# and every gene fit fails. Keep the numeric offset on a child environment so
+# the user's formula environment is left unchanged.
+bind_offset <- function(formula, offset) {
+  fenv <- new.env(parent = environment(formula))
+  fenv$offset <- offset
+  environment(formula) <- fenv
+  formula
+}
+
 glmmTMBcore = function (geneList, fullFormula, reduced, data, family, control,
           offset, modelData, designMatrix, hyp.matrix, ...)
 {
@@ -346,6 +357,8 @@ glmerCore = function (geneList, fullFormula, reduced, data, control, offset,
   data[, "count"] <- geneList$y
   disp <- geneList$dispersion
   plugin <- is.finite(disp) && disp > 0
+  fullFormula <- bind_offset(fullFormula, offset)
+  if (!is.null(reduced)) reduced <- bind_offset(reduced, offset)
   fit <- try(suppressMessages(suppressWarnings(
     if (plugin) {
       lme4::glmer(fullFormula, data = data, control = control, offset = offset,
@@ -785,12 +798,14 @@ glmmSeq = function (modelFormula, countdata, metadata, id = NULL, dispersion = N
   noErr <- vapply(resultList, function(x) x$tryErrors == "", FUN.VALUE = TRUE)
 
   if (sum(noErr) == 0) {
-    message("All genes returned an error. Check call. Check sufficient data in each group")
     outputErrors <- vapply(resultList[!noErr], function(x) {
       x$tryErrors
     }, FUN.VALUE = c("test"))
-    print(outputErrors[1])
-    return(outputErrors)
+    stop(
+      "tidybulk says: glmmSeq failed for every gene. First error: ",
+      outputErrors[[1]],
+      call. = FALSE
+    )
   }
   end <- Sys.time()
   if (verbose)
