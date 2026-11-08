@@ -113,4 +113,112 @@ test_that("test_differential_abundance preserves colData correctly", {
 test_that("glmmSeq works correctly", {
   # Skip glmmSeq as it's not available
   skip("glmmSeq function not available")
+})
+
+test_that("dispersion_trend chooses tagwise or one shared dispersion", {
+  abundant <- airway_mini |>
+    identify_abundant()
+
+  tagwise_edgeR <- abundant |>
+    test_differential_abundance(~ dex, method = "edgeR_likelihood_ratio")
+  common_edgeR <- abundant |>
+    test_differential_abundance(
+      ~ dex,
+      method = "edgeR_likelihood_ratio",
+      dispersion_trend = "common"
+    )
+
+  tagwise_disp <- metadata(tagwise_edgeR)$tidybulk$edgeR_likelihood_ratio_object$tagwise.dispersion
+  common_object <- metadata(common_edgeR)$tidybulk$edgeR_likelihood_ratio_object
+  expect_gt(length(unique(tagwise_disp)), 1)
+  expect_null(common_object$tagwise.dispersion)
+  expect_length(common_object$common.dispersion, 1)
+  expect_false(isTRUE(all.equal(
+    rowData(tagwise_edgeR)$PValue,
+    rowData(common_edgeR)$PValue
+  )))
+
+  default_ql <- abundant |>
+    test_differential_abundance(~ dex, method = "edgeR_quasi_likelihood")
+  tagwise_ql <- abundant |>
+    test_differential_abundance(
+      ~ dex,
+      method = "edgeR_quasi_likelihood",
+      dispersion_trend = "tagwise"
+    )
+  common_ql <- abundant |>
+    test_differential_abundance(
+      ~ dex,
+      method = "edgeR_quasi_likelihood",
+      dispersion_trend = "common"
+    )
+  expect_equal(rowData(default_ql)$PValue, rowData(tagwise_ql)$PValue)
+  expect_length(metadata(common_ql)$tidybulk$edgeR_quasi_likelihood_fit$s2.prior, 1)
+  expect_false(isTRUE(all.equal(
+    rowData(tagwise_ql)$PValue,
+    rowData(common_ql)$PValue
+  )))
+
+  tagwise_voom <- abundant |>
+    test_differential_abundance(~ dex, method = "limma_voom")
+  common_voom <- abundant |>
+    test_differential_abundance(
+      ~ dex,
+      method = "limma_voom",
+      dispersion_trend = "common"
+    )
+  expect_false(is.null(metadata(tagwise_voom)$tidybulk$limma_voom_object$weights))
+  expect_false(is.null(metadata(common_voom)$tidybulk$limma_voom_object$weights))
+  expect_equal(rowData(tagwise_voom)$P.Value, rowData(common_voom)$P.Value)
+
+  common_weights <- abundant |>
+    test_differential_abundance(
+      ~ dex,
+      method = "limma_voom_sample_weights",
+      dispersion_trend = "common"
+    )
+  expect_false(is.null(
+    metadata(common_weights)$tidybulk$limma_voom_sample_weights_object$weights
+  ))
+
+  tagwise_deseq <- abundant |>
+    test_differential_expression(~ dex, method = "DESeq2")
+  common_deseq <- abundant |>
+    test_differential_expression(
+      ~ dex,
+      method = "DESeq2",
+      dispersion_trend = "common"
+    )
+  common_disp_fit <- SummarizedExperiment::mcols(
+    metadata(common_deseq)$tidybulk$DESeq2_object
+  )$dispFit
+  expect_length(unique(common_disp_fit[is.finite(common_disp_fit)]), 1)
+  expect_gt(length(unique(DESeq2::dispersions(
+    metadata(tagwise_deseq)$tidybulk$DESeq2_object
+  ))), 1)
+  # fitType = "mean" changes the Wald statistics, not only the stored fit.
+  expect_false(isTRUE(all.equal(
+    rowData(tagwise_deseq)$pvalue,
+    rowData(common_deseq)$pvalue
+  )))
+  expect_error(
+    abundant |>
+      test_differential_expression(
+        ~ dex,
+        method = "DESeq2",
+        dispersion_trend = "common",
+        fitType = "local"
+      ),
+    "fitType"
+  )
+
+  expect_error(
+    abundant |>
+      test_differential_abundance(
+        ~ dex,
+        method = "edgeR_likelihood_ratio",
+        dispersion_trend = "trend"
+      ),
+    "tagwise"
+  )
 }) 
