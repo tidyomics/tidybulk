@@ -109,6 +109,44 @@ test_that("test_differential_abundance preserves colData correctly", {
   expect_equal(colData(res_with_extra)$extra_column, rep("test", nrow(colData(res_with_extra))))
 })
 
+test_that("three contrasts return distinct fold changes and p-values", {
+  # cell has four lines, so these three pairwise contrasts are estimable
+  contrasts <- c(
+    "cellN061011 - cellN080611",
+    "cellN080611 - cellN61311",
+    "cellN61311 - cellN061011"
+  )
+
+  res <- airway[1:200, ] |>
+    identify_abundant() |>
+    test_differential_abundance(
+      .formula = ~ cell,
+      method = "edgeR_quasi_likelihood",
+      contrasts = contrasts
+    )
+
+  rd <- SummarizedExperiment::rowData(res)
+  logfc_cols <- paste0("logFC___", contrasts)
+  p_cols <- paste0("PValue___", contrasts)
+
+  expect_true(all(logfc_cols %in% colnames(rd)))
+  expect_true(all(p_cols %in% colnames(rd)))
+
+  logfc <- lapply(logfc_cols, function(col) rd[[col]])
+  p_values <- lapply(p_cols, function(col) rd[[col]])
+
+  expect_true(all(vapply(logfc, function(x) any(is.finite(x)), logical(1))))
+  expect_true(all(vapply(p_values, function(x) any(!is.na(x)), logical(1))))
+  expect_true(all(vapply(p_values, function(x) all(x >= 0 & x <= 1, na.rm = TRUE), logical(1))))
+
+  # Each contrast must differ from the other two
+  pairs <- list(c(1, 2), c(1, 3), c(2, 3))
+  for (pair in pairs) {
+    expect_gt(sum(abs(logfc[[pair[1]]] - logfc[[pair[2]]]), na.rm = TRUE), 0)
+    expect_gt(sum(abs(p_values[[pair[1]]] - p_values[[pair[2]]]), na.rm = TRUE), 0)
+  }
+})
+
 # Test glmmSeq function
 test_that("glmmSeq works correctly", {
   # Skip glmmSeq as it's not available

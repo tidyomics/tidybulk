@@ -1,6 +1,11 @@
 \name{NEWS}
 \title{News for Package \pkg{tidybulk}}
 
+\section{Changes in version 2.3.5}{
+\itemize{
+    \item Fix edgeR methods in \code{test_differential_abundance()} so each supplied contrast is tested on its own. The full contrast matrix was previously passed to \code{glmQLFTest()}, \code{glmLRT()}, and \code{glmTreat()}, which repeated one joint test and returned the same fold change and p-value for every contrast.
+}}
+
 \section{Changes in version 2.3.3}{
 \itemize{
     \item \code{scale_abundance()} now stores edgeR effective library size (\code{lib.size * norm.factors}) in \code{colData} as \code{effective_library_size}, alongside \code{TMM} and \code{multiplier}.

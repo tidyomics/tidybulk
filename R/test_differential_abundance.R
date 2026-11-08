@@ -811,12 +811,15 @@ get_differential_transcript_abundance_bulk_SE <- function(
       
       1:ncol(my_contrasts) |>
       map_dfr(function(contrast_index) {
+        # Test one contrast at a time. Passing the whole matrix makes edgeR
+        # run a joint F-test and repeat the same statistics for every contrast.
+        this_contrast <- my_contrasts[, contrast_index]
         if(!is.null(test_above_log2_fold_change))
-          fit_object = fit_object |> edgeR::glmTreat(coef = 2, contrast = my_contrasts, lfc=test_above_log2_fold_change)
+          fit_object = fit_object |> edgeR::glmTreat(coef = 2, contrast = this_contrast, lfc=test_above_log2_fold_change)
         else if(tolower(method) %in%  c("edger_likelihood_ratio", "edger_robust_likelihood_ratio"))
-          fit_object = fit_object |> edgeR::glmLRT(coef = 2, contrast = my_contrasts)
+          fit_object = fit_object |> edgeR::glmLRT(coef = 2, contrast = this_contrast)
         else if(tolower(method) ==  "edger_quasi_likelihood")
-          fit_object = fit_object |> edgeR::glmQLFTest(coef = 2, contrast = my_contrasts)
+          fit_object = fit_object |> edgeR::glmQLFTest(coef = 2, contrast = this_contrast)
         else
           stop("tidybulk says: method not supported")	
         
