@@ -20,6 +20,7 @@ test_differential_abundance(
   omit_contrast_in_colnames = FALSE,
   prefix = "",
   formula_dispersion = NULL,
+  dispersion_trend = c("tagwise", "common"),
   ...,
   significance_threshold = NULL,
   fill_missing_values = NULL,
@@ -40,6 +41,7 @@ test_differential_abundance(
   omit_contrast_in_colnames = FALSE,
   prefix = "",
   formula_dispersion = NULL,
+  dispersion_trend = c("tagwise", "common"),
   ...,
   significance_threshold = NULL,
   fill_missing_values = NULL,
@@ -60,6 +62,7 @@ test_differential_abundance(
   omit_contrast_in_colnames = FALSE,
   prefix = "",
   formula_dispersion = NULL,
+  dispersion_trend = c("tagwise", "common"),
   ...,
   significance_threshold = NULL,
   fill_missing_values = NULL,
@@ -76,7 +79,7 @@ test_differential_abundance(
 
 \item{contrasts}{This parameter takes the format of the contrast parameter of the method of choice. For edgeR and limma-voom is a character vector. For DESeq2 is a list including a character vector of length three. The first covariate is the one the model is tested against (e.g., ~ factor_of_interest)}
 
-\item{method}{A character vector. Available methods are "edgeR_quasi_likelihood" (i.e., QLF), "edgeR_likelihood_ratio" (i.e., LRT), "edger_robust_likelihood_ratio", "DESeq2", "limma_voom", "limma_voom_sample_weights", "glmmseq_lme4", "glmmseq_glmmtmb". Only one method can be specified at a time. For glmmSeq, pass `formula_dispersion` (a fixed-effects formula for edgeR) to plug in tagwise dispersion, or omit it to let each gene estimate phi.}
+\item{method}{A character vector. Available methods are "edgeR_quasi_likelihood" (i.e., QLF), "edgeR_likelihood_ratio" (i.e., LRT), "edger_robust_likelihood_ratio", "DESeq2", "limma_voom", "limma_voom_sample_weights", "glmmseq_lme4", "glmmseq_glmmtmb". Only one method can be specified at a time. For glmmSeq, pass `formula_dispersion` (a fixed-effects formula for edgeR) to plug in the dispersion, or omit it to let each gene estimate phi.}
 
 \item{test_above_log2_fold_change}{A positive real value. This works for edgeR and limma_voom methods. It uses the `treat` function, which tests that the difference in abundance is bigger than this threshold rather than zero \url{https://pubmed.ncbi.nlm.nih.gov/19176553}.}
 
@@ -86,7 +89,9 @@ test_differential_abundance(
 
 \item{prefix}{A character string. The prefix you would like to add to the result columns. It is useful if you want to compare several methods.}
 
-\item{formula_dispersion}{A fixed-effects formula for edgeR tagwise dispersion (glmmSeq). If NULL, each gene estimates phi.}
+\item{formula_dispersion}{A fixed-effects formula for the edgeR dispersion (glmmSeq), estimated tagwise or common according to `dispersion_trend`. If NULL, each gene estimates phi.}
+
+\item{dispersion_trend}{Either `"tagwise"` (default) or `"common"`. `"tagwise"` keeps each method's per-feature dispersion. `"common"` passes that method's shared-dispersion argument, which is the faster choice when there are many samples. edgeR likelihood-ratio and robust likelihood-ratio: `estimateDisp(trend.method = "none", tagwise = FALSE)`. edgeR quasi-likelihood: `glmQLFit(abundance.trend = FALSE)`. limma-voom: `eBayes(trend = FALSE)` and `treat(trend = FALSE)`. DESeq2: `DESeq(fitType = "mean")`. For glmmSeq this chooses how `formula_dispersion` is estimated, so `"common"` requires `formula_dispersion`. With `"tagwise"`, a DESeq2 `fitType` passed through `...` is still honoured. With `"common"`, do not also pass `fitType`.}
 
 \item{...}{Further arguments passed to some of the internal experimental functions. For glmmSeq: `.scaling_factor` skips TMM and uses that column from [scale_abundance()].}
 
