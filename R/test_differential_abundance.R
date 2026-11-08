@@ -17,7 +17,7 @@
 #' @param .formula A formula representing the desired linear model. If there is more than one factor, they should be in the order factor of interest + additional factors.
 #' @param abundance The name of the transcript/gene abundance column (character, preferred)
 #' @param contrasts This parameter takes the format of the contrast parameter of the method of choice. For edgeR and limma-voom is a character vector. For DESeq2 is a list including a character vector of length three. The first covariate is the one the model is tested against (e.g., ~ factor_of_interest)
-#' @param method A character vector. Available methods are "edgeR_quasi_likelihood" (i.e., QLF), "edgeR_likelihood_ratio" (i.e., LRT), "edger_robust_likelihood_ratio", "DESeq2", "limma_voom", "limma_voom_sample_weights", "glmmseq_lme4", "glmmseq_glmmtmb". Only one method can be specified at a time. For glmmSeq, pass `formula_dispersion` (a fixed-effects formula for edgeR) to plug in tagwise dispersion, or omit it to let each gene estimate phi.
+#' @param method A character vector. Available methods are "edgeR_quasi_likelihood" (i.e., QLF), "edgeR_likelihood_ratio" (i.e., LRT), "edger_robust_likelihood_ratio", "DESeq2", "DESeq2_shrink_apeglm", "DESeq2_shrink_ashr", "DESeq2_shrink_normal", "limma_voom", "limma_voom_sample_weights", "glmmseq_lme4", "glmmseq_glmmtmb". Only one method can be specified at a time. "DESeq2_shrink_apeglm", "DESeq2_shrink_ashr" and "DESeq2_shrink_normal" run DESeq2 and replace log2FoldChange and lfcSE with the estimates shrunk by `DESeq2::lfcShrink()` of that type, keeping the DESeq2 p-values. They require `contrasts` (e.g. list(c("condition", "treated", "untreated"))), so only the comparisons you specify are shrunk. For glmmSeq, pass `formula_dispersion` (a fixed-effects formula for edgeR) to plug in tagwise dispersion, or omit it to let each gene estimate phi.
 #' @param test_above_log2_fold_change A positive real value. This works for edgeR and limma_voom methods. It uses the `treat` function, which tests that the difference in abundance is bigger than this threshold rather than zero \url{https://pubmed.ncbi.nlm.nih.gov/19176553}.
 #' @param scaling_method A character string. The scaling method passed to the back-end functions: edgeR and limma-voom (i.e., edgeR::normLibSizes; "TMM","TMMwsp","RLE","upperquartile"). Setting the parameter to \"none\" will skip the compensation for sequencing-depth for the method edgeR or limma_voom.
 #' @param omit_contrast_in_colnames If just one contrast is specified you can choose to omit the contrast label in the colnames.
@@ -197,6 +197,9 @@ setGeneric(
       "edgeR_likelihood_ratio",
       "edger_robust_likelihood_ratio",
       "DESeq2",
+      "DESeq2_shrink_apeglm",
+      "DESeq2_shrink_ashr",
+      "DESeq2_shrink_normal",
       "limma_voom",
       "limma_voom_sample_weights",
       "glmmseq_lme4",
@@ -230,6 +233,9 @@ setGeneric(
     "edgeR_likelihood_ratio",
     "edger_robust_likelihood_ratio",
     "DESeq2",
+    "DESeq2_shrink_apeglm",
+    "DESeq2_shrink_ashr",
+    "DESeq2_shrink_normal",
     "limma_voom",
     "limma_voom_sample_weights",
     "glmmseq_lme4",
@@ -346,20 +352,20 @@ such as batch effects (if applicable) in the formula.
         prefix = prefix,
         ...
       )
-  } else if (tolower(method) == "deseq2") {
-    my_differential_abundance <-
-      get_differential_transcript_abundance_deseq2_SE(
-        .data,
-        .formula,
-        abundance = abundance,
-        .contrasts = contrasts,
-        method = method,
-        test_above_log2_fold_change = test_above_log2_fold_change,
-        scaling_method = scaling_method,
-        omit_contrast_in_colnames = omit_contrast_in_colnames,
-        prefix = prefix,
-        ...
-      )
+  }   else if(tolower(method) %in% c("deseq2", "deseq2_shrink_apeglm", "deseq2_shrink_ashr", "deseq2_shrink_normal")) {
+    my_differential_abundance =
+    get_differential_transcript_abundance_deseq2_SE(
+      .data,
+      .formula,
+      abundance = abundance,
+      .contrasts = contrasts,
+      method = method,
+      test_above_log2_fold_change = test_above_log2_fold_change,
+      scaling_method = scaling_method,
+      omit_contrast_in_colnames = omit_contrast_in_colnames,
+      prefix = prefix,
+      ...
+    )
   } else if (tolower(method) %in% c("glmmseq_lme4", "glmmseq_glmmtmb")) {
     my_differential_abundance <-
       get_differential_transcript_abundance_glmmSeq_SE(
@@ -402,6 +408,9 @@ such as batch effects (if applicable) in the formula.
     limma_voom = "voom",
     limma_voom_sample_weights = "voom_sample_weights",
     deseq2 = "deseq2",
+    deseq2_shrink_apeglm = c("deseq2", "apeglm"),
+    deseq2_shrink_ashr = c("deseq2", "ashr"),
+    deseq2_shrink_normal = "deseq2",
     glmmseq_lme4 = "glmmseq",
     glmmseq_glmmtmb = "glmmseq"
   )
@@ -457,6 +466,22 @@ such as batch effects (if applicable) in the formula.
       data_obj_intermediate,
       my_differential_abundance$results_deseqresults,
       paste0(method, "_Resultsobject")
+    )
+  }
+
+  if (!is.null(my_differential_abundance$shrunk_results)) {
+    data_obj_intermediate <- attach_to_metadata(
+      data_obj_intermediate,
+      my_differential_abundance$shrunk_results,
+      paste0(method, "_shrunk")
+    )
+    rlang::inform(
+      sprintf(
+        "tidybulk says: to access the shrunk DESeq2 results do `metadata(.)$tidybulk$%s_shrunk`",
+        method
+      ),
+      .frequency_id = sprintf("Access DE results %s", method),
+      .frequency = "always"
     )
   }
 
@@ -524,7 +549,7 @@ setMethod(
 #' @param .formula A formula representing the desired linear model. If there is more than one factor, they should be in the order factor of interest + additional factors.
 #' @param abundance The name of the transcript/gene abundance column (character, preferred)
 #' @param contrasts This parameter takes the format of the contrast parameter of the method of choice. For edgeR and limma-voom is a character vector. For DESeq2 is a list including a character vector of length three. The first covariate is the one the model is tested against (e.g., ~ factor_of_interest)
-#' @param method A character vector. Available methods are "edgeR_quasi_likelihood" (i.e., QLF), "edgeR_likelihood_ratio" (i.e., LRT), "edger_robust_likelihood_ratio", "DESeq2", "limma_voom", "limma_voom_sample_weights", "glmmseq_lme4", "glmmseq_glmmtmb". Only one method can be specified at a time. For glmmSeq, pass `formula_dispersion` (a fixed-effects formula for edgeR) to plug in tagwise dispersion, or omit it to let each gene estimate phi.
+#' @param method A character vector. Available methods are "edgeR_quasi_likelihood" (i.e., QLF), "edgeR_likelihood_ratio" (i.e., LRT), "edger_robust_likelihood_ratio", "DESeq2", "DESeq2_shrink_apeglm", "DESeq2_shrink_ashr", "DESeq2_shrink_normal", "limma_voom", "limma_voom_sample_weights", "glmmseq_lme4", "glmmseq_glmmtmb". Only one method can be specified at a time. "DESeq2_shrink_apeglm", "DESeq2_shrink_ashr" and "DESeq2_shrink_normal" run DESeq2 and replace log2FoldChange and lfcSE with the estimates shrunk by `DESeq2::lfcShrink()` of that type, keeping the DESeq2 p-values. They require `contrasts` (e.g. list(c("condition", "treated", "untreated"))), so only the comparisons you specify are shrunk. For glmmSeq, pass `formula_dispersion` (a fixed-effects formula for edgeR) to plug in tagwise dispersion, or omit it to let each gene estimate phi.
 #' @param test_above_log2_fold_change A positive real value. This works for edgeR and limma_voom methods. It uses the `treat` function, which tests that the difference in abundance is bigger than this threshold rather than zero \url{https://pubmed.ncbi.nlm.nih.gov/19176553}.
 #' @param scaling_method A character string. The scaling method passed to the back-end functions: edgeR and limma-voom (i.e., edgeR::normLibSizes; "TMM","TMMwsp","RLE","upperquartile"). Setting the parameter to \"none\" will skip the compensation for sequencing-depth for the method edgeR or limma_voom.
 #' @param omit_contrast_in_colnames If just one contrast is specified you can choose to omit the contrast label in the colnames.
@@ -705,6 +730,9 @@ setGeneric(
       "edgeR_likelihood_ratio",
       "edger_robust_likelihood_ratio",
       "DESeq2",
+      "DESeq2_shrink_apeglm",
+      "DESeq2_shrink_ashr",
+      "DESeq2_shrink_normal",
       "limma_voom",
       "limma_voom_sample_weights",
       "glmmseq_lme4",
@@ -746,6 +774,9 @@ setMethod(
       "edgeR_likelihood_ratio",
       "edger_robust_likelihood_ratio",
       "DESeq2",
+      "DESeq2_shrink_apeglm",
+      "DESeq2_shrink_ashr",
+      "DESeq2_shrink_normal",
       "limma_voom",
       "limma_voom_sample_weights",
       "glmmseq_lme4",
@@ -802,6 +833,9 @@ setMethod(
       "edgeR_likelihood_ratio",
       "edger_robust_likelihood_ratio",
       "DESeq2",
+      "DESeq2_shrink_apeglm",
+      "DESeq2_shrink_ashr",
+      "DESeq2_shrink_normal",
       "limma_voom",
       "limma_voom_sample_weights",
       "glmmseq_lme4",
@@ -876,6 +910,9 @@ get_differential_transcript_abundance_bulk_SE <- function(
     "edgeR_likelihood_ratio",
     "edger_robust_likelihood_ratio",
     "DESeq2",
+    "DESeq2_shrink_apeglm",
+    "DESeq2_shrink_ashr",
+    "DESeq2_shrink_normal",
     "limma_voom",
     "limma_voom_sample_weights",
     "glmmseq_lme4",
@@ -1518,6 +1555,21 @@ get_differential_transcript_abundance_deseq2_SE <- function(
   # Check if package is installed, otherwise install
   check_and_install_packages("DESeq2")
 
+  shrinkage_type <- tolower(method) |> str_remove("^deseq2(_shrink_)?")
+  if (shrinkage_type %in% c("apeglm", "ashr")) {
+    check_and_install_packages(shrinkage_type)
+  }
+
+  # Shrink only comparisons the user asked for, never a default coefficient
+  if (
+    shrinkage_type != "" &&
+      (is.null(.contrasts) || !all(map_int(.contrasts, length) == 3))
+  ) {
+    stop(sprintf(
+      "tidybulk says: method %s requires `contrasts`, given as list(c(\"condition_column\",\"condition1\",\"condition2\")), so that only the comparisons you specify are shrunk.",
+      method
+    ))
+  }
   if (is.null(test_above_log2_fold_change)) {
     test_above_log2_fold_change <- 0
   }
@@ -1576,6 +1628,11 @@ get_differential_transcript_abundance_deseq2_SE <- function(
       DESeq2::results(
         contrast = my_contrasts[[1]],
         lfcThreshold = test_above_log2_fold_change
+      ) |>
+      shrink_deseq2_results(
+        deseq2_object,
+        contrast = my_contrasts[[1]],
+        type = shrinkage_type
       )
 
     result_raw <- result
@@ -1588,6 +1645,11 @@ get_differential_transcript_abundance_deseq2_SE <- function(
           DESeq2::results(
             contrast = my_contrasts[[contrast_index]],
             lfcThreshold = test_above_log2_fold_change
+          ) |>
+          shrink_deseq2_results(
+            deseq2_object,
+            contrast = my_contrasts[[contrast_index]],
+            type = shrinkage_type
           )
       })
     result <- 1:length(my_contrasts) |>
@@ -1620,6 +1682,51 @@ get_differential_transcript_abundance_deseq2_SE <- function(
     result = result,
     result_raw = result,
     de_object = deseq2_object,
-    results_deseqresults = result_raw
+    shrunk_results = if (shrinkage_type != "") result_raw
   )
+}
+
+#' Replace DESeq2 log2 fold changes with shrunk estimates
+#'
+#' @keywords internal
+#' @noRd
+#'
+#' @param res A `DESeqResults` object from `DESeq2::results()`
+#' @param deseq2_object The fitted `DESeqDataSet` that produced `res`
+#' @param contrast A character vector of length three (factor, numerator, denominator)
+#' @param type The `DESeq2::lfcShrink()` type ("apeglm", "ashr" or "normal"). An empty string returns `res` unchanged.
+#'
+#' @return `res` with log2FoldChange and lfcSE shrunk, and all other columns (including p-values) unchanged
+#'
+shrink_deseq2_results <- function(res, deseq2_object, contrast, type) {
+
+  if (type == "") return(res)
+
+  if (type == "apeglm") {
+    # apeglm shrinks a model coefficient, so the contrast denominator must be the reference level
+    coef <- make.names(sprintf("%s_%s_vs_%s", contrast[1], contrast[2], contrast[3]))
+    if (!coef %in% DESeq2::resultsNames(deseq2_object)) {
+      colData(deseq2_object)[[contrast[1]]] <- colData(deseq2_object)[[contrast[1]]] |>
+        as.factor() |>
+        stats::relevel(ref = contrast[3])
+      deseq2_object <- DESeq2::nbinomWaldTest(deseq2_object, quiet = TRUE)
+    }
+    if (!coef %in% DESeq2::resultsNames(deseq2_object))
+      stop(sprintf(
+        "tidybulk says: method DESeq2_shrink_apeglm needs the coefficient %s in the model, which this design does not produce (e.g. designs without an intercept). Use method = \"DESeq2_shrink_ashr\" instead.",
+        coef
+      ))
+    shrunk <- DESeq2::lfcShrink(deseq2_object, coef = coef, type = "apeglm", quiet = TRUE)
+  } else if (type == "ashr") {
+    # ashr shrinks the log2FoldChange and lfcSE already in res, whatever coefficient or contrast produced them
+    shrunk <- DESeq2::lfcShrink(deseq2_object, res = res, type = "ashr", quiet = TRUE)
+  } else if (type == "normal") {
+    shrunk <- DESeq2::lfcShrink(deseq2_object, contrast = contrast, res = res, type = "normal", quiet = TRUE)
+  } else {
+    stop(sprintf("tidybulk says: shrinkage type %s is not supported. Use apeglm, ashr or normal.", type))
+  }
+
+  res$log2FoldChange <- shrunk[rownames(res), "log2FoldChange"]
+  res$lfcSE <- shrunk[rownames(res), "lfcSE"]
+  res
 }

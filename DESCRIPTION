@@ -59,6 +59,8 @@ Suggests:
     clusterProfiler,
     msigdbr,
     DESeq2,
+    apeglm,
+    ashr,
     broom,
     survival,
     boot,
