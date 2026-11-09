@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.5</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@ transcriptomic data analysis</h1>
                         <h4 data-toc-skip class="author">Stefano
 Mangiola</h4>
             
-            <h4 data-toc-skip class="date">2026-09-06</h4>
+            <h4 data-toc-skip class="date">2026-11-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stemangiola/tidybulk/blob/master/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="hidden name"><code>introduction.Rmd</code></div>
@@ -1597,6 +1597,7 @@ comparisons in complex designs.</p>
 <span>  <span class="fu"><a href="../reference/pivot_transcript-methods.html">pivot_transcript</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/AnnotationDb-class.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">contains</span><span class="op">(</span><span class="st">"contrasts"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## tidybulk says: The design column names are "dextrt, dexuntrt"</span></span></code></pre>
+<pre><code><span><span class="co">## voomLmFit is now recommended over voom</span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: to access the DE object do `metadata(.)$tidybulk$limma_voom_object`</span></span>
 <span><span class="co">## tidybulk says: to access the raw results (fitted GLM) do `metadata(.)$tidybulk$limma_voom_fit`</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 15,790 × 6</span></span></span>
@@ -1626,7 +1627,7 @@ comparisons in complex designs.</p>
 </h4>
 <p>TREAT method <span class="citation">(<a href="#ref-mccarthy2009treat">McCarthy and Smyth 2009</a>)</span> is
 used for testing significance relative to a fold-change threshold.</p>
-<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using contrasts for more complex comparisons</span></span>
 <span><span class="va">airway</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/test_differential_expression-methods.html">test_differential_expression</a></span><span class="op">(</span></span>
@@ -1671,7 +1672,7 @@ models. Pass <code>formula_dispersion</code> as a fixed-effects formula
 for edgeR tagwise dispersion (you choose whether grouping factors enter
 that design). Omit it to let each gene estimate phi (useful with many
 samples).</p>
-<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb171"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using glmmSeq for mixed models</span></span>
 <span><span class="va">airway</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/keep_abundant.html">keep_abundant</a></span><span class="op">(</span>formula_design <span class="op">=</span> <span class="op">~</span> <span class="va">dex</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1691,15 +1692,11 @@ samples).</p>
 <pre><code><span><span class="co">## Registered S3 method overwritten by 'lme4':</span></span>
 <span><span class="co">##   method           from</span></span>
 <span><span class="co">##   na.action.merMod car</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in check_dep_version(dep_pkg = "TMB"): package version mismatch: </span></span>
-<span><span class="co">## glmmTMB was built with TMB package version 1.9.21</span></span>
-<span><span class="co">## Current TMB package version is 1.9.25</span></span>
-<span><span class="co">## Please re-install glmmTMB from source or restore original 'TMB' package (see '?reinstalling' for more information)</span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: calculating tagwise (shrinked) and trended dispersion with edgeR::estimateDisp() using ~dex + cell.</span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: plugging rowData column dispersion_shrinked into glmmSeq.</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## n = 8 samples, 4 individuals</span></span></code></pre>
-<pre><code><span><span class="co">## Time difference of 1.182255 mins</span></span></code></pre>
+<pre><code><span><span class="co">## Time difference of 1.422359 mins</span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: to access the DE object do</span></span>
 <span><span class="co">## `metadata(.)$tidybulk$glmmseq_lme4_object`</span></span></code></pre>
 <pre><code><span><span class="co">## tidybulk says: to access the raw results (fitted GLM) do</span></span>
@@ -1712,7 +1709,7 @@ samples).</p>
 <span><span class="co">## rowData names(64): gene_name gene_seq_end ... glmmseq__P_dex</span></span>
 <span><span class="co">##   glmmseq__P_dex_adjusted</span></span>
 <span><span class="co">## colnames(8): SRR1039508 SRR1039509 ... SRR1039520 SRR1039521</span></span>
-<span><span class="co">## colData names(16): SampleName cell ... PC2 cluster_kmeans</span></span></code></pre>
+<span><span class="co">## colData names(17): SampleName cell ... PC2 cluster_kmeans</span></span></code></pre>
 <div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">airway</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/pivot_transcript-methods.html">pivot_transcript</a></span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
@@ -1843,20 +1840,20 @@ al.</span> 2005</a>)</span> is used for gene set enrichment.</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">fit</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">unnest</span><span class="op">(</span><span class="va">test</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">p.adjust</span> <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 69 × 14</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 79 × 14</span></span></span>
 <span><span class="co">##    gs_collection idx_for_plotting ID         Description setSize enrichmentScore</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 1</span> C2                           1 CHEN_LVAD… CHEN_LVAD_…      82          -<span style="color: #BB0000;">0.732</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> C2                           2 FEKIR_HEP… FEKIR_HEPA…      27          -<span style="color: #BB0000;">0.841</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> C2                           2 FEKIR_HEP… FEKIR_HEPA…      27          -<span style="color: #BB0000;">0.840</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 3</span> C2                           3 VECCHI_GA… VECCHI_GAS…     206          -<span style="color: #BB0000;">0.575</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> C2                           4 WP_OVERVI… WP_OVERVIE…      28           0.788</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> C2                           5 YAO_TEMPO… YAO_TEMPOR…      55          -<span style="color: #BB0000;">0.656</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> C2                           7 SHEDDEN_L… SHEDDEN_LU…     153          -<span style="color: #BB0000;">0.555</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> C2                           8 GENTILE_U… GENTILE_UV…      23           0.773</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> C2                           9 NAKAMURA_… NAKAMURA_A…      49          -<span style="color: #BB0000;">0.660</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> C2                          10 WP_SELENI… WP_SELENIU…      47          -<span style="color: #BB0000;">0.678</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> C2                           4 WP_OVERVI… WP_OVERVIE…      28           0.787</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> C2                           5 GENTILE_U… GENTILE_UV…      23           0.772</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> C2                           7 SHEDDEN_L… SHEDDEN_LU…     153          -<span style="color: #BB0000;">0.554</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> C2                           8 WP_SELENI… WP_SELENIU…      47          -<span style="color: #BB0000;">0.678</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> C2                           9 YAO_TEMPO… YAO_TEMPOR…      55          -<span style="color: #BB0000;">0.656</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> C2                          10 NAKAMURA_… NAKAMURA_A…      49          -<span style="color: #BB0000;">0.660</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span> C2                          11 TURASHVIL… TURASHVILI…      46          -<span style="color: #BB0000;">0.672</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 59 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 69 more rows</span></span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 8 more variables: NES &lt;dbl&gt;, pvalue &lt;dbl&gt;, p.adjust &lt;dbl&gt;, qvalue &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   rank &lt;int&gt;, leading_edge &lt;chr&gt;, core_enrichment &lt;chr&gt;, log2err &lt;dbl&gt;</span></span></span></code></pre>
 <div class="section level5">
@@ -1864,7 +1861,7 @@ al.</span> 2005</a>)</span> is used for gene set enrichment.</p>
 </h5>
 <div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yulab-smu.top/contribution-knowledge-mining/" class="external-link">enrichplot</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## enrichplot v1.33.0 Learn more at https://yulab-smu.top/contribution-knowledge-mining/</span></span>
+<pre><code><span><span class="co">## enrichplot v1.99.8 Learn more at https://yulab-smu.top/contribution-knowledge-mining/</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Please cite:</span></span>
 <span><span class="co">## </span></span>
@@ -1931,22 +1928,22 @@ al.</span> 2005</a>)</span> is used for gene set enrichment.</p>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">airway_overrep</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 7,850 × 13</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 7,891 × 14</span></span></span>
 <span><span class="co">##    gs_collection ID      Description GeneRatio BgRatio RichFactor FoldEnrichment</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> C2            PASINI… PASINI_SUZ… 85/1739   316/22…      0.269           3.47</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> C2            CHARAF… CHARAFE_BR… 102/1739  464/22…      0.220           2.84</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> C2            CHARAF… CHARAFE_BR… 100/1739  455/22…      0.220           2.84</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> C2            REN_AL… REN_ALVEOL… 92/1739   404/22…      0.228           2.94</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> C2            CHEN_L… CHEN_LVAD_… 40/1739   101/22…      0.396           5.11</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> C2            ONDER_… ONDER_CDH1… 66/1739   255/22…      0.259           3.34</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> C2            BOQUES… BOQUEST_ST… 88/1739   423/22…      0.208           2.69</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> C2            LIU_PR… LIU_PROSTA… 97/1739   495/22…      0.196           2.53</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> C2            LU_AGI… LU_AGING_B… 65/1739   263/22…      0.247           3.19</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> C2            LIM_MA… LIM_MAMMAR… 94/1739   479/22…      0.196           2.53</span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 7,840 more rows</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 6 more variables: zScore &lt;dbl&gt;, pvalue &lt;dbl&gt;, p.adjust &lt;dbl&gt;, qvalue &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   Count &lt;int&gt;, entrez &lt;list&gt;</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> C2            PASINI… PASINI_SUZ… 85/1737   316/22…      0.269           3.48</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> C2            CHARAF… CHARAFE_BR… 102/1737  464/22…      0.220           2.84</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> C2            CHARAF… CHARAFE_BR… 100/1737  455/22…      0.220           2.84</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> C2            REN_AL… REN_ALVEOL… 92/1737   404/22…      0.228           2.94</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> C2            CHEN_L… CHEN_LVAD_… 40/1737   101/22…      0.396           5.12</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> C2            ONDER_… ONDER_CDH1… 66/1737   255/22…      0.259           3.34</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> C2            BOQUES… BOQUEST_ST… 88/1737   423/22…      0.208           2.69</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> C2            LIU_PR… LIU_PROSTA… 97/1737   495/22…      0.196           2.53</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> C2            LU_AGI… LU_AGING_B… 65/1737   263/22…      0.247           3.19</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> C2            LIM_MA… LIM_MAMMAR… 94/1737   479/22…      0.196           2.54</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 7,881 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 7 more variables: oddsRatio &lt;dbl&gt;, zScore &lt;dbl&gt;, pvalue &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   p.adjust &lt;dbl&gt;, qvalue &lt;dbl&gt;, Count &lt;int&gt;, entrez &lt;list&gt;</span></span></span></code></pre>
 <p>EGSEA <span class="citation">(<a href="#ref-alhamdoosh2017egsea">Alhamdoosh et al. 2017</a>)</span> is
 used for ensemble gene set enrichment analysis. EGSEA is a method that
 combines multiple gene set enrichment analysis methods to provide a more
@@ -2253,7 +2250,7 @@ methods used in our workflow.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">## Running under: Ubuntu 24.04.4 LTS</span></span>
+<span><span class="co">## Running under: Ubuntu 24.04.5 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
 <span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -2276,79 +2273,76 @@ methods used in our workflow.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
 <span><span class="co">##  [1] patchwork_1.3.2                 GGally_2.4.0                   </span></span>
-<span><span class="co">##  [3] DESeq2_1.53.2                   edgeR_4.99.3                   </span></span>
-<span><span class="co">##  [5] limma_3.99.0                    tidySummarizedExperiment_1.23.2</span></span>
-<span><span class="co">##  [7] airway_1.33.2                   tidybulk_2.3.3                 </span></span>
+<span><span class="co">##  [3] DESeq2_1.53.7                   edgeR_4.99.12                  </span></span>
+<span><span class="co">##  [5] limma_3.99.4                    tidySummarizedExperiment_1.23.2</span></span>
+<span><span class="co">##  [7] airway_1.33.2                   tidybulk_2.3.5                 </span></span>
 <span><span class="co">##  [9] ttservice_0.5.3                 SummarizedExperiment_1.43.0    </span></span>
 <span><span class="co">## [11] Biobase_2.73.2                  GenomicRanges_1.65.4           </span></span>
 <span><span class="co">## [13] Seqinfo_1.3.2                   IRanges_2.47.5                 </span></span>
-<span><span class="co">## [15] S4Vectors_0.51.9                BiocGenerics_0.59.12           </span></span>
+<span><span class="co">## [15] S4Vectors_0.51.10               BiocGenerics_0.59.12           </span></span>
 <span><span class="co">## [17] generics_0.1.4                  MatrixGenerics_1.25.0          </span></span>
 <span><span class="co">## [19] matrixStats_1.5.0               ggrepel_0.9.8                  </span></span>
 <span><span class="co">## [21] ggplot2_4.0.3                   forcats_1.0.1                  </span></span>
 <span><span class="co">## [23] magrittr_2.0.5                  purrr_1.2.2                    </span></span>
 <span><span class="co">## [25] tibble_3.3.1                    tidyr_1.3.2                    </span></span>
-<span><span class="co">## [27] dplyr_1.2.1                     knitr_1.51                     </span></span>
+<span><span class="co">## [27] dplyr_1.2.1                     knitr_1.52                     </span></span>
 <span><span class="co">## [29] BiocStyle_2.41.0               </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##   [1] fs_2.1.0                enrichplot_1.33.0       httr_1.4.9             </span></span>
+<span><span class="co">##   [1] fs_2.1.0                enrichplot_1.99.8       httr_1.4.9             </span></span>
 <span><span class="co">##   [4] RColorBrewer_1.1-3      numDeriv_2016.8-1.1     tools_4.6.1            </span></span>
 <span><span class="co">##   [7] backports_1.5.1         utf8_1.2.6              R6_2.6.1               </span></span>
 <span><span class="co">##  [10] lazyeval_0.2.3          mgcv_1.9-4              withr_3.0.3            </span></span>
-<span><span class="co">##  [13] preprocessCore_1.75.1   cli_3.6.6               textshaping_1.0.5      </span></span>
-<span><span class="co">##  [16] tidyprint_1.1.1         scatterpie_0.2.6        sandwich_3.1-3         </span></span>
-<span><span class="co">##  [19] labeling_0.4.3          sass_0.4.10             mvtnorm_1.4-2          </span></span>
-<span><span class="co">##  [22] S7_0.2.2                genefilter_1.95.0       proxy_0.4-29           </span></span>
-<span><span class="co">##  [25] pbapply_1.7-5           pkgdown_2.2.1           systemfonts_1.3.2      </span></span>
-<span><span class="co">##  [28] yulab.utils_0.2.5       gson_0.2.1              DOSE_4.7.2             </span></span>
-<span><span class="co">##  [31] mcprogress_0.1.1        RSQLite_3.53.3          gridGraphics_0.5-1     </span></span>
-<span><span class="co">##  [34] glmmSeq_0.5.7           car_3.1-5               GO.db_3.23.1           </span></span>
-<span><span class="co">##  [37] Matrix_1.7-6            fansi_1.0.7             abind_1.4-8            </span></span>
-<span><span class="co">##  [40] lifecycle_1.0.5         multcomp_1.4-32         yaml_2.3.12            </span></span>
-<span><span class="co">##  [43] carData_3.0-6           qvalue_2.45.0           SparseArray_1.13.2     </span></span>
-<span><span class="co">##  [46] grid_4.6.1              blob_1.3.0              crayon_1.5.3           </span></span>
-<span><span class="co">##  [49] ggtangle_0.1.2          lattice_0.23-1          msigdbr_26.1.1         </span></span>
-<span><span class="co">##  [52] annotate_1.91.0         KEGGREST_1.53.6         pillar_1.11.1          </span></span>
-<span><span class="co">##  [55] boot_1.3-32             estimability_2.0.0      widyr_0.1.5            </span></span>
-<span><span class="co">##  [58] codetools_0.2-20        fastmatch_1.1-8         glue_1.8.1             </span></span>
-<span><span class="co">##  [61] ggiraph_0.9.6           fontLiberation_0.1.0    ggfun_0.2.1            </span></span>
-<span><span class="co">##  [64] data.table_1.18.6.1     treeio_1.37.0           vctrs_0.7.3            </span></span>
-<span><span class="co">##  [67] png_0.1-9               Rdpack_2.6.6            org.Mm.eg.db_3.23.0    </span></span>
-<span><span class="co">##  [70] gtable_0.3.6            assertthat_0.2.1        cachem_1.1.0           </span></span>
-<span><span class="co">##  [73] xfun_0.60               rbibutils_2.4.1         S4Arrays_1.13.0        </span></span>
-<span><span class="co">##  [76] reformulas_0.4.4        survival_3.8-11         aisdk_1.4.12           </span></span>
-<span><span class="co">##  [79] statmod_1.5.2           ellipsis_0.3.3          TH.data_1.1-5          </span></span>
-<span><span class="co">##  [82] nlme_3.1-171            ggtree_4.3.0            bit64_4.8.6            </span></span>
-<span><span class="co">##  [85] fontquiver_0.2.1        SnowballC_0.7.1         bslib_0.12.0           </span></span>
-<span><span class="co">##  [88] TMB_1.9.25              otel_0.2.0              DBI_1.3.0              </span></span>
-<span><span class="co">##  [91] tidyselect_1.2.1        processx_3.9.0          emmeans_2.0.4          </span></span>
-<span><span class="co">##  [94] bit_4.6.0               compiler_4.6.1          httr2_1.3.0            </span></span>
-<span><span class="co">##  [97] fontBitstreamVera_0.1.1 desc_1.4.3              DelayedArray_0.39.6    </span></span>
-<span><span class="co">## [100] plotly_4.12.1           bookdown_0.48           scales_1.4.0           </span></span>
-<span><span class="co">## [103] callr_3.8.0             rappdirs_0.3.4          stringr_1.6.0          </span></span>
-<span><span class="co">## [106] digest_0.6.39           minqa_1.2.8             rmarkdown_2.32         </span></span>
-<span><span class="co">## [109] XVector_0.53.0          htmltools_0.5.9         pkgconfig_2.0.3        </span></span>
-<span><span class="co">## [112] lme4_2.0-6              fastmap_1.2.0           rlang_1.3.0            </span></span>
-<span><span class="co">## [115] htmlwidgets_1.6.4       farver_2.1.2            jquerylib_0.1.4        </span></span>
-<span><span class="co">## [118] zoo_1.9-0               jsonlite_2.0.0          BiocParallel_1.47.0    </span></span>
-<span><span class="co">## [121] GOSemSim_2.39.2         tokenizers_0.3.0        Formula_1.2-6          </span></span>
-<span><span class="co">## [124] ggplotify_0.1.3         Rcpp_1.1.2              ape_5.8-1              </span></span>
-<span><span class="co">## [127] babelgene_22.9          ggnewscale_0.5.2        gdtools_0.5.1          </span></span>
-<span><span class="co">## [130] stringi_1.8.9           MASS_7.3-66             plyr_1.8.9             </span></span>
-<span><span class="co">## [133] org.Hs.eg.db_3.23.1     ggstats_0.14.0          parallel_4.6.1         </span></span>
-<span><span class="co">## [136] Biostrings_2.81.8       splines_4.6.1           locfit_1.5-9.12        </span></span>
-<span><span class="co">## [139] ps_1.9.3                igraph_2.3.3            ggpubr_1.0.0           </span></span>
-<span><span class="co">## [142] ggsignif_0.6.4          enrichit_0.2.1          reshape2_1.4.5         </span></span>
-<span><span class="co">## [145] XML_3.99-0.24           evaluate_1.0.5          tidytext_0.4.3         </span></span>
-<span><span class="co">## [148] BiocManager_1.30.27     tweenr_2.0.3            nloptr_2.2.1           </span></span>
-<span><span class="co">## [151] polyclip_1.10-7         ggforce_0.5.0           BiocBaseUtils_1.15.1   </span></span>
-<span><span class="co">## [154] broom_1.0.13            xtable_1.8-8            e1071_1.7-17           </span></span>
-<span><span class="co">## [157] tidytree_0.4.8          tidydr_0.0.6            janeaustenr_1.0.0      </span></span>
-<span><span class="co">## [160] rstatix_1.1.0           class_7.3-24            viridisLite_0.4.3      </span></span>
-<span><span class="co">## [163] ragg_1.5.2              lmerTest_3.2-1          clusterProfiler_4.21.1 </span></span>
-<span><span class="co">## [166] aplot_0.3.1             glmmTMB_1.1.14          memoise_2.0.1          </span></span>
-<span><span class="co">## [169] AnnotationDbi_1.75.2    cluster_2.1.8.3         sva_3.59.0</span></span></code></pre>
+<span><span class="co">##  [13] preprocessCore_1.75.3   cli_3.6.6               textshaping_1.0.5      </span></span>
+<span><span class="co">##  [16] tidyprint_1.1.1         scatterpie_0.2.6        labeling_0.4.3         </span></span>
+<span><span class="co">##  [19] sass_0.4.10             S7_0.2.2                genefilter_1.95.0      </span></span>
+<span><span class="co">##  [22] proxy_0.4-29            pbapply_1.7-5           pkgdown_2.2.1          </span></span>
+<span><span class="co">##  [25] systemfonts_1.3.2       yulab.utils_0.2.5       gson_0.2.2             </span></span>
+<span><span class="co">##  [28] DOSE_4.7.3              mcprogress_0.1.1        RSQLite_3.53.3         </span></span>
+<span><span class="co">##  [31] gridGraphics_0.5-1      glmmSeq_0.5.8           car_3.1-5              </span></span>
+<span><span class="co">##  [34] GO.db_3.24.0            Matrix_1.7-6            fansi_1.0.7            </span></span>
+<span><span class="co">##  [37] abind_1.4-8             lifecycle_1.0.5         yaml_2.3.12            </span></span>
+<span><span class="co">##  [40] carData_3.0-6           qvalue_2.45.0           SparseArray_1.13.4     </span></span>
+<span><span class="co">##  [43] grid_4.6.1              blob_1.3.0              crayon_1.5.3           </span></span>
+<span><span class="co">##  [46] ggtangle_0.1.4          lattice_0.23-1          msigdbr_26.1.1         </span></span>
+<span><span class="co">##  [49] annotate_1.91.0         KEGGREST_1.53.6         pillar_1.11.1          </span></span>
+<span><span class="co">##  [52] boot_1.3-32             widyr_0.1.5             codetools_0.2-20       </span></span>
+<span><span class="co">##  [55] fastmatch_1.1-8         glue_1.8.1              ggiraph_0.9.6          </span></span>
+<span><span class="co">##  [58] ggfun_0.2.2             fontLiberation_0.1.0    data.table_1.18.6.1    </span></span>
+<span><span class="co">##  [61] vctrs_0.7.3             png_0.1-9               treeio_1.37.1          </span></span>
+<span><span class="co">##  [64] Rdpack_2.6.6            org.Mm.eg.db_3.24.4     gtable_0.3.6           </span></span>
+<span><span class="co">##  [67] assertthat_0.2.1        cachem_1.1.0            xfun_0.62              </span></span>
+<span><span class="co">##  [70] rbibutils_2.4.1         S4Arrays_1.13.2         reformulas_0.4.4       </span></span>
+<span><span class="co">##  [73] survival_3.8-12         aisdk_1.4.12            statmod_1.5.2          </span></span>
+<span><span class="co">##  [76] ellipsis_0.3.3          nlme_3.1-171            ggtree_4.3.0           </span></span>
+<span><span class="co">##  [79] bit64_4.8.6             fontquiver_0.2.1        SnowballC_0.7.1        </span></span>
+<span><span class="co">##  [82] bslib_0.12.0            otel_0.2.0              DBI_1.3.0              </span></span>
+<span><span class="co">##  [85] tidyselect_1.2.1        processx_3.9.0          bit_4.6.0              </span></span>
+<span><span class="co">##  [88] compiler_4.6.1          httr2_1.3.0             desc_1.4.3             </span></span>
+<span><span class="co">##  [91] fontBitstreamVera_0.1.1 DelayedArray_0.39.8     plotly_4.12.1          </span></span>
+<span><span class="co">##  [94] bookdown_0.48           scales_1.4.0            callr_3.8.0            </span></span>
+<span><span class="co">##  [97] rappdirs_0.3.4          stringr_1.6.0           digest_0.6.39          </span></span>
+<span><span class="co">## [100] minqa_1.2.8             rmarkdown_2.32          XVector_0.53.0         </span></span>
+<span><span class="co">## [103] htmltools_0.5.9         pkgconfig_2.0.3         lme4_2.1-0             </span></span>
+<span><span class="co">## [106] fastmap_1.2.0           rlang_1.3.0             htmlwidgets_1.6.4      </span></span>
+<span><span class="co">## [109] farver_2.1.2            jquerylib_0.1.4         jsonlite_2.0.0         </span></span>
+<span><span class="co">## [112] BiocParallel_1.47.0     GOSemSim_2.39.4         tokenizers_0.3.0       </span></span>
+<span><span class="co">## [115] Formula_1.2-6           ggplotify_0.1.4         Rcpp_1.1.2             </span></span>
+<span><span class="co">## [118] ape_5.8-1               babelgene_22.9          ggnewscale_0.5.2       </span></span>
+<span><span class="co">## [121] gdtools_0.5.2           stringi_1.8.9           MASS_7.3-66            </span></span>
+<span><span class="co">## [124] plyr_1.8.9              org.Hs.eg.db_3.24.4     ggstats_0.14.0         </span></span>
+<span><span class="co">## [127] parallel_4.6.1          Biostrings_2.81.9       splines_4.6.1          </span></span>
+<span><span class="co">## [130] locfit_1.5-9.12         ps_1.9.3                igraph_2.3.4           </span></span>
+<span><span class="co">## [133] ggpubr_1.0.0            ggsignif_0.6.4          enrichit_0.2.6         </span></span>
+<span><span class="co">## [136] reshape2_1.4.5          XML_3.99-0.25           evaluate_1.0.5         </span></span>
+<span><span class="co">## [139] tidytext_0.4.3          BiocManager_1.30.27     nloptr_2.2.1           </span></span>
+<span><span class="co">## [142] tweenr_2.0.3            polyclip_1.10-7         BiocBaseUtils_1.15.1   </span></span>
+<span><span class="co">## [145] ggforce_0.5.0           broom_1.0.13            xtable_1.8-8           </span></span>
+<span><span class="co">## [148] e1071_1.7-17            tidytree_0.4.8          tidydr_0.0.7           </span></span>
+<span><span class="co">## [151] janeaustenr_1.0.0       rstatix_1.1.0           class_7.3-24           </span></span>
+<span><span class="co">## [154] viridisLite_0.4.3       ragg_1.5.2              lmerTest_3.2-1         </span></span>
+<span><span class="co">## [157] clusterProfiler_4.21.4  aplot_0.3.2             memoise_2.0.1          </span></span>
+<span><span class="co">## [160] AnnotationDbi_1.75.2    cluster_2.1.8.3         sva_3.59.0</span></span></code></pre>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-alhamdoosh2017egsea" class="csl-entry">
 Alhamdoosh, M, M Ng, NJ Wilson, et al. 2017. <span>“Combining Multiple

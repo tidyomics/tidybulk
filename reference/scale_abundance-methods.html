@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidybulk</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.5</span>
       </span>
     </div>
 
@@ -144,7 +144,7 @@
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A tbl object with additional columns with scaled data as `&lt;NAME OF COUNT COLUMN&gt;_scaled`</p>
+    <p>A `SummarizedExperiment` with a scaled assay named `&lt;ABUNDANCE&gt;&lt;suffix&gt;` (default `"counts_scaled"`), plus sample-level `colData` columns `TMM`, `multiplier`, and `effective_library_size` (edgeR library size times normalisation factor).</p>
 <p>A `SummarizedExperiment` object</p>
 <p>A `SummarizedExperiment` object</p>
     </div>
@@ -198,12 +198,12 @@ edgeR::normLibSizes(.data, method = c("TMM","TMMwsp","RLE","upperquartile"))</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">509414</span> ENSG000002… SRR103… | 0      0             | GSM1275875 N061… trt   untrt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">509415</span> ENSG000002… SRR103… | 0      0             | GSM1275875 N061… trt   untrt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">509416</span> ENSG000002… SRR103… | 0      0             | GSM1275875 N061… trt   untrt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more variables: Run &lt;fct&gt;, avgLength &lt;chr&gt;, Experiment &lt;fct&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 21 more variables: Run &lt;fct&gt;, avgLength &lt;chr&gt;, Experiment &lt;fct&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Sample &lt;fct&gt;, BioSample &lt;fct&gt;, condition &lt;fct&gt;, TMM &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   multiplier &lt;chr&gt;, `|` &lt;|&gt;, gene_id &lt;chr&gt;, gene_name &lt;chr&gt;, entrezid &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_biotype &lt;chr&gt;, gene_seq_start &lt;chr&gt;, gene_seq_end &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_name &lt;chr&gt;, seq_strand &lt;chr&gt;, seq_coord_system &lt;chr&gt;, symbol &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   .abundant &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   multiplier &lt;chr&gt;, effective_library_size &lt;chr&gt;, `|` &lt;|&gt;, gene_id &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_name &lt;chr&gt;, entrezid &lt;chr&gt;, gene_biotype &lt;chr&gt;, gene_seq_start &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   gene_seq_end &lt;chr&gt;, seq_name &lt;chr&gt;, seq_strand &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   seq_coord_system &lt;chr&gt;, symbol &lt;chr&gt;, .abundant &lt;chr&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
