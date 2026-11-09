@@ -1,7 +1,7 @@
 Type: Package
 Package: tidybulk
 Title: Brings transcriptomics to the tidyverse 
-Version: 2.3.5
+Version: 2.3.6
 Authors@R: c(person("Stefano", "Mangiola", email = "mangiolastefano@gmail.com",
                   role = c("aut", "cre")),
             person("Maria", "Doyle", email = "Maria.Doyle@petermac.org",
@@ -59,6 +59,8 @@ Suggests:
     clusterProfiler,
     msigdbr,
     DESeq2,
+    apeglm,
+    ashr,
     broom,
     survival,
     boot,
@@ -101,4 +103,4 @@ LazyData: true
 LazyDataCompression: xz
 URL: https://github.com/stemangiola/tidybulk
 BugReports: https://github.com/stemangiola/tidybulk/issues
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
