@@ -34,6 +34,25 @@ test_that("estimate_dispersion writes tagwise phi", {
   expect_true(all(is.finite(rd$dispersion_trended) & rd$dispersion_trended > 0))
 })
 
+test_that("estimate_dispersion writes one shared phi when asked for common", {
+  skip_if_not_installed("edgeR")
+  se <- simulated_se()
+  expect_message(
+    out <- estimate_dispersion(se, ~ treatment + donor, dispersion_trend = "common"),
+    "common dispersion"
+  )
+  rd <- SummarizedExperiment::rowData(out)
+  tagwise <- SummarizedExperiment::rowData(
+    estimate_dispersion(se, ~ treatment + donor)
+  )$dispersion_shrinked
+  expect_length(unique(rd$dispersion_shrinked), 1)
+  expect_gt(length(unique(tagwise)), 1)
+  expect_false(isTRUE(all.equal(tagwise, rd$dispersion_shrinked)))
+  expect_true(all(is.finite(rd$dispersion_shrinked) & rd$dispersion_shrinked > 0))
+  expect_equal(rd$dispersion_trended, rd$dispersion_shrinked)
+  expect_length(rd$dispersion_shrinked, nrow(se))
+})
+
 test_that("a mixed-model formula is an error", {
   skip_if_not_installed("edgeR")
   se <- simulated_se()
