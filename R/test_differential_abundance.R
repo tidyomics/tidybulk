@@ -1489,8 +1489,8 @@ get_differential_transcript_abundance_glmmSeq_SE <- function(
 #'
 #' @param .data A tibble
 #' @param .formula a formula with no response variable, referring only to numeric variables
-#' @param .contrasts A character vector. See edgeR makeContrasts specification for the parameter `contrasts`. If contrasts are not present the first covariate is the one the model is tested against (e.g., ~ factor_of_interest)
-#' @param method A string character. Either "edgeR_quasi_likelihood" (i.e., QLF), "edgeR_likelihood_ratio" (i.e., LRT)
+#' @param .contrasts A list of character vectors of length three, c("column", "numerator", "denominator"). If NULL, the first covariate of `.formula` is tested.
+#' @param method A string character. "DESeq2", or "DESeq2_shrink_apeglm", "DESeq2_shrink_ashr" or "DESeq2_shrink_normal" to shrink the fold changes of the given contrasts.
 #' @param scaling_method A character string. The scaling method passed to the backend function (i.e., edgeR::normLibSizes; "TMM","TMMwsp","RLE","upperquartile")
 #' @param omit_contrast_in_colnames If just one contrast is specified you can choose to omit the contrast label in the colnames.
 #' @param ... Additional arguments for DESeq2
@@ -1501,19 +1501,16 @@ get_differential_transcript_abundance_deseq2_SE <- function(
   .data,
   .formula,
   abundance = assayNames(.data)[1],
-
   .abundance = NULL,
   .contrasts = NULL,
   method = "deseq2",
-
   test_above_log2_fold_change = NULL,
-
   scaling_method = "TMM",
   omit_contrast_in_colnames = FALSE,
   prefix = "",
   ...
 ) {
-  # Deprecation logic for .abundance (symbolic)
+  # Resolve the deprecated symbolic .abundance to an assay name
   if (!is.null(.abundance)) {
     lifecycle::deprecate_warn(
       "2.0.0",
@@ -1525,36 +1522,28 @@ get_differential_transcript_abundance_deseq2_SE <- function(
     }
   }
 
-  .abundance <- rlang::enquo(.abundance)
-
   # Fix NOTEs
   . <- NULL
   pvalue <- NULL
   padj <- NULL
 
-  # Check if contrasts are of the same form
-  if (
-    .contrasts |>
-      is.null() |>
-      not() &
-      .contrasts |> class() |> equals("list") |> not()
-  ) {
+  # Contrasts must be a list of c("column", "numerator", "denominator")
+  if (!is.null(.contrasts) && !identical(class(.contrasts), "list")) {
     stop(
       "tidybulk says: for DESeq2 the list of constrasts should be given in the form list(c(\"condition_column\",\"condition1\",\"condition2\")) i.e. list(c(\"genotype\",\"knockout\",\"wildtype\"))"
     )
   }
 
-  # Check if omit_contrast_in_colnames is correctly setup
-  if (omit_contrast_in_colnames & length(.contrasts) > 1) {
+  # Contrast names can only be dropped from the columns for a single contrast
+  if (omit_contrast_in_colnames && length(.contrasts) > 1) {
     warning(
       "tidybulk says: you can omit contrasts in column names only when maximum one contrast is present"
     )
     omit_contrast_in_colnames <- FALSE
   }
 
-  # Check if package is installed, otherwise install
+  # Install DESeq2, plus apeglm or ashr when that shrinkage is requested
   check_and_install_packages("DESeq2")
-
   shrinkage_type <- tolower(method) |> str_remove("^deseq2(_shrink_)?")
   if (shrinkage_type %in% c("apeglm", "ashr")) {
     check_and_install_packages(shrinkage_type)
@@ -1570,90 +1559,61 @@ get_differential_transcript_abundance_deseq2_SE <- function(
       method
     ))
   }
+
+  # Test against a log2 fold change of zero unless a threshold is given
   if (is.null(test_above_log2_fold_change)) {
     test_above_log2_fold_change <- 0
   }
 
-  my_contrasts <- .contrasts
-
-  # If no assay is specified take first
-  my_assay <- abundance
-
+  # Fit the DESeq2 model on the raw counts
   deseq2_object <-
-    # DESeq2
     DESeq2::DESeqDataSetFromMatrix(
-      countData = .data |> assay(my_assay),
+      countData = .data |> assay(abundance),
       colData = colData(.data),
       design = .formula
     ) |>
     DESeq2::DESeq(...)
 
-  # Simplified logic, no anonymous function, broken up for clarity
-
-  has_no_contrasts <- is.null(my_contrasts)
-  is_continuous <- class(deseq2_object@colData[, parse_formula(.formula)[
-    1
-  ]]) %in%
-    c("numeric", "integer", "double")
-  should_omit_contrast_names <- !is.null(my_contrasts) &
-    omit_contrast_in_colnames
-
-  if (has_no_contrasts & is_continuous) {
-    # Simple comparison continuous
-    result <- deseq2_object |>
-      DESeq2::results(lfcThreshold = test_above_log2_fold_change)
-
-    result_raw <- result
-    result <- result |> as_tibble(rownames = "transcript")
-  } else if (has_no_contrasts) {
-    # Simple comparison discrete
-    factor_levels <- deseq2_object@colData[, parse_formula(.formula)[1]] |>
-      as.factor() |>
-      levels()
-    result <- deseq2_object |>
+  # Results for one user contrast, with fold changes shrunk for the shrink methods
+  contrast_results <- function(contrast) {
+    deseq2_object |>
       DESeq2::results(
-        contrast = c(
-          parse_formula(.formula)[1],
-          factor_levels[2],
-          factor_levels[1]
-        ),
-        lfcThreshold = test_above_log2_fold_change
-      )
-
-    result_raw <- result
-    result <- result |> as_tibble(rownames = "transcript")
-  } else if (should_omit_contrast_names) {
-    # Single contrast, omit contrast names in columns
-    result <- deseq2_object |>
-      DESeq2::results(
-        contrast = my_contrasts[[1]],
+        contrast = contrast,
         lfcThreshold = test_above_log2_fold_change
       ) |>
       shrink_deseq2_results(
         deseq2_object,
-        contrast = my_contrasts[[1]],
+        contrast = contrast,
         type = shrinkage_type
       )
+  }
 
-    result_raw <- result
-    result <- result |> as_tibble(rownames = "transcript")
+  if (is.null(.contrasts)) {
+    # No contrasts: test the first covariate, as a slope or second level vs first
+    factor_of_interest <- parse_formula(.formula)[1]
+    covariate <- colData(deseq2_object)[, factor_of_interest]
+    result_raw <- if (is.numeric(covariate)) {
+      deseq2_object |>
+        DESeq2::results(lfcThreshold = test_above_log2_fold_change)
+    } else {
+      factor_levels <- covariate |> as.factor() |> levels()
+      deseq2_object |>
+        DESeq2::results(
+          contrast = c(factor_of_interest, factor_levels[2], factor_levels[1]),
+          lfcThreshold = test_above_log2_fold_change
+        )
+    }
+    result <- result_raw |> as_tibble(rownames = "transcript")
+  } else if (omit_contrast_in_colnames) {
+    # One contrast, with plain column names
+    result_raw <- contrast_results(.contrasts[[1]])
+    result <- result_raw |> as_tibble(rownames = "transcript")
   } else {
-    # Multiple contrasts
-    contrast_labels <- my_contrasts |>
+    # Each contrast gets columns suffixed "___column numerator-denominator"
+    contrast_labels <- .contrasts |>
       map_chr(\(contrast) sprintf("%s %s-%s", contrast[1], contrast[2], contrast[3]))
-    result_raw <- my_contrasts |>
-      map(\(contrast) {
-        deseq2_object |>
-          DESeq2::results(
-            contrast = contrast,
-            lfcThreshold = test_above_log2_fold_change
-          ) |>
-          shrink_deseq2_results(
-            deseq2_object,
-            contrast = contrast,
-            type = shrinkage_type
-          )
-      }) |>
+    result_raw <- .contrasts |>
+      map(contrast_results) |>
       set_names(contrast_labels)
     result <- contrast_labels |>
       map_dfr(\(label) {
@@ -1668,12 +1628,9 @@ get_differential_transcript_abundance_deseq2_SE <- function(
       )
   }
 
-  # Attach prefix without using pipe
-  cn <- colnames(result)
-  cn_new <- c(cn[1], sprintf("%s%s", prefix, cn[2:length(cn)]))
-  colnames(result) <- cn_new
+  # Prefix every statistic column, leaving the transcript column as is
+  colnames(result)[-1] <- paste0(prefix, colnames(result)[-1])
 
-  # Return
   list(
     result = result,
     result_raw = result,
