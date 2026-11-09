@@ -432,77 +432,37 @@ such as batch effects (if applicable) in the formula.
     )
   }
 
-  data_obj_intermediate <- attach_to_metadata(
-    data_obj_intermediate,
-    my_differential_abundance$result_raw,
-    paste0(method, "_fit")
-  )
-  data_obj_intermediate <- attach_to_metadata(
-    data_obj_intermediate,
-    my_differential_abundance$de_object,
-    paste0(method, "_object")
+  # Store the DE object, its fit and any shrunk DESeq2 results, and say where they are
+  stored <- list(
+    object = my_differential_abundance$de_object,
+    fit = my_differential_abundance$result_raw,
+    shrunk = my_differential_abundance$shrunk_results
+  ) |>
+    purrr::compact()
+  descriptions <- c(
+    object = "the DE object",
+    fit = "the raw results (fitted GLM)",
+    shrunk = "the shrunk DESeq2 results"
   )
 
-  if (tolower(method) == "deseq2") {
-    if (
-      is(my_differential_abundance$results_deseqresults, "list") &&
-        length(my_differential_abundance$results_deseqresults) > 1
-    ) {
-      my_differential_abundance$results_deseqresults <- set_names(
-        my_differential_abundance$results_deseqresults,
-        paste(
-          prefix,
-          1:length(my_differential_abundance$results_deseqresults),
-          sep = "_"
-        )
-      )
-    } else {
-      my_differential_abundance$results_deseqresults <- list(
-        my_differential_abundance$results_deseqresults
-      ) |>
-        set_names(prefix)
-    }
-
+  for (name in names(stored)) {
     data_obj_intermediate <- attach_to_metadata(
       data_obj_intermediate,
-      my_differential_abundance$results_deseqresults,
-      paste0(method, "_Resultsobject")
-    )
-  }
-
-  if (!is.null(my_differential_abundance$shrunk_results)) {
-    data_obj_intermediate <- attach_to_metadata(
-      data_obj_intermediate,
-      my_differential_abundance$shrunk_results,
-      paste0(method, "_shrunk")
+      stored[[name]],
+      paste0(method, "_", name)
     )
     rlang::inform(
       sprintf(
-        "tidybulk says: to access the shrunk DESeq2 results do `metadata(.)$tidybulk$%s_shrunk`",
-        method
+        "tidybulk says: to access %s do `metadata(.)$tidybulk$%s_%s`",
+        descriptions[[name]],
+        method,
+        name
       ),
       .frequency_id = sprintf("Access DE results %s", method),
       .frequency = "always"
     )
   }
 
-  rlang::inform(
-    sprintf(
-      "tidybulk says: to access the DE object do `metadata(.)$tidybulk$%s_object`",
-      method
-    ),
-    .frequency_id = sprintf("Access DE results %s", method),
-    .frequency = "always"
-  )
-
-  rlang::inform(
-    sprintf(
-      "tidybulk says: to access the raw results (fitted GLM) do `metadata(.)$tidybulk$%s_fit`",
-      method
-    ),
-    .frequency_id = sprintf("Access DE results %s", method),
-    .frequency = "always"
-  )
   data_obj_intermediate
 }
 
