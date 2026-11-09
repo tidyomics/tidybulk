@@ -379,6 +379,7 @@ such as batch effects (if applicable) in the formula.
         scaling_method = scaling_method,
         omit_contrast_in_colnames = omit_contrast_in_colnames,
         prefix = prefix,
+        formula_dispersion = formula_dispersion,
         ...
       )
   } else {
@@ -1348,9 +1349,8 @@ get_differential_transcript_abundance_glmmSeq_SE <- function(
     ...,
     .abundance = NULL
 ) {
-  
-  .dispersion <- enquo(.dispersion)
-  .scaling_factor = enquo(.scaling_factor)
+
+  .scaling_factor <- enquo(.scaling_factor)
   
   # Deprecation logic for .abundance
   if (!is.null(.abundance)) {
@@ -1639,31 +1639,27 @@ get_differential_transcript_abundance_deseq2_SE <- function(
     result <- result |> as_tibble(rownames = "transcript")
   } else {
     # Multiple contrasts
-    result_raw <- 1:length(my_contrasts) |>
-      map(\(contrast_index) {
+    contrast_labels <- my_contrasts |>
+      map_chr(\(contrast) sprintf("%s %s-%s", contrast[1], contrast[2], contrast[3]))
+    result_raw <- my_contrasts |>
+      map(\(contrast) {
         deseq2_object |>
           DESeq2::results(
-            contrast = my_contrasts[[contrast_index]],
+            contrast = contrast,
             lfcThreshold = test_above_log2_fold_change
           ) |>
           shrink_deseq2_results(
             deseq2_object,
-            contrast = my_contrasts[[contrast_index]],
+            contrast = contrast,
             type = shrinkage_type
           )
-      })
-    result <- 1:length(my_contrasts) |>
-      map_dfr(function(contrast_index) {
-        result_raw[[contrast_index]] |>
+      }) |>
+      set_names(contrast_labels)
+    result <- contrast_labels |>
+      map_dfr(\(label) {
+        result_raw[[label]] |>
           as_tibble(rownames = "transcript") |>
-          mutate(
-            constrast = sprintf(
-              "%s %s-%s",
-              my_contrasts[[contrast_index]][1],
-              my_contrasts[[contrast_index]][2],
-              my_contrasts[[contrast_index]][3]
-            )
-          )
+          mutate(constrast = label)
       }) |>
       pivot_wider(
         values_from = -c(transcript, constrast),
