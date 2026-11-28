@@ -57,6 +57,12 @@ jobs:
         EOF
         chmod +x "$HOME/bin/Rscript"
         echo "$HOME/bin" >> "$GITHUB_PATH"
+        # R CMD check requires Suggests unless this is false. --as-cran is
+        # already off for devel; the default of this variable is still true,
+        # and the check process reads it from Renviron.site.
+        site="$(R RHOME)/etc/Renviron.site"
+        touch "$site"
+        echo '_R_CHECK_FORCE_SUGGESTS_=false' >> "$site"
     - uses: neurogenomics/rworkflows@master
       with:
         run_telemetry: ${{ matrix.config.os != 'ubuntu-latest' }}
