@@ -18,13 +18,13 @@ if(requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
   gene_names <- rownames(airway_mini)
   
   # Map gene symbols and entrez IDs
-  symbol_mapping <- mapIds(org.Hs.eg.db::org.Hs.eg.db,
+  symbol_mapping <- AnnotationDbi::mapIds(org.Hs.eg.db::org.Hs.eg.db,
                           keys = gene_names,
                           keytype = "ENSEMBL",
                           column = "SYMBOL",
                           multiVals = "first")
   
-  entrez_mapping <- mapIds(org.Hs.eg.db::org.Hs.eg.db,
+  entrez_mapping <- AnnotationDbi::mapIds(org.Hs.eg.db::org.Hs.eg.db,
                           keys = gene_names,
                           keytype = "ENSEMBL",
                           column = "ENTREZID",
