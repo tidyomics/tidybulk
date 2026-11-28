@@ -144,6 +144,21 @@ library(ggrepel)
 library(SummarizedExperiment)
 library(tidybulk)
 
+# Enrichment examples need optional Suggests. On Bioconductor devel those
+# packages can fail to install when a downstream CRAN dependency is missing
+# from the snapshot, and R CMD check must still be able to build this vignette.
+has_gene_rank <- all(vapply(
+	c("clusterProfiler", "enrichplot", "msigdbr", "fastmatch"),
+	requireNamespace, logical(1), quietly = TRUE
+))
+has_gene_overrep <- all(vapply(
+	c("clusterProfiler", "msigdbr", "fastmatch"),
+	requireNamespace, logical(1), quietly = TRUE
+))
+# sva is a Suggests package. Bioconductor devel can omit it when it is not
+# built for that R, and adjust_abundance() stops if it is missing.
+has_sva <- requireNamespace("sva", quietly = TRUE)
+
 # Define theme
 my_theme = 	
 	theme_bw() +
@@ -1007,7 +1022,13 @@ airway |>
 
 ComBat-seq [@zhang2017combatseq] is used for batch effect correction in RNA-seq data.
 
-```{r batch-correction-adjust-abundance}
+```{r batch-correction-unavailable, echo=FALSE, eval=!has_sva}
+knitr::asis_output(
+	"Batch correction is skipped in this build because sva is not installed.\n\n"
+)
+```
+
+```{r batch-correction-adjust-abundance, eval=has_sva}
 # Adjust for batch effects
 airway = airway |>
   adjust_abundance(
@@ -1041,7 +1062,13 @@ airway |>
 
 Gene Set Enrichment Analysis (GSEA) [@subramanian2005gsea] is used for gene set enrichment.
 
-```{r enrichment-gene-rank-analysis}
+```{r enrichment-packages-unavailable, echo=FALSE, eval=!has_gene_rank}
+knitr::asis_output(
+	"Gene rank enrichment is skipped in this build because clusterProfiler and enrichplot are not installed.\n\n"
+)
+```
+
+```{r enrichment-gene-rank-analysis, eval=has_gene_rank}
 # Run gene rank enrichment (GSEA style)
 gene_rank_res =
   airway |>
@@ -1059,7 +1086,7 @@ gene_rank_res =
   )
 ```
 
-```{r enrichment-inspect-significant-genesets}
+```{r enrichment-inspect-significant-genesets, eval=has_gene_rank}
 # Inspect significant gene sets (example for C2 collection)
 gene_rank_res |>
   filter(gs_collection == "C2") |>
@@ -1069,7 +1096,7 @@ gene_rank_res |>
 ```
 
 #### Visualize enrichment 
-```{r enrichment-visualize-gsea-plots}
+```{r enrichment-visualize-gsea-plots, eval=has_gene_rank}
   library(enrichplot)
   library(patchwork)
   gene_rank_res |>
@@ -1089,7 +1116,13 @@ detach("package:enrichplot", unload = TRUE)
 
 Gene Ontology overrepresentation analysis [@ashburner2000go] is used for functional enrichment. 
 
-```{r enrichment-gene-overrepresentation}
+```{r enrichment-overrep-unavailable, echo=FALSE, eval=!has_gene_overrep}
+knitr::asis_output(
+	"Gene overrepresentation is skipped in this build because clusterProfiler is not installed.\n\n"
+)
+```
+
+```{r enrichment-gene-overrepresentation, eval=has_gene_overrep}
 # Test gene overrepresentation
 airway_overrep = 
   airway |>

@@ -56,6 +56,7 @@ test_that("quantile_normalise_abundance with preprocessCore works correctly", {
 # Test adjust_abundance function
 
 test_that("adjust_abundance adds adjusted assay correctly", {
+  skip_if_not_installed("sva")
   # Add a batch column to airway_mini
   se_mini2 <- airway_mini
   # Create a batch variable with two groups (not confounded with dex)
@@ -101,6 +102,7 @@ test_that("scale_abundance default suffix still works", {
 # Test adjust_abundance on a custom assay
 
 test_that("adjust_abundance on custom assay creates correct adjusted assay name", {
+  skip_if_not_installed("sva")
   se_mini2 <- airway_mini
   # Create a batch variable with two groups (not confounded with dex)
   colData(se_mini2)$batch <- c(1, 1, 2, 2, 1)

@@ -157,6 +157,7 @@ test_that("Drop redundant correlated - SummarizedExperiment",{
 })
 
 test_that("Get adjusted counts - SummarizedExperiment",{
+  skip_if_not_installed("sva")
   
   cm = airway_mini
   cm$batch = c(1, 1, 2, 2, 1)  # Non-confounded with dex
@@ -177,6 +178,7 @@ test_that("Get adjusted counts - SummarizedExperiment",{
 })
 
 test_that("Get adjusted counts multiple factors - SummarizedExperiment",{
+  skip_if_not_installed("sva")
   
   cm = airway_mini
   # Ensure each batch has at least 2 samples for ComBat-Seq
