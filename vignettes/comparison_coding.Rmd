@@ -117,6 +117,10 @@ library(tidybulk)
 library(tidySummarizedExperiment)
 library(airway)
 
+# sva is a Suggests package. Bioconductor devel can omit it when it is not
+# built for that R, and adjust_abundance() stops if it is missing.
+has_sva <- requireNamespace("sva", quietly = TRUE)
+
 # Define theme
 my_theme = 	
 	theme_bw() +
@@ -512,7 +516,10 @@ We may want to adjust `counts` for (known) unwanted variation. `adjust_abundance
 
 <div class="column-left">
 TidyTranscriptomics
-```{r adjust, message=FALSE, warning=FALSE, results='hide'}
+```{r adjust-unavailable, echo=FALSE, eval=!has_sva, results='asis'}
+cat("Batch correction is skipped in this build because sva is not installed.\n")
+```
+```{r adjust, message=FALSE, warning=FALSE, results='hide', eval=has_sva}
 airway.norm.adj =
 	airway.norm 	|> adjust_abundance(	.factor_unwanted = cell, .factor_of_interest = dex, method="combat")
 

@@ -155,6 +155,9 @@ has_gene_overrep <- all(vapply(
 	c("clusterProfiler", "msigdbr", "fastmatch"),
 	requireNamespace, logical(1), quietly = TRUE
 ))
+# sva is a Suggests package. Bioconductor devel can omit it when it is not
+# built for that R, and adjust_abundance() stops if it is missing.
+has_sva <- requireNamespace("sva", quietly = TRUE)
 
 # Define theme
 my_theme = 	
@@ -1019,7 +1022,13 @@ airway |>
 
 ComBat-seq [@zhang2017combatseq] is used for batch effect correction in RNA-seq data.
 
-```{r batch-correction-adjust-abundance}
+```{r batch-correction-unavailable, echo=FALSE, eval=!has_sva}
+knitr::asis_output(
+	"Batch correction is skipped in this build because sva is not installed.\n\n"
+)
+```
+
+```{r batch-correction-adjust-abundance, eval=has_sva}
 # Adjust for batch effects
 airway = airway |>
   adjust_abundance(
