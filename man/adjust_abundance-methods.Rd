@@ -114,9 +114,12 @@ for (lev in unique(cond)) {
 }
 cm$batch <- as.factor(cm$batch)
 
-cm |>
-identify_abundant() |>
-adjust_abundance(	.factor_unwanted = batch, .factor_of_interest =  condition, method="combat_seq"	)
+# sva is a Suggests package and is not built for every Bioconductor devel.
+if (requireNamespace("sva", quietly = TRUE)) {
+  cm |>
+    identify_abundant() |>
+    adjust_abundance(.factor_unwanted = batch, .factor_of_interest = condition, method = "combat_seq")
+}
 
 }
 \references{
