@@ -49,13 +49,14 @@ jobs:
         cat > /tmp/install-treelayout.R <<'RSCRIPT'
         lib <- .Library.site
         if (!requireNamespace("treelayout", quietly = TRUE)) {
-          repos <- getOption("repos")
-          repos["CRAN_CURRENT"] <- "https://cloud.r-project.org"
+          # dependencies = FALSE: the image already has Imports such as dplyr
+          # and Rcpp. Installing them again from current CRAN overwrites the
+          # Docker library and corrupts later package installs.
           install.packages(
             "treelayout",
             lib = lib,
-            repos = repos,
-            dependencies = TRUE
+            repos = "https://cloud.r-project.org",
+            dependencies = FALSE
           )
         }
         if (!requireNamespace("treelayout", quietly = TRUE)) {
