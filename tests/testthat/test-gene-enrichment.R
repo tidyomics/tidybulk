@@ -8,7 +8,9 @@ library(dplyr)
 library(SummarizedExperiment)
 library(tidySummarizedExperiment)
 library(tidybulk)
-library(EGSEA)
+if (requireNamespace("EGSEA", quietly = TRUE)) {
+  library(EGSEA)
+}
 
 # Add entrez and symbol mapping for gene enrichment tests
 if(requireNamespace("org.Hs.eg.db", quietly = TRUE)) {

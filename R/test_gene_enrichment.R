@@ -76,9 +76,9 @@
 #'
 #' library(tidySummarizedExperiment)
 #'
+#' \dontrun{
 #' library("EGSEA")
 #'
-#' \dontrun{
 #' df_entrez <- airway |>
 #'   mutate(entrez = .feature) |>
 #'   aggregate_duplicates(.transcript = entrez )
