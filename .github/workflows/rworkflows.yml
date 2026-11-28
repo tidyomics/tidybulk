@@ -38,6 +38,25 @@ jobs:
           cont: ~
           rspm: ~
     steps:
+    # On R devel, rworkflows installs CRAN remotes and then upgrades it from
+    # GitHub in the same process. Replacing a loaded package corrupts its
+    # lazy-load database (R_decompress1 / libdeflate) and the job stops
+    # before R CMD check. CRAN remotes can resolve and install dependencies.
+    - name: Skip in-process remotes upgrade on R devel
+      if: matrix.config.bioc == 'devel'
+      shell: bash
+      run: |
+        mkdir -p "$HOME/bin"
+        cat > "$HOME/bin/Rscript" << 'EOF'
+        #!/bin/bash
+        real=/usr/local/bin/Rscript
+        if [ -n "${1:-}" ] && [ -f "$1" ] && grep -q 'remotes::install_github("r-lib/remotes")' "$1"; then
+          sed -i 's|remotes::install_github("r-lib/remotes")|# CRAN remotes stays loaded. Upgrading it in-process breaks lazy-loading on R devel.|' "$1"
+        fi
+        exec "$real" "$@"
+        EOF
+        chmod +x "$HOME/bin/Rscript"
+        echo "$HOME/bin" >> "$GITHUB_PATH"
     - uses: neurogenomics/rworkflows@master
       with:
         run_telemetry: ${{ matrix.config.os != 'ubuntu-latest' }}
