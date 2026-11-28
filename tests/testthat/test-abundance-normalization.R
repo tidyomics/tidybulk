@@ -96,7 +96,22 @@ test_that("scale_abundance uses custom suffix correctly", {
 test_that("scale_abundance default suffix still works", {
   res <- airway_mini |> identify_abundant() |> scale_abundance()
   expect_true("counts_scaled" %in% names(SummarizedExperiment::assays(res)))
-}) 
+})
+
+test_that("scale_abundance scales the specified non-first assay", {
+  se <- airway_mini
+  alt <- SummarizedExperiment::assay(se, "counts") * 10 + 5
+  SummarizedExperiment::assays(se)[["alt_counts"]] <- alt
+
+  res <- se |>
+    identify_abundant(abundance = "alt_counts") |>
+    scale_abundance(abundance = "alt_counts")
+
+  expect_true("alt_counts_scaled" %in% SummarizedExperiment::assayNames(res))
+  expected <- alt %*% diag(SummarizedExperiment::colData(res)$multiplier)
+  colnames(expected) <- colnames(alt)
+  expect_equal(SummarizedExperiment::assay(res, "alt_counts_scaled"), expected)
+})
 
 # Test adjust_abundance on a custom assay
 

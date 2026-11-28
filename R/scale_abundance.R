@@ -198,12 +198,12 @@ setGeneric("scale_abundance", function(.data,
   
   my_counts_scaled =
     list(
-      assay(.data) %*%
+      assay(.data, my_assay) %*%
         diag(multiplier)
       
     ) |>
     setNames(value_scaled)
-  colnames(my_counts_scaled[[1]]) = assay(.data)  |> colnames()
+  colnames(my_counts_scaled[[1]]) = assay(.data, my_assay)  |> colnames()
   
   
   # Add the assay
