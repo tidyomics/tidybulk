@@ -1,6 +1,11 @@
 \name{NEWS}
 \title{News for Package \pkg{tidybulk}}
 
+\section{Changes in version 2.3.7}{
+\itemize{
+    \item Fix \code{scale_abundance()} so that when \code{abundance} names a non-default assay, the scaled values are computed from that assay rather than from the first assay in the object.
+}}
+
 \section{Changes in version 2.3.6}{
 \itemize{
     \item \code{test_differential_expression()} gain \code{dispersion_trend = c("tagwise", "common")}. \code{"tagwise"} (the default) keeps each method's per-feature dispersion, so results are unchanged. \code{"common"} passes the backend's shared-dispersion argument, which is the faster choice when there are many samples: edgeR \code{estimateDisp(trend.method = "none", tagwise = FALSE)} for the likelihood-ratio and robust likelihood-ratio methods, \code{glmQLFit(abundance.trend = FALSE)} for quasi-likelihood, \code{eBayes(trend = FALSE)} and \code{treat(trend = FALSE)} for limma-voom, and \code{fitType = "mean"} for DESeq2.
