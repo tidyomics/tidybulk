@@ -38,32 +38,6 @@ jobs:
           cont: ~
           rspm: ~
     steps:
-    # Bioconductor devel ggtree imports treelayout. That CRAN package can be
-    # newer than the Posit snapshot baked into the devel Docker image, and
-    # then enrichplot and clusterProfiler fail to install. The introduction
-    # vignette needs both, so put treelayout on the library path first.
-    - name: Install treelayout ahead of the CRAN snapshot
-      if: matrix.config.bioc == 'devel'
-      shell: bash
-      run: |
-        cat > /tmp/install-treelayout.R <<'RSCRIPT'
-        lib <- .Library.site
-        if (!requireNamespace("treelayout", quietly = TRUE)) {
-          # dependencies = FALSE: the image already has Imports such as dplyr
-          # and Rcpp. Installing them again from current CRAN overwrites the
-          # Docker library and corrupts later package installs.
-          install.packages(
-            "treelayout",
-            lib = lib,
-            repos = "https://cloud.r-project.org",
-            dependencies = FALSE
-          )
-        }
-        if (!requireNamespace("treelayout", quietly = TRUE)) {
-          stop("treelayout failed to install; ggtree, enrichplot, and clusterProfiler need it on Bioconductor devel")
-        }
-        RSCRIPT
-        sudo Rscript /tmp/install-treelayout.R
     - uses: neurogenomics/rworkflows@master
       with:
         run_telemetry: ${{ matrix.config.os != 'ubuntu-latest' }}
