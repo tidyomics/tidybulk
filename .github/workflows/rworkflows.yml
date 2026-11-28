@@ -62,7 +62,10 @@ jobs:
         run_telemetry: ${{ matrix.config.os != 'ubuntu-latest' }}
         run_bioccheck: ${{ false }}
         run_rcmdcheck: ${{ true }}
-        as_cran: ${{ true }}
+        # --as-cran forces every Suggests package to be installed. Bioconductor
+        # devel does not currently build sva, EGSEA, or the dependencies of
+        # tidyHeatmap and pasilla, so that check cannot pass there.
+        as_cran: ${{ matrix.config.bioc != 'devel' }}
         run_vignettes: ${{ true }}
         has_testthat: ${{ true }}
         run_covr: ${{ true }}
