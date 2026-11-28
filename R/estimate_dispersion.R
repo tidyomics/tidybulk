@@ -1,7 +1,10 @@
 # Internal. edgeR tagwise (or trended if n >= 1000) written to rowData.
+# dispersion_trend = "common" writes one shared dispersion instead.
 # formula_abundance must be a fixed-effects formula; the user chooses it.
 
-estimate_dispersion <- function(.data, formula_abundance, abundance = "counts") {
+estimate_dispersion <- function(.data, formula_abundance, abundance = "counts",
+                                dispersion_trend = c("tagwise", "common")) {
+  dispersion_trend <- match.arg(dispersion_trend)
   check_and_install_packages("edgeR")
   check_formula(formula_abundance)
   if (grepl("|", paste(deparse(formula_abundance), collapse = ""), fixed = TRUE)) {
@@ -29,7 +32,21 @@ estimate_dispersion <- function(.data, formula_abundance, abundance = "counts") 
   }
 
   formula_txt <- paste(deparse(formula_abundance), collapse = "")
-  if (n_sample < 1000L) {
+  if (identical(dispersion_trend, "common")) {
+    message(
+      "tidybulk says: calculating common dispersion ",
+      "with edgeR::estimateDisp(trend.method = \"none\", tagwise = FALSE) using ",
+      formula_txt, "."
+    )
+    fit <- edgeR::estimateDisp(
+      assay(.data, abundance),
+      design = design,
+      trend.method = "none",
+      tagwise = FALSE
+    )
+    disp <- trended <- fit$common.dispersion
+    d_eff <- n_sample - ncol(design)
+  } else if (n_sample < 1000L) {
     message(
       "tidybulk says: calculating tagwise (shrinked) and trended dispersion ",
       "with edgeR::estimateDisp() using ", formula_txt, "."
@@ -60,8 +77,8 @@ estimate_dispersion <- function(.data, formula_abundance, abundance = "counts") 
     d_eff <- ncol(se_sub) - ncol(design)
   }
 
-  rowData(.data)[["dispersion_shrinked"]] <- as.numeric(disp)
-  rowData(.data)[["dispersion_trended"]] <- as.numeric(trended)
+  rowData(.data)[["dispersion_shrinked"]] <- rep_len(as.numeric(disp), nrow(.data))
+  rowData(.data)[["dispersion_trended"]] <- rep_len(as.numeric(trended), nrow(.data))
   rowData(.data)[["dispersion_degrees_freedom"]] <-
     rep_len(as.numeric(d_eff), nrow(.data))
   .data <- attach_to_metadata(.data, fit, "estimateDisp")
